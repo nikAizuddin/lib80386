@@ -1,0 +1,132 @@
+;          1         2         3         4         5         6         7
+;01234567890123456789012345678901234567890123456789012345678901234567890
+;=======================================================================
+;+---------------------------------------------------------------------+
+;| FUNCTION: append_string                                             |
+;+---------------------------------------------------------------------+
+;| DESCRIPTION: Append a source string to destination string.          |
+;|              Lets say, the destination string is "Hello World",     |
+;|              and the source string is "! I am good", after append   |
+;|              string the destination string will become              |
+;|              "Hello World! I am good".                              |
+;+---------------------------------------------------------------------+
+;| REQUIRES: ---                                                       |
+;+---------------------------------------------------------------------+
+;| BUGS: ---                                                           |
+;+---------------------------------------------------------------------+
+;| FUTURE IMPROVEMENTS: * Rename src_strblock to src_buffer.   (DONE)  |
+;|                      * Rename dst_strblock to dst_buffer.   (DONE)  |
+;|                      * Rename bit_pos to dst_buffer_bitpos. (DONE)  |
+;+---------------------------------------------------------------------+
+;| PROCESS DESCRIPTION:                                                |
+;|                                                                     |
+;|   append_string( addr_dst_str^:32bit,                               |
+;|                  addr_dst_strlen^:32bit,                            |
+;|                  addr_src_str^:32bit,                               |
+;|                  src_strlen:32bit )                                 |
+;|                                                                     |
+;|   Input parameters                                                  |
+;|     1) addr_dst_str    = address of destination string              |
+;|     2) addr_dst_strlen = address of destination string length       |
+;|     3) addr_src_str    = address of source string                   |
+;|     4) src_strlen      = value of source string length              |
+;|                                                                     |
+;|   Output parameters                                                 |
+;|     1) addr_dst_str    = new string is appended to the dst string   |
+;|     2) addr_dst_strlen = new value of strlen after append           |
+;|                                                                     |
+;|   Returns                                                           |
+;|     ---                                                             |
+;|                                                                     |
+;|   +-------------------------------------------------------------+   |
+;|   |                     STACK STRUCTURE                         |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | Offset |       Data        |          Descriptions          |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +    0 | addr_dst_str      | Stores address to destination  |   |
+;|   |        |                   | string.                        |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +    4 | addr_dst_strlen   | Stores address to destination  |   |
+;|   |        |                   | string length.                 |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +    8 | addr_src_str      | Stores address to source       |   |
+;|   |        |                   | string.                        |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +   12 | src_strlen        | Stores length of source        |   |
+;|   |        |                   | string.                        |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +   16 | dst_strlen        | Stores length of destination   |   |
+;|   |        |                   | string.                        |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +   20 | current_dst_block | Current memory block number    |   |
+;|   |        |                   | of destination string.         |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +   24 | block_byte_offset | Byte offset of memory block.   |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +   28 | dst_ptr           | Point to the address of        |   |
+;|   |        |                   | current destination string     |   |
+;|   |        |                   | memory block.                  |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +   32 | src_ptr           | Point to the address of        |   |
+;|   |        |                   | current source string memory   |   |
+;|   |        |                   | block.                         |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +   36 | src_buffer        | Stores buffer for the source   |   |
+;|   |        |                   | source string.                 |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +   40 | dst_buffer        | Stores buffer for the          |   |
+;|   |        |                   | destination string.            |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +   44 | dst_buffer_bitpos | Bit position of destination    |   |
+;|   |        |                   | string.                        |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +   48 | i                 | General purpose counter.       |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | +   52 | ascii_char        | Stores a byte of character.    |   |
+;|   +--------+-------------------+--------------------------------+   |
+;|   | Total stack used for local variables = 56 bytes             |   |
+;|   +-------------------------------------------------------------+   |
+;|                                                                     |
+;|        Begin                                                        |
+;|   001:     src_ptr = addr_src_str;                                  |
+;|   002:     src_buffer = src_ptr^;                                   |
+;|   003:     dst_strlen = addr_dst_strlen^;                           |
+;|                                                                     |
+;|   004:     current_dst_block = dst_strlen / 4;                      |
+;|   005:     block_byte_offset = current_dst_block * 4;               |
+;|                                                                     |
+;|   006:     dst_ptr = addr_dst_str + block_byte_offset;              |
+;|   007:     dst_buffer = dst_ptr^;                                   |
+;|   008:     dst_buffer_bitpos = (dst_strlen - block_byte_offset) * 8;|
+;|                                                                     |
+;|   009:     i = src_strlen;                                          |
+;|            loop_1:                                                  |
+;|   010:         if dst_buffer_bitpos != 32, goto .endcond_1;         |
+;|                cond_1:                                              |
+;|   011:             dst_ptr^ = dst_buffer;                           |
+;|   012:             dst_ptr += 4;                                    |
+;|   013:             dst_buffer = 0;                                  |
+;|   014:             dst_buffer_bitpos = 0;                           |
+;|                endcond_1:                                           |
+;|                                                                     |
+;|   015:         if src_buffer != 0, goto .endcond_2;                 |
+;|                cond_2:                                              |
+;|   016:             src_ptr += 4;                                    |
+;|   017:             src_buffer = src_ptr^;                           |
+;|                endcond_2:                                           |
+;|                                                                     |
+;|   018:         ascii_char = (src_buffer&0xff) << dst_buffer_bitpos; |
+;|   019:         dst_buffer |= ascii_char;                            |
+;|   020:         dst_buffer_bitpos += 8;                              |
+;|   021:         ++ dst_strlen;                                       |
+;|   022:         src_buffer >>= 8;                                    |
+;|   023:         -- i;                                                |
+;|   024:         if i != 0, goto .loop_1;                             |
+;|            endloop_1:                                               |
+;|                                                                     |
+;|   025:     dst_ptr^ = dst_buffer;                                   |
+;|   026:     addr_dst_strlen^ = dst_strlen;                           |
+;|        End.                                                         |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;=======================================================================
