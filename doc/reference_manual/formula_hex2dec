@@ -7,25 +7,24 @@
 ;| formula_hex2dec -- Convert hexadecimal number to decimal number.    |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;| PASCAL SPECIFICATION:                                               |
+;| FUNCTION:                                                           |
 ;|                                                                     |
-;| function formula_hex2dec( hexadecimal_num: Longword ): Longword;    |
+;| formula_hex2dec( hexadecimal_num:32bit ) : 32bit                    |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;| PARAMETERS:                                                         |
+;| INPUT PARAMETERS:                                                   |
 ;|                                                                     |
 ;| hexadecimal_num                                                     |
-;|     The hexadecimal number, can be data type of Longword or Longint.|
+;|     The hexadecimal number.                                         |
 ;|                                                                     |
+;+---------------------------------------------------------------------+
+;| OUTPUT PARAMETERS: ---                                              |
 ;+---------------------------------------------------------------------+
 ;| RETURNS:                                                            |
 ;|                                                                     |
-;| decimal number                                                      |
+;|     decimal number                                                  |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;| DESCRIPTION:                                                        |
-;|                                                                     |
-;| Converts 0x00bd0c32 to 0x12389426.                                  |
-;|                                                                     |
+;| PARAMETER DESCRIPTION: ---                                          |
 ;+---------------------------------------------------------------------+
 ;=======================================================================

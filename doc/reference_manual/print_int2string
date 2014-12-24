@@ -7,15 +7,15 @@
 ;| print_int2string -- Print signed or unsigned int to string.         |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;| PASCAL SPECIFICATION:                                               |
+;| FUNCTION:                                                           |
 ;|                                                                     |
-;| procedure print_int2string(integer_x: Longword,                     |
-;|                            addr_ascii_str: Longword,                |
-;|                            addr_ascii_len: Longword,                |
-;|                            flag: Longword )                         |
+;| print_int2string( integer_x:32bit,                                  |
+;|                   addr_ascii_str^:32bit,                            |
+;|                   addr_ascii_len^:32bit,                            |
+;|                   flag:32bit )                                      |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;| PARAMETERS:                                                         |
+;| INPUT PARAMETERS:                                                   |
 ;|                                                                     |
 ;| integer_x                                                           |
 ;|     The integer number, can be signed or unsigned int.              |
@@ -27,12 +27,17 @@
 ;|     Specify whether the integer_x is signed or unsigned int.        |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;| RETURNS:                                                            |
+;| OUTPUT PARAMETERS:                                                  |
 ;|                                                                     |
-;| Nothing                                                             |
+;| addr_ascii_str                                                      |
+;|     String filled with ASCII integer numbers.                       |
+;| addr_ascii_len                                                      |
+;|     The string length.                                              |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;| DESCRIPTION:                                                        |
+;| RETURNS: ---                                                        |
+;+---------------------------------------------------------------------+
+;| PARAMETER DESCRIPTION:                                              |
 ;|                                                                     |
 ;| The specifications of the flag value are as follows:                |
 ;|                                                                     |

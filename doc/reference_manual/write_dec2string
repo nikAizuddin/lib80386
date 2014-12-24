@@ -7,15 +7,15 @@
 ;| write_dec2string -- Fill the string with the decimal number.        |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;| PASCAL SPECIFICATION:                                               |
+;| FUNCTION:                                                           |
 ;|                                                                     |
-;| procedure write_dec2string(decimal_x_ptr^: Longword,                |
-;|                            num_of_blocks: Longword,                 |
-;|                            ascii_x_ptr^: Longword,                  |
-;|                            ascii_x_len_ptr^: Longword)              |
+;| write_dec2string( decimal_x_ptr^:32bit,                             |
+;|                   num_of_blocks:32bit,                              |
+;|                   ascii_x_ptr^:32bit,                               |
+;|                   ascii_x_len_ptr^:32bit )                          |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;| PARAMETERS:                                                         |
+;| INPUT PARAMETERS:                                                   |
 ;|                                                                     |
 ;| decimal_x_ptr                                                       |
 ;|     The address to decimal number block 0.                          |
@@ -27,14 +27,16 @@
 ;|     The address to length of ascii.                                 |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;| RETURNS:                                                            |
+;| OUTPUT PARAMETERS:                                                  |
 ;|                                                                     |
-;| Nothing                                                             |
+;| ascii_x_ptr                                                         |
+;|     The string will be filled with ASCII integer numbers.           |
+;| ascii_x_len_ptr                                                     |
+;|     The string length.                                              |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;| DESCRIPTION:                                                        |
-;|                                                                     |
-;| For example, fill 0x00000042 into string, becomes 0x00003234.       |
-;|                                                                     |
+;| RETURNS: ---                                                        |
+;+---------------------------------------------------------------------+
+;| PARAMETER DESCRIPTION: ---                                          |
 ;+---------------------------------------------------------------------+
 ;=======================================================================
