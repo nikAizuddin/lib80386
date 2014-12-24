@@ -1,0 +1,154 @@
+;          1         2         3         4         5         6         7
+;01234567890123456789012345678901234567890123456789012345678901234567890
+;=======================================================================
+;+---------------------------------------------------------------------+
+;| FUNCTION: print_double2string                                       |
+;+---------------------------------------------------------------------+
+;| DESCRIPTION: Print a double value to string.                        |
+;+---------------------------------------------------------------------+
+;| REQUIRES: append_string.asm,                                        |
+;|           print_int2string.asm                                      |
+;|           pow_int.asm                                               |
+;+---------------------------------------------------------------------+
+;| BUGS: ---                                                           |
+;+---------------------------------------------------------------------+
+;| FUTURE IMPROVEMENTS: ---                                            |
+;+---------------------------------------------------------------------+
+;| PROCESS DESCRIPTION:                                                |
+;|                                                                     |
+;|   print_double2string( double_x:64bit,                              |
+;|                        decimal_places:32bit,                        |
+;|                        addr_out_string^:32bit,                      |
+;|                        addr_out_strlen^:32bit )                     |
+;|                                                                     |
+;|   Input parameters                                                  |
+;|     1) double_x         = the double precision value                |
+;|     2) decimal_places   = specify the number of decimal places to   |
+;|                           print the double_x                        |
+;|     3) addr_out_string^ = address to the out string                 |
+;|     4) addr_out_strlen^ = address to the out strlen                 |
+;|                                                                     |
+;|   Output parameters                                                 |
+;|     ---                                                             |
+;|                                                                     |
+;|   Returns                                                           |
+;|     ---                                                             |
+;|                                                                     |
+;|   +-------------------------------------------------------------+   |
+;|   |                     STACK STRUCTURE                         |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | Offset |          Date           |       Descriptions       |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +    0 | double_x[0]             | The double number that   |   |
+;|   | +    4 | double_x[1]             | we want to print.        |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +    8 | decimal_places          | Number of decimal places |   |
+;|   |        |                         | to print.                |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +   12 | addr_out_string^        | Address to the out       |   |
+;|   |        |                         | string.                  |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +   16 | addr_out_strlen^        | Address to the out       |   |
+;|   |        |                         | strlen.                  |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +   20 | integer_part            | Stores integer part      |   |
+;|   |        |                         | number for double_x      |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +   24 | decimal_part[0]         | Stores decimal part      |   |
+;|   | +   28 | decimal_part[1]         | number for double_x.     |   |
+;|   |        |                         | decimal_part[1] is not   |   |
+;|   |        |                         | used. Reserved for future|   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +   32 | decimal_part_str[0]     | Stores decimal part      |   |
+;|   | +   36 | decimal_part_str[1]     | number that has been     |   |
+;|   |        |                         | converted to string.     |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +   40 | decimal_part_strlen     | Length of decimal part   |   |
+;|   |        |                         | string.                  |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +   44 | fpu_controlword         | Used for modify FPU      |   |
+;|   |        |                         | rounding mode.           |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +   48 | temp                    | Used for adding integer  |   |
+;|   |        |                         | part. The value can be   |   |
+;|   |        |                         | +1 or -1.                |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +   52 | dot_character           | Contains ASCII character |   |
+;|   |        |                         | 0x2E which is a dot.     |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +   56 | cur_dec_places          | Current decimal places.  |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +   60 | zeroes_str[0]           | Stores 0x3030303030,     |   |
+;|   | +   64 | zeroes_str[1]           | 0x30303030.              |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | +   68 | zeroes_strlen           | Length of zeroes string. |   |
+;|   +--------+-------------------------+--------------------------+   |
+;|   | Total stack used for local variables = 72 bytes             |   |
+;|   +-------------------------------------------------------------+   |
+;|                                                                     |
+;|        Begin                                                        |
+;|   001:     initialize FPU stacks;                                   |
+;|   002:     set FPU rounding mode to truncate;                       |
+;|   003:     push double_x into FPU;                                  |
+;|   004:     convert double_x to int and store to integer_part;       |
+;|                                                                     |
+;|   005:     reinitialize FPU stacks;                                 |
+;|   006:     push double_x into FPU;                                  |
+;|   007:     push integer_part into FPU;                              |
+;|   008:     st0 = st1 - st0;                                         |
+;|   009:     push decimal_places into FPU;                            |
+;|   010:     st0 = st1 * st0;                                         |
+;|   011:     save st0 to decimal_part;                                |
+;|                                                                     |
+;|   012:     if decimal_part[0] & 0x80000000 != 0x80000000, skip      |
+;|            .decimal_part_is_neg:                                    |
+;|   013:         decimal_part[0] = (!decimal_part) + 1;               |
+;|   014:         temp = -1;                                           |
+;|            .decimal_part_is_pos:                                    |
+;|   015:         temp = 1;                                            |
+;|                                                                     |
+;|   016:     print_int2string( decimal_part[0],                       |
+;|                              @decimal_part_str[0],                  |
+;|                              @decimal_part_strlen,                  |
+;|                              0);                                    |
+;|                                                                     |
+;|   017:     if decimal_part[0] != decimal_places, skip               |
+;|            .round_integer_part:                                     |
+;|   018:         integer_part = integer_part + temp;                  |
+;|   019:         decimal_part_str[0] &= 0xfffffff0                    |
+;|   020:         -- decimal_part_strlen;                              |
+;|            .dont_round_integer_part:                                |
+;|                                                                     |
+;|   021:     print_int2string( integer_part,                          |
+;|                              addr_out_string,                       |
+;|                              addr_out_strlen,                       |
+;|                              1 );                                   |
+;|                                                                     |
+;|   022:     append_string( addr_out_string,                          |
+;|                           addr_out_strlen,                          |
+;|                           @dot_character,                           |
+;|                           1 );                                      |
+;|                                                                     |
+;|   023:     cur_dec_places = pow_int( 10, decimal_part_strlen );     |
+;|   024:     if cur_dec_places >= decimal_places, skip;               |
+;|            .insert_heading_zeroes:                                  |
+;|                .loop_1:                                             |
+;|   025:             cur_dec_places *= 10;                            |
+;|   026:             ++ zeroes_strlen;                                |
+;|   027:             if cur_dec_places != decimal_places, .loop_1;    |
+;|                .endloop:                                            |
+;|   028:         append_string( addr_out_string,                      |
+;|                               addr_out_strlen,                      |
+;|                               @zeroes_str[0],                       |
+;|                               zeroes_strlen );                      |
+;|            .dont_insert_heading_zeroes:                             |
+;|                                                                     |
+;|   029:     append_string( addr_out_string,                          |
+;|                           addr_out_strlen,                          |
+;|                           @decimal_part_str[0],                     |
+;|                           decimal_part_strlen );                    |
+;|        End.                                                         |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;=======================================================================
+
