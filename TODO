@@ -1,0 +1,9 @@
+--> create a complete test on print_double2string. make sure no error.
+
+--> make a research about EDI, ESI, MOVSD,... instructions
+--> make a research about Binary Coded Decimal(BCD)
+
+--> make a research about ncurses interface, that used in alsamixer.
+
+--> improve all library source code
+--> improve all documentations

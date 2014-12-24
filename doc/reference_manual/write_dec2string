@@ -1,0 +1,40 @@
+;          1         2         3         4         5         6         7
+;01234567890123456789012345678901234567890123456789012345678901234567890
+;=======================================================================
+;+---------------------------------------------------------------------+
+;| NAME:                                                               |
+;|                                                                     |
+;| write_dec2string -- Fill the string with the decimal number.        |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;| PASCAL SPECIFICATION:                                               |
+;|                                                                     |
+;| procedure write_dec2string(decimal_x_ptr^: Longword,                |
+;|                            num_of_blocks: Longword,                 |
+;|                            ascii_x_ptr^: Longword,                  |
+;|                            ascii_x_len_ptr^: Longword)              |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;| PARAMETERS:                                                         |
+;|                                                                     |
+;| decimal_x_ptr                                                       |
+;|     The address to decimal number block 0.                          |
+;| num_of_blocks                                                       |
+;|     Number of decimal number blocks.                                |
+;| ascii_x_ptr                                                         |
+;|     The address to ascii block 0.                                   |
+;| ascii_x_len_ptr                                                     |
+;|     The address to length of ascii.                                 |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;| RETURNS:                                                            |
+;|                                                                     |
+;| Nothing                                                             |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;| DESCRIPTION:                                                        |
+;|                                                                     |
+;| For example, fill 0x00000042 into string, becomes 0x00003234.       |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;=======================================================================

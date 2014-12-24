@@ -1,0 +1,13 @@
+--> improve append_string, use EDI, ESI, MOVSD,...
+
+--> improve print_double2stdout
+--> improve print_double2string
+--> improve print_int2stdout
+--> improve print_int2string
+--> improve write_dec2string
+
+--> create read_intfromstring()
+  Read an integer number from a readbuffer.
+
+--> create read_doublefromstring()
+  Read a double number from a readbuffer.

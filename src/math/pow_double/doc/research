@@ -1,0 +1,58 @@
+libm: line 27658 pow
+libm: line 13475 __pow_finite
+
+__pow_finite() does the power calculation, not pow()
+
+CONCLUSION ------
+
+x = 3.52
+y - 2.70
+p = 0
+q = 0
+r = 0
+
+STEP1: p = math.log(x)/math.log(2)
+STEP2: q = p * y
+STEP3: r = q - (rounded q)
+STEP4: math.pow(2,r) * pow(2,rounded q);
+
+
+TEST 1 -------
+pow(x,y)
+x = 3.52
+y = 2.70
+answer should be = 29.89958713020677
+
+STEP1: math.log(3.52)/math.log(2) = 1.8155754288625725 [fyl2x instruction]
+STEP2: 1.8155754288625725 * 2.70 = 4.902053657928946
+STEP3: 4.902053657928946-5[rounded 4.902053657928946] = -0.09794634207105357
+STEP4: (2^-0.09794634207105357) * 2^5 = 29.89958713020677 CORRECT!!!
+
+
+TEST 2 -------
+pow(x,y)
+x = 1.25
+y = 2.60
+p = 0
+q = 0
+r = 0
+answer should be = 1.7863478590911186
+
+STEP1: p = math.log(1.25) / math.log(2) = 0.32192809488736235
+STEP2: q = 0.32192809488736235 * 2.60 = 0.8370130467071422
+STEP3: r = 0.8370130467071422 - 1 = -0.16298695329285784
+STEP4: answer = math.pow(2,-0.16298695329285784) * math.pow(2,1)
+              = 1.7863478590911186 CORRECT!!!!
+
+TEST 3 -------
+pow(x,y)
+x = 32.50
+y = -3.12
+answer should be = 1.9183326288008635e-05
+
+STEP1: p = math.log(32.50) / math.log(2) = 5.022367813028454
+STEP2: q = 5.022367813028454 * -3.12 = -15.669787576648778
+STEP3: r = -15.669787576648778 - 5 = -20.66978757664878
+STEP4: answer = math.pow(2,-20.66978757664878) * math.pow(2,5)
+              = 1.918332628800862e-05 CORRECT!!!
+

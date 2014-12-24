@@ -1,0 +1,153 @@
+;          1         2         3         4         5         6         7
+;01234567890123456789012345678901234567890123456789012345678901234567890
+;=======================================================================
+;+---------------------------------------------------------------------+
+;| LABEL: write_dec2string                                             |
+;+---------------------------------------------------------------------+
+;| ENTITY TYPE: Process                                                |
+;+---------------------------------------------------------------------+
+;| DESCRIPTION: <self-documented>                                      |
+;+---------------------------------------------------------------------+
+;| PROCESS ID: 0                                                       |
+;+---------------------------------------------------------------------+
+;| PROCESS DESCRIPTION:                                                |
+;|                                                                     |
+;|   Input  dataflows: address decimal_x_b0, num_of_blocks,            |
+;|                     address ascii_x_b0, address ascii_x_len         |
+;|   Output dataflows: ascii_x, ascii_x_len                            |
+;|                                                                     |
+;|   +-------------------------------------------------------------+   |
+;|   |                     STACK STRUCTURE                         |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | Offset |                     Data                           |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +    0 | decimal_x_ptr                                      |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +    4 | num_of_blocks                                      |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +    8 | ascii_x_ptr                                        |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +   12 | ascii_x_len_ptr                                    |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +   16 | ascii_x_len                                        |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +   20 | decimal_x_b0                                       |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +   24 | decimal_x_b1                                       |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +   28 | decimal_x_b0_len                                   |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +   32 | decimal_x_b1_len                                   |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +   36 | temp                                               |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +   40 | counter                                            |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +   44 | ascii_char                                         |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +   48 | byte_position                                      |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | Total stack used for local variables = 52 bytes             |   |
+;|   +-------------------------------------------------------------+   |
+;|                                                                     |
+;|   procedure write_dec2string(decimal_x_ptr^: Longword,              |
+;|                              num_of_blocks: Longword,               |
+;|                              ascii_x_ptr^: Longword,                |
+;|                              ascii_x_len_ptr^: Longword)            |
+;|                                                                     |
+;|   Var                                                               |
+;|       ascii_x_len: Longword                                         |
+;|       decimal_x_b0: Longword                                        |
+;|       decimal_x_b1: Longword                                        |
+;|       decimal_x_b0_len: Longword                                    |
+;|       decimal_x_b1_len: Longword                                    |
+;|       temp: Longword                                                |
+;|       counter: Longword                                             |
+;|       ascii_char: Longword                                          |
+;|       byte_position: Longword                                       |
+;|                                                                     |
+;|   Begin                                                             |
+;|                                                                     |
+;|       { If there are 2 blocks of decimal_x }                        |
+;|       If num_of_blocks = 2 Then                                     |
+;|           decimal_x_b0 := decimal_x_ptr^;                           |
+;|           decimal_x_b1 := (decimal_x_ptr+4)^;                       |
+;|                                                                     |
+;|           decimal_x_b0_len := 8;                                    |
+;|                                                                     |
+;|           { Find the number of nipples in decimal_x_b1 }            |
+;|           temp := decimal_x_b1;                                     |
+;|           While temp <> 0 Do                                        |
+;|           Begin                                                     |
+;|               temp := temp >> 4;                                    |
+;|               ++ decimal_x_b1_len;                                  |
+;|           End;                                                      |
+;|                                                                     |
+;|           { Fill ascii_x with decimal_x block 1 }                   |
+;|           counter := decimal_x_b1_len;                              |
+;|           While counter <> 0 Do                                     |
+;|           Begin                                                     |
+;|               ascii_char :=                                         |
+;|                   ((decimal_x_b1 >> ((counter-1)*4)) and 0x0f) or   |
+;|                   0x30;                                             |
+;|               ascii_x_ptr^ :=                                       |
+;|                   ascii_x_ptr^ or (ascii_char << (byte_position*8));|
+;|               ++ ascii_x_len;                                       |
+;|               ++ byte_position;                                     |
+;|               -- counter;                                           |
+;|           End;                                                      |
+;|                                                                     |
+;|           { Fill ascii_x with decimal_x block 0 }                   |
+;|           counter := decimal_x_b0_len;                              |
+;|           While counter <> 0 Do                                     |
+;|           Begin                                                     |
+;|               ascii_char :=                                         |
+;|                   ((decimal_x_b0 >> ((counter-1)*4)) and 0x0f) or   |
+;|                   0x30;                                             |
+;|               ascii_x_ptr^ :=                                       |
+;|                   ascii_x_ptr^ or (ascii_char << (byte_position*8));|
+;|               ++ ascii_x_len;                                       |
+;|               ++ byte_position;                                     |
+;|               If byte_position = 4 Then                             |
+;|                   ascii_x_ptr := ascii_x_ptr + 4;                   |
+;|                   byte_position := 0;                               |
+;|               -- counter;                                           |
+;|           End;                                                      |
+;|                                                                     |
+;|       { If number of blocks is 1, or other than 2 }                 |
+;|       Else                                                          |
+;|           decimal_x_b0 := decimal_x_ptr^;                           |
+;|                                                                     |
+;|           { Find the number of nipples in decimal_x block 0 }       |
+;|           temp := decimal_x_b0;                                     |
+;|           While temp <> 0 Do                                        |
+;|           Begin                                                     |
+;|               temp := temp >> 4;                                    |
+;|               ++ decimal_x_b0_len;                                  |
+;|           End;                                                      |
+;|                                                                     |
+;|           { Fill the ascii_x with decimal_x block 0 }               |
+;|           counter := decimal_x_b0_len;                              |
+;|           While counter <> 0 Do                                     |
+;|           Begin                                                     |
+;|               ascii_char :=                                         |
+;|                   ((decimal_x_b0 >> ((counter-1)*4)) and 0x0f) or   |
+;|                   0x30;                                             |
+;|               ascii_x_ptr^ :=                                       |
+;|                   ascii_x_ptr^ or (ascii_char << (byte_position*8));|
+;|               ++ ascii_x_len;                                       |
+;|               ++ byte_position;                                     |
+;|               If byte_position = 4 Then                             |
+;|                   ascii_x_ptr := ascii_x_ptr + 4;                   |
+;|                   byte_position := 0;                               |
+;|               -- counter;                                           |
+;|           End;                                                      |
+;|                                                                     |
+;|       { Save the length of ascii_x }                                |
+;|       ascii_x_len_ptr^ := ascii_x_len;                              |
+;|                                                                     |
+;|   End.                                                              |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;=======================================================================
+

@@ -1,0 +1,92 @@
+;          1         2         3         4         5         6         7
+;01234567890123456789012345678901234567890123456789012345678901234567890
+;=======================================================================
+;+---------------------------------------------------------------------+
+;| LABEL: calculate_integer_length                                     |
+;+---------------------------------------------------------------------+
+;| ENTITY TYPE: Process                                                |
+;+---------------------------------------------------------------------+
+;| DESCRIPTION: Find the number of digits from an integer number.      |
+;+---------------------------------------------------------------------+
+;| PROCESS ID: 0                                                       |
+;+---------------------------------------------------------------------+
+;| PROCESS DESCRIPTION:                                                |
+;|                                                                     |
+;|   Input  dataflows: integer_x, flag                                 |
+;|   Output dataflows: num_of_digits                                   |
+;|                                                                     |
+;|   +-------------------------------------------------------------+   |
+;|   |                     STACK STRUCTURE                         |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | Offset |                     Data                           |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +    0 | integer_x                                          |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +    4 | flag                                               |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | +    8 | num_of_digits                                      |   |
+;|   +--------+----------------------------------------------------+   |
+;|   | Total stack used for local variables = 16 bytes             |   |
+;|   +-------------------------------------------------------------+   |
+;|                                                                     |
+;|   FUNCTION calculate_integer_length(integer_x:LONGWORD,             |
+;|                                     flag:LONGWORD) : LONGWORD       |
+;|                                                                     |
+;|   VAR                                                               |
+;|       num_of_digits:LONGWORD                                        |
+;|                                                                     |
+;|   BEGIN                                                             |
+;|                                                                     |
+;|       { If flag = 1, that means the integer_x is long signed int.   |
+;|         So, we have to check its sign value to determine whether    |
+;|         it is a positive or negative number.                        |
+;|                                                                     |
+;|         If the integer_x is negative number, we have to find the    |
+;|         value from its two's complement form.                       |
+;|                                                                     |
+;|         If the integer_x is positive number, no need to find the    |
+;|         value from its two's complement form.                       |
+;|                                                                     |
+;|         Otherwise if the flag = 0, skip these instructions. }       |
+;|                                                                     |
+;|       { Check whether integer_x is signed or unsigned int }         |
+;|       IF flag = 1 THEN                                              |
+;|           { If integer_x is signed, check its sign value }          |
+;|           IF (integer_x and 0x80000000) <> 0 THEN                   |
+;|               { If integer_x is negative }                          |
+;|               { Invert all bits }                                   |
+;|               integer_x := not integer_x;                           |
+;|               { Add 1 }                                             |
+;|               integer_x := integer_x + 1;                           |
+;|                                                                     |
+;|       { The instructions below will find the number of digits       |
+;|         from integer_x. }                                           |
+;|                                                                     |
+;|       IF integer_x < 10 THEN                                        |
+;|           num_of_digits := 1;                                       |
+;|       ELSE IF integer_x < 100 THEN                                  |
+;|           num_of_digits := 2;                                       |
+;|       ELSE IF integer_x < 1000 THEN                                 |
+;|           num_of_digits := 3;                                       |
+;|       ELSE IF integer_x < 10000 THEN                                |
+;|           num_of_digits := 4;                                       |
+;|       ELSE IF integer_x < 100000 THEN                               |
+;|           num_of_digits := 5;                                       |
+;|       ELSE IF integer_x < 1000000 THEN                              |
+;|           num_of_digits := 6;                                       |
+;|       ELSE IF integer_x < 10000000 THEN                             |
+;|           num_of_digits := 7;                                       |
+;|       ELSE IF integer_x < 100000000 THEN                            |
+;|           num_of_digits := 8;                                       |
+;|       ELSE IF integer_x < 1000000000 THEN                           |
+;|           num_of_digits := 9;                                       |
+;|       ELSE                                                          |
+;|           num_of_digits := 10;                                      |
+;|                                                                     |
+;|       EXIT(num_of_digits);                                          |
+;|                                                                     |
+;|   END.                                                              |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;=======================================================================
+

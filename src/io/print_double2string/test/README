@@ -1,0 +1,10 @@
+This will test the print_double2string, make sure no errors.
+
+We will test the function by using these values:
+================================================
+
+test_0001:
+    double_x = 12.092
+    decimal_places = 10
+    the output should be 12.1
+

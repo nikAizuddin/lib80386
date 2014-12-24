@@ -1,0 +1,40 @@
+;          1         2         3         4         5         6         7
+;01234567890123456789012345678901234567890123456789012345678901234567890
+;=======================================================================
+;+---------------------------------------------------------------------+
+;| NAME:                                                               |
+;|                                                                     |
+;| calculate_integer_length -- Find the number of digits               |
+;|                             from an integer number.                 |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;| PASCAL SPECIFICATION:                                               |
+;|                                                                     |
+;| function calculate_integer_length(integer_x: Longword,              |
+;|                                   flag: Longword ): Longword;       |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;| PARAMETERS:                                                         |
+;|                                                                     |
+;| integer_x                                                           |
+;|     The integer number, can be data type of Longword or Longint.    |
+;| flag                                                                |
+;|     Specify whether the integer_x is Longword or Longint            |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;| RETURNS:                                                            |
+;|                                                                     |
+;| Length of integer, which is the number of digits from integer_x.    |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;| DESCRIPTION:                                                        |
+;|                                                                     |
+;| The specifications of the flag value are as follows:                |
+;|                                                                     |
+;| flag = 0b00000000000000000000000000000000                           |
+;|     The integer_x is Longword (unsigned int 32-bit)                 |
+;| flag = 0b00000000000000000000000000000001                           |
+;|     The integer_x is Longint (signed int 32-bit)                    |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;=======================================================================
