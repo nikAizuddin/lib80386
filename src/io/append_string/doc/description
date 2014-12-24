@@ -17,6 +17,7 @@
 ;| FUTURE IMPROVEMENTS: * Rename src_strblock to src_buffer.   (DONE)  |
 ;|                      * Rename dst_strblock to dst_buffer.   (DONE)  |
 ;|                      * Rename bit_pos to dst_buffer_bitpos. (DONE)  |
+;|                      * Use ESI, EDI, MOVSD instruction for str.     |
 ;+---------------------------------------------------------------------+
 ;| PROCESS DESCRIPTION:                                                |
 ;|                                                                     |

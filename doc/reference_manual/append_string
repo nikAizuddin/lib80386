@@ -4,7 +4,12 @@
 ;+---------------------------------------------------------------------+
 ;| NAME:                                                               |
 ;|                                                                     |
-;| append_string -- Append a string to the string                      |
+;| append_string -- Append a source string to destination string.      |
+;|                                                                     |
+;|     Lets say, the destination string is "Hello World",              |
+;|     and the source string is "! I am good", after append            |
+;|     string the destination string will become                       |
+;|     "Hello World! I am good".                                       |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;| FUNCTION:                                                           |
@@ -40,8 +45,6 @@
 ;|     ---                                                             |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;| DESCRIPTION:                                                        |
-;|                                                                     |
-;|                                                                     |
+;| PARAMETER DESCRIPTION: ---                                          |
 ;+---------------------------------------------------------------------+
 ;=======================================================================
