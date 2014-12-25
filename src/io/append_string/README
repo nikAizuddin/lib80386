@@ -1,1 +1,19 @@
-
+;          1         2         3         4         5         6         7
+;01234567890123456789012345678901234567890123456789012345678901234567890
+;=======================================================================
+;+---------------------------------------------------------------------+
+;|                          append_string                              |
+;|                                                                     |
+;|     Use this function if you want to append the string.             |
+;|                                                                     |
+;|     Please read doc/description file for more info.                 |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;| DIRECTORY INFORMATION                                               |
+;|                                                                     |
+;|     doc: Contains documentations about the function.                |
+;| example: Some basic tutorials on how to use this function.          |
+;|     src: Contains source code.                                      |
+;|    test: For testing purpose, to ensure the function has no error.  |
+;+---------------------------------------------------------------------+
+;=======================================================================
