@@ -7,30 +7,30 @@ _START    = _start.asm
 # Mathematics
 
 POW_INT = \
-  "../../../math/pow_int/src/pow_int.asm"
+  "../../../../math/pow_int/src/pow_int.asm"
 
 POW_DOUBLE = \
-  "../../../math/pow_double/src/pow_double.asm"
+  "../../../../math/pow_double/src/pow_double.asm"
 
 CALCULATE_INTEGER_LENGTH = \
-  "../../../math/calculate_integer_length/src/calculate_integer_length.asm"
+  "../../../../math/calculate_integer_length/src/calculate_integer_length.asm"
 
 FORMULA_HEX2DEC = \
-  "../../../math/formula_hex2dec/src/formula_hex2dec.asm"
+  "../../../../math/formula_hex2dec/src/formula_hex2dec.asm"
 
 # Input/Output
 
 APPEND_STRING = \
-  "../../../io/append_string/src/append_string.asm"
+  "../../../../io/append_string/src/append_string.asm"
 
 PRINT_DOUBLE2STRING = \
-  "../../../io/print_double2string/src/print_double2string.asm"
+  "../../../../io/print_double2string/src/print_double2string.asm"
 
 PRINT_INT2STRING = \
-  "../../../io/print_int2string/src/print_int2string.asm"
+  "../../../../io/print_int2string/src/print_int2string.asm"
 
 WRITE_DEC2STRING = \
-  "../../../io/write_dec2string/src/write_dec2string.asm"
+  "../../../../io/write_dec2string/src/write_dec2string.asm"
 
 OBJ = _start.o \
       print_int2string.o \
