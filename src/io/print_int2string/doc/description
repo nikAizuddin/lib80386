@@ -8,7 +8,8 @@
 ;+---------------------------------------------------------------------+
 ;| REQUIRES: calculate_integer_length.asm,                             |
 ;|           formula_hex2dec.asm,                                      |
-;|           write_dec2string.asm                                      |
+;|           write_dec2string.asm,                                     |
+;|           append_string.asm                                         |
 ;+---------------------------------------------------------------------+
 ;| BUGS: ---                                                           |
 ;+---------------------------------------------------------------------+
@@ -65,17 +66,9 @@
 ;|   +--------+-----------------+----------------------------------+   |
 ;|   | +   48 | ascii_x_len     |                                  |   |
 ;|   +--------+-----------------+----------------------------------+   |
-;|   | +   52 | ascii_char      |                                  |   |
+;|   | +   52 | is_negative     |                                  |   |
 ;|   +--------+-----------------+----------------------------------+   |
-;|   | +   56 | byte_pos        |                                  |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +   60 | ctr             |                                  |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +   64 | temp_ptr        |                                  |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +   68 | is_negative     |                                  |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | Total stack used for local variables = 72 bytes             |   |
+;|   | Total stack used for local variables = 56 bytes             |   |
 ;|   +-------------------------------------------------------------+   |
 ;|                                                                     |
 ;|        Begin                                                        |
@@ -87,10 +80,12 @@
 ;|                goto .flag_notequal_1;                               |
 ;|                                                                     |
 ;|            .flag_equal_1:                                           |
+;|                                                                     |
 ;|   003:         if (integer_x & 0x80000000) != 0x80000000, then      |
 ;|                    goto .sign_false;                                |
 ;|                                                                     |
 ;|                .sign_true:                                          |
+;|                                                                     |
 ;|   004:             integer_x = (!integer_x) + 1;                    |
 ;|   005:             is_negative = 1;                                 |
 ;|                                                                     |
@@ -102,6 +97,7 @@
 ;|                goto .integer_x_len_lessequal_8;                     |
 ;|                                                                     |
 ;|            .integer_x_len_morethan_8:                               |
+;|                                                                     |
 ;|   007:         integer_x_quo = integer_x / 100000000;               |
 ;|   008:         integer_x_rem = remainder from the division;         |
 ;|   009:         decimal_x[0] = formula_hex2dec( integer_x_rem );     |
@@ -113,39 +109,31 @@
 ;|   012:         goto .skip_integer_x_len_equalmore_8;                |
 ;|                                                                     |
 ;|            .integer_x_len_lessequal_8:                              |
+;|                                                                     |
 ;|   013:         decimal_x[0] = formula_hex2dec( integer_x );         |
-;|   014:         write_dec2string( @decimal_x_b0,                     |
+;|   014:         write_dec2string( @decimal_x[0],                     |
 ;|                                  1,                                 |
-;|                                  @ascii_x_b0,                       |
+;|                                  @ascii_x[0],                       |
 ;|                                  @ascii_x_len );                    |
 ;|                                                                     |
 ;|            .skip_integer_x_len_equalmore_8:                         |
 ;|                                                                     |
-;|       If is_negative = 1 Then                                       |
-;|           addr_ascii_str^ := 0x2d;                                  |
-;|           ++ byte_pos;                                              |
-;|           ++ addr_ascii_len^;                                       |
+;|   015:     if is_negative != 1, then                                |
+;|                goto .is_negative_false;                             |
 ;|                                                                     |
-;|       { Fill ascii string with ascii_x }                            |
-;|       #### REPLACE WITH APPEND_STRING() ####                        |
-;|       ctr := ascii_x_len;                                           |
-;|       temp_ptr := @ascii_x_b0;                                      |
-;|       While ctr <> 0 Do                                             |
-;|       Begin                                                         |
-;|           If byte_pos = 4 Then                                      |
-;|               addr_ascii_str := addr_ascii_str + 4;                 |
-;|               byte_pos := 0;                                        |
-;|           If temp_ptr^ := 0 Then                                    |
-;|               temp_ptr := temp_ptr + 4;                             |
-;|           ascii_char := (temp_ptr^ and 0xff) << (byte_pos*8);       |
-;|           addr_ascii_str^ := addr_ascii_str^ or ascii_char;         |
-;|           ++ byte_pos;                                              |
-;|           ++ (addr_ascii_len^);                                     |
-;|           temp_ptr^ := temp_ptr^ >> 8;                              |
-;|           -- ctr;                                                   |
-;|       End.                                                          |
+;|            .is_negative_true:                                       |
 ;|                                                                     |
-;|   End.                                                              |
+;|   016:         addr_out_string^ = 0x2d;                             |
+;|   018:         ++ addr_out_strlen^;                                 |
+;|                                                                     |
+;|            .is_negative_false:                                      |
+;|                                                                     |
+;|   019: append_string( addr_out_string,                              |
+;|                       addr_out_strlen,                              |
+;|                       @ascii_x[0],                                  |
+;|                       ascii_x_len );                                |
+;|                                                                     |
+;|        End.                                                         |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;=======================================================================
