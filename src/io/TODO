@@ -1,7 +1,6 @@
---> improve append_string, use EDI, ESI, MOVSD,...
-
---> improve print_int2string
 --> improve write_dec2string
+
+--> improve append_string, use EDI, ESI, MOVSD,...
 
 --> create read_intfromstring()
   Read an integer number from a readbuffer.

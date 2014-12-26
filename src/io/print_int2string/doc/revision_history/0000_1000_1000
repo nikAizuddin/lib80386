@@ -3,14 +3,10 @@
 ;=======================================================================
 ;+-------------------+-------------------------------------------------+
 ;| REV#: 0.1.1       | DESCRIPTION:                                    |
-;| DATE: 25-DEC-2014 |     Improve performance + code readability.     |
+;| DATE: 27-DEC-2014 |     Improve code readability.                   |
 ;+-------------------+-------------------------------------------------+
 ;| DETAILS:                                                            |
 ;|                                                                     |
-;| 1) Improve performance                                              |
-;|     Improve algorithm by reducing the number of jumps.              |
-;|                                                                     |
-;| 2) Improve source code readability                                  |
 ;|     Introduces a new style which is more organized.                 |
 ;|     Also reduce the duplicated instructions by using append_string. |
 ;|                                                                     |

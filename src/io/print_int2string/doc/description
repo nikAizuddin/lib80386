@@ -124,11 +124,11 @@
 ;|            .is_negative_true:                                       |
 ;|                                                                     |
 ;|   016:         addr_out_string^ = 0x2d;                             |
-;|   018:         ++ addr_out_strlen^;                                 |
+;|   017:         ++ addr_out_strlen^;                                 |
 ;|                                                                     |
 ;|            .is_negative_false:                                      |
 ;|                                                                     |
-;|   019: append_string( addr_out_string,                              |
+;|   018: append_string( addr_out_string,                              |
 ;|                       addr_out_strlen,                              |
 ;|                       @ascii_x[0],                                  |
 ;|                       ascii_x_len );                                |

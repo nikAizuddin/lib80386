@@ -102,7 +102,7 @@ print_int2string:
     ;    +-------------------------+
     ;----| 002: if flag != 1, then |------------------------------------
     ;    +-------------------------+
-    ;       goto .flag_notequal_1
+    ;       goto .flag_notequal_1. Means, the integer_x is unsigned.
     ;-------------------------------------------------------------------
     mov    eax, [esp + 12]          ;eax = flag
     cmp    eax, 1
@@ -113,7 +113,7 @@ print_int2string:
     ;    +------------------------------------------------------+
     ;----| 003: if (integer_x & 0x80000000) != 0x80000000, then |-------
     ;    +------------------------------------------------------+
-    ;       goto .sign_false
+    ;       goto .sign_false. Means, no need for Two's complement.
     ;-------------------------------------------------------------------
     mov    eax, [esp    ]           ;eax = integer_x
     and    eax, 0x80000000
@@ -125,6 +125,7 @@ print_int2string:
     ;    +------------------------------------+
     ;----| 004: integer_x = (!integer_x) + 1; |-------------------------
     ;    +------------------------------------+
+    ;       The integer_x is negative, and need Two's complement.
     ;-------------------------------------------------------------------
     mov    eax, [esp]               ;eax = integer_x
     not    eax
@@ -134,6 +135,7 @@ print_int2string:
     ;    +-----------------------+
     ;----| 005: is_negative = 1; |--------------------------------------
     ;    +-----------------------+
+    ;       Tells the program that the integer_x is negative.
     ;-------------------------------------------------------------------
     mov    eax, 1
     mov    [esp + 52], eax          ;is_negative := eax
@@ -144,7 +146,8 @@ print_int2string:
     ;    +----------------------------------+
     ;----| 006: if integer_x_len <= 8, then |---------------------------
     ;    +----------------------------------+
-    ;       goto .integer_x_len_lessequal_8
+    ;       goto .integer_x_len_lessequal_8. Means, the number of
+    ;       digits in integer_x_len is less than or equal 8.
     ;-------------------------------------------------------------------
     mov    eax, [esp + 16]          ;eax = integer_x_len
     cmp    eax, 8
