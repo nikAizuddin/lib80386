@@ -1,0 +1,152 @@
+;          1         2         3         4         5         6         7
+;01234567890123456789012345678901234567890123456789012345678901234567890
+;=======================================================================
+;+---------------------------------------------------------------------+
+;| FUNCTION: print_int2string                                          |
+;+---------------------------------------------------------------------+
+;| DESCRIPTION: Print signed or unsigned int to string.                |
+;+---------------------------------------------------------------------+
+;| REQUIRES: calculate_integer_length.asm,                             |
+;|           formula_hex2dec.asm,                                      |
+;|           write_dec2string.asm                                      |
+;+---------------------------------------------------------------------+
+;| BUGS: ---                                                           |
+;+---------------------------------------------------------------------+
+;| FUTURE IMPROVEMENTS: ---                                            |
+;+---------------------------------------------------------------------+
+;| PROCESS DESCRIPTION:                                                |
+;|                                                                     |
+;|   print_int2string( integer_x:32bit,                                |
+;|                     addr_out_string^:32bit,                         |
+;|                     addr_out_strlen^:32bit,                         |
+;|                     flag:32bit )                                    |
+;|                                                                     |
+;|   Input parameters                                                  |
+;|     1) integer_x        = the integer number, can be signed/unsign. |
+;|     2) addr_out_string^ = address to the destination string.        |
+;|     3) addr_out_strlen^ = address to the destination strlen.        |
+;|     4) flag             = specify whether integer_x is signed/unsi. |
+;|                                                                     |
+;|   Output parameters                                                 |
+;|     2) addr_out_string^ = string filled with ASCII integer numbers. |
+;|     3) addr_out_strlen^ = the string length.                        |
+;|                                                                     |
+;|   Returns                                                           |
+;|     ---                                                             |
+;|                                                                     |
+;|   +-------------------------------------------------------------+   |
+;|   |                     STACK STRUCTURE                         |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | Offset |      Data       |          Descriptions            |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +    0 | integer_x       |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +    4 | addr_out_string |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +    8 | addr_out_strlen |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   12 | flag            |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   16 | integer_x_len   |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   20 | integer_x_quo   |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   24 | integer_x_rem   |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   28 | decimal_x[0]    |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   32 | decimal_x[1]    |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   36 | ascii_x[0]      |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   40 | ascii_x[1]      |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   44 | ascii_x[2]      |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   48 | ascii_x_len     |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   52 | ascii_char      |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   56 | byte_pos        |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   60 | ctr             |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   64 | temp_ptr        |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | +   68 | is_negative     |                                  |   |
+;|   +--------+-----------------+----------------------------------+   |
+;|   | Total stack used for local variables = 72 bytes             |   |
+;|   +-------------------------------------------------------------+   |
+;|                                                                     |
+;|        Begin                                                        |
+;|                                                                     |
+;|   001:     integer_x_len = calculate_integer_length( integer_x,     |
+;|                                                      flag );        |
+;|                                                                     |
+;|   002:     if flag != 1, then                                       |
+;|                goto .flag_notequal_1;                               |
+;|                                                                     |
+;|            .flag_equal_1:                                           |
+;|   003:         if (integer_x & 0x80000000) != 0x80000000, then      |
+;|                    goto .sign_false;                                |
+;|                                                                     |
+;|                .sign_true:                                          |
+;|   004:             integer_x = (!integer_x) + 1;                    |
+;|   005:             is_negative = 1;                                 |
+;|                                                                     |
+;|                .sign_false:                                         |
+;|                                                                     |
+;|            .flag_notequal_1:                                        |
+;|                                                                     |
+;|   006:     if integer_x_len <= 8, then                              |
+;|                goto .integer_x_len_lessequal_8;                     |
+;|                                                                     |
+;|            .integer_x_len_morethan_8:                               |
+;|   007:         integer_x_quo = integer_x / 100000000;               |
+;|   008:         integer_x_rem = remainder from the division;         |
+;|   009:         decimal_x[0] = formula_hex2dec( integer_x_rem );     |
+;|   010:         decimal_x[1] = formula_hex2dec( integer_x_quo );     |
+;|   011:         write_dec2string( @decimal_x[0],                     |
+;|                                  2,                                 |
+;|                                  @ascii_x[0],                       |
+;|                                  @ascii_x_len );                    |
+;|   012:         goto .skip_integer_x_len_equalmore_8;                |
+;|                                                                     |
+;|            .integer_x_len_lessequal_8:                              |
+;|   013:         decimal_x[0] = formula_hex2dec( integer_x );         |
+;|   014:         write_dec2string( @decimal_x_b0,                     |
+;|                                  1,                                 |
+;|                                  @ascii_x_b0,                       |
+;|                                  @ascii_x_len );                    |
+;|                                                                     |
+;|            .skip_integer_x_len_equalmore_8:                         |
+;|                                                                     |
+;|       If is_negative = 1 Then                                       |
+;|           addr_ascii_str^ := 0x2d;                                  |
+;|           ++ byte_pos;                                              |
+;|           ++ addr_ascii_len^;                                       |
+;|                                                                     |
+;|       { Fill ascii string with ascii_x }                            |
+;|       #### REPLACE WITH APPEND_STRING() ####                        |
+;|       ctr := ascii_x_len;                                           |
+;|       temp_ptr := @ascii_x_b0;                                      |
+;|       While ctr <> 0 Do                                             |
+;|       Begin                                                         |
+;|           If byte_pos = 4 Then                                      |
+;|               addr_ascii_str := addr_ascii_str + 4;                 |
+;|               byte_pos := 0;                                        |
+;|           If temp_ptr^ := 0 Then                                    |
+;|               temp_ptr := temp_ptr + 4;                             |
+;|           ascii_char := (temp_ptr^ and 0xff) << (byte_pos*8);       |
+;|           addr_ascii_str^ := addr_ascii_str^ or ascii_char;         |
+;|           ++ byte_pos;                                              |
+;|           ++ (addr_ascii_len^);                                     |
+;|           temp_ptr^ := temp_ptr^ >> 8;                              |
+;|           -- ctr;                                                   |
+;|       End.                                                          |
+;|                                                                     |
+;|   End.                                                              |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;=======================================================================
+

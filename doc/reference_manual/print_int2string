@@ -10,8 +10,8 @@
 ;| FUNCTION:                                                           |
 ;|                                                                     |
 ;| print_int2string( integer_x:32bit,                                  |
-;|                   addr_ascii_str^:32bit,                            |
-;|                   addr_ascii_len^:32bit,                            |
+;|                   addr_out_string^:32bit,                           |
+;|                   addr_out_strlen^:32bit,                           |
 ;|                   flag:32bit )                                      |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
@@ -19,9 +19,9 @@
 ;|                                                                     |
 ;| integer_x                                                           |
 ;|     The integer number, can be signed or unsigned int.              |
-;| addr_ascii_str                                                      |
+;| addr_out_string                                                     |
 ;|     Address to the destination string.                              |
-;| addr_ascii_len                                                      |
+;| addr_out_strlen                                                     |
 ;|     Address to the destination string length.                       |
 ;| flag                                                                |
 ;|     Specify whether the integer_x is signed or unsigned int.        |
@@ -29,9 +29,9 @@
 ;+---------------------------------------------------------------------+
 ;| OUTPUT PARAMETERS:                                                  |
 ;|                                                                     |
-;| addr_ascii_str                                                      |
+;| addr_out_string                                                     |
 ;|     String filled with ASCII integer numbers.                       |
-;| addr_ascii_len                                                      |
+;| addr_out_strlen                                                     |
 ;|     The string length.                                              |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
