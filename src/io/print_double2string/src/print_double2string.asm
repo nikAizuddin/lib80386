@@ -21,7 +21,7 @@
 ;|                   print_int2string.asm                              |
 ;|                   pow_int.asm                                       |
 ;+---------------------------------------------------------------------+
-;|          VERSION: 0.1.1                                             |
+;|          VERSION: 0.1.11                                            |
 ;|           STATUS: Alpha                                             |
 ;|             BUGS: --- <See doc/bugs/index file>                     |
 ;+---------------------------------------------------------------------+
@@ -34,9 +34,10 @@
 extern append_string
 extern print_int2string
 extern pow_int
+global print_double2string
 
 section .text
-global print_double2string
+
 print_double2string:
 
 ;parameter 1 = double_x:64bit
@@ -97,7 +98,7 @@ print_double2string:
     ;       Initializes the FPU to its default state. Flags all
     ;       FPU registers as empty, clears the top stack pointer.
     ;-------------------------------------------------------------------
-    finit                           ;initialize fpu
+    finit
 
     ;    +-----------------------------------------+
     ;----| 002: set FPU rounding mode to truncate; |--------------------
@@ -154,7 +155,7 @@ print_double2string:
     ;       Copy double_x into FPU, so that later we can convert
     ;       to integer value, without rounding (truncate).
     ;-------------------------------------------------------------------
-    fld    qword [esp]              ;push double_x into fpu
+    fld    qword [esp]
 
     ;    +--------------------------------------------------------+
     ;----| 004: convert double_x to int and save to integer_part; |-----
@@ -163,7 +164,7 @@ print_double2string:
     ;       Lets say the double_x = 3.8992, when convert to int
     ;       it will becomes 3 and store into integer_part variable.
     ;-------------------------------------------------------------------
-    fist   dword [esp + 20]         ;convert to int, save 2 integer_part
+    fist   dword [esp + 20]
 
 
 ;+----------------------------------------+
@@ -181,7 +182,7 @@ print_double2string:
     ;----| 005: reinitialize FPU stacks; |------------------------------
     ;    +-------------------------------+
     ;-------------------------------------------------------------------
-    finit                           ;reinitialize fpu
+    finit
 
     ;    +------------------------------+
     ;----| 006: push double_x into FPU; |-------------------------------
@@ -206,7 +207,7 @@ print_double2string:
     ;           st6 = <empty>
     ;           st7 = <empty>
     ;-------------------------------------------------------------------
-    fld    qword [esp]              ;push double_x into fpu
+    fld    qword [esp]
 
     ;    +----------------------------------+
     ;----| 007: push integer_part into FPU; |---------------------------
@@ -231,7 +232,7 @@ print_double2string:
     ;           st6 = <empty>
     ;           st7 = <empty>
     ;-------------------------------------------------------------------
-    fild   dword [esp + 20]         ;push integer_part into fpu
+    fild   dword [esp + 20]
 
     ;    +-----------------------+
     ;----| 008: st0 = st1 - st0; |--------------------------------------
@@ -326,9 +327,9 @@ print_double2string:
     ;-------------------------------------------------------------------
     fmul                            ;st0 = st1 * st0;
 
-    ;    +--------------------------------+
-    ;----| 011: save st0 to decimal_part; |-----------------------------
-    ;    +--------------------------------+
+    ;    +----------------------------------------+
+    ;----| 011: save and pop st0 to decimal_part; |---------------------
+    ;    +----------------------------------------+
     ;       Now we have done obtaining the decimal part of the
     ;       double_x. Store the result into decimal_part variable,
     ;       and pop the FPU register.
@@ -343,7 +344,7 @@ print_double2string:
     ;
     ;       Fortunately, these problems already solved :)
     ;-------------------------------------------------------------------
-    fistp  qword [esp + 24]         ;save and pop st0 to decimal_part;
+    fistp  qword [esp + 24]
 
 
 ;+------------------------------------------+
@@ -352,17 +353,17 @@ print_double2string:
 ;       The solution is, we have to round the integer_part by 1.
 ;=======================================================================
 
-    ;    +----------------------------------------------------+
-    ;----| 012: if decimal_part[0] & 0x80000000 != 0x80000000 |---------
-    ;    +----------------------------------------------------+
-    ;       Then goto .decimal_part_is_pos.
+    ;    +----------------------------------------------------------+
+    ;----| 012: if decimal_part[0] & 0x80000000 != 0x80000000, then |---
+    ;    +----------------------------------------------------------+
+    ;       goto .decimal_part_is_pos.
     ;
     ;       This check positive/negative sign of the decimal_part.
     ;-------------------------------------------------------------------
     mov    eax, [esp + 24]          ;eax = decimal_part[0]
-    and    eax, 0x80000000          ;eax = eax & 0x80000000
-    cmp    eax, 0x80000000          ;compare eax with 0x80000000
-    jne    .decimal_part_is_pos     ;if !=, goto 2nd condition
+    and    eax, 0x80000000
+    cmp    eax, 0x80000000
+    jne    .decimal_part_is_pos
 
 .decimal_part_is_neg:
 
@@ -373,9 +374,10 @@ print_double2string:
     ;       have to reverse two's complement value.
     ;-------------------------------------------------------------------
     mov    eax, [esp + 24]          ;eax = decimal_part[0]
-    not    eax                      ;eax = !eax
-    add    eax, 1                   ;eax = eax + 1
+    not    eax
+    add    eax, 1
     mov    [esp + 24], eax          ;decimal_part[0] = eax
+
     ;    +-----------------+
     ;----| 014: temp = -1; |--------------------------------------------
     ;    +-----------------+
@@ -384,7 +386,7 @@ print_double2string:
     ;       Because later, lets say the decimal_part is -0.999,
     ;       we have to -1 so that the decimal_part becomes -1.000.
     ;-------------------------------------------------------------------
-    mov    eax, -1                  ;eax = -1
+    mov    eax, -1
     mov    [esp + 48], eax          ;temp = eax
     jmp    .end_decimal_part_check_sign
 
@@ -427,10 +429,10 @@ print_double2string:
     call   print_int2string
     add    esp, 16                  ;restore 16 bytes
 
-    ;    +-------------------------------------------+
-    ;----| 017: if decimal_part[0] != decimal_places |------------------
-    ;    +-------------------------------------------+
-    ;       Then goto .dont_round_integer_part.
+    ;    +-------------------------------------------------+
+    ;----| 017: if decimal_part[0] != decimal_places, then |------------
+    ;    +-------------------------------------------------+
+    ;       goto .dont_round_integer_part.
     ;
     ;       This checks whether we need to add integer_part
     ;       by 1 or not. If we must add integer_part by 1,
@@ -465,7 +467,7 @@ print_double2string:
     ;-------------------------------------------------------------------
     mov    eax, [esp + 24]          ;eax = decimal_part[0]
     mov    ebx, [esp +  8]          ;ebx = decimal_places
-    cmp    eax, ebx                 ;compare eax with ebx
+    cmp    eax, ebx
     jne    .dont_round_integer_part ;if !=, .dont_round_integer_part
 
 .round_integer_part:
@@ -481,7 +483,7 @@ print_double2string:
     ;-------------------------------------------------------------------
     mov    eax, [esp + 20]          ;eax = integer_part
     mov    ebx, [esp + 48]          ;ebx = temp
-    add    eax, ebx                 ;eax = eax + ebx
+    add    eax, ebx
     mov    [esp + 20], eax          ;integer_part = eax
 
     ;    +----------------------------------------+
@@ -489,7 +491,7 @@ print_double2string:
     ;    +----------------------------------------+
     ;-------------------------------------------------------------------
     mov    eax, [esp + 32]          ;eax = decimal_part_str[0]
-    and    eax, 0xfffffff0          ;eax = eax and 0xfffffff0
+    and    eax, 0xfffffff0
     mov    [esp + 32], eax          ;decimal_part_str[0] = eax
 
     ;    +------------------------------+
@@ -497,7 +499,7 @@ print_double2string:
     ;    +------------------------------+
     ;-------------------------------------------------------------------
     mov    ebx, [esp + 40]          ;ebx = decimal_part_strlen
-    sub    ebx, 1                   ;ebx = ebx - 1
+    sub    ebx, 1
     mov    [esp + 40], ebx          ;decimal_part_strlen = ebx
 
 .dont_round_integer_part:
@@ -608,15 +610,17 @@ print_double2string:
     add    esp, 8                   ;restore 8 bytes
     mov    [esp + 56], eax          ;cur_dec_places = eax (ret value)
 
-    ;    +-------------------------------------------------+
-    ;----| 024: if cur_dec_places >= decimal_places, skip; |------------
-    ;    +-------------------------------------------------+
+    ;    +------------------------------------------------+
+    ;----| 024: if cur_dec_places >= decimal_places, then |-------------
+    ;    +------------------------------------------------+
+    ;       goto .dont_insert_heading_zeroes
+    ;
     ;       But if we found that current decimal places of
     ;       decimal part string is less, execute this condition.
     ;-------------------------------------------------------------------
     mov    eax, [esp + 56]          ;eax = cur_dec_places
     mov    ebx, [esp +  8]          ;ebx = decimal_places
-    cmp    eax, ebx                 ;compare eax with ebx
+    cmp    eax, ebx
     jge    .dont_insert_heading_zeroes
 
 .insert_heading_zeroes:
@@ -630,8 +634,8 @@ print_double2string:
     ;       that are required to append to the out_string.
     ;-------------------------------------------------------------------
     mov    eax, [esp + 56]          ;eax = cur_dec_places
-    mov    ebx, 10                  ;ebx = 10
-    xor    edx, edx                 ;edx = 0
+    mov    ebx, 10
+    xor    edx, edx
     mul    ebx                      ;eax *= ebx
     mov    [esp + 56], eax          ;cur_dec_places = eax
 
@@ -640,7 +644,7 @@ print_double2string:
     ;    +------------------------+
     ;-------------------------------------------------------------------
     mov    eax, [esp + 68]          ;eax = zeroes_strlen
-    add    eax, 1                   ;eax += 1
+    add    eax, 1
     mov    [esp + 68], eax          ;zeroes_strlen = eax
 
     ;    +----------------------------------------------------+
@@ -649,7 +653,7 @@ print_double2string:
     ;-------------------------------------------------------------------
     mov    eax, [esp + 56]          ;eax = cur_dec_places
     mov    ebx, [esp +  8]          ;ebx = decimal_places
-    cmp    eax, ebx                 ;compare eax with ebx
+    cmp    eax, ebx
     jne    .loop_1
 
 .endloop:
@@ -712,6 +716,7 @@ print_double2string:
 ;///////////////////////////////////////////////////////////////////////
 ;//                          ALGORITHM END                            //
 ;///////////////////////////////////////////////////////////////////////
+
 
 .return:
 

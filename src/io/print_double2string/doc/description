@@ -7,7 +7,7 @@
 ;| DESCRIPTION: Print a double value to string.                        |
 ;+---------------------------------------------------------------------+
 ;| REQUIRES: append_string.asm,                                        |
-;|           print_int2string.asm                                      |
+;|           print_int2string.asm,                                     |
 ;|           pow_int.asm                                               |
 ;+---------------------------------------------------------------------+
 ;| BUGS: ---                                                           |
@@ -41,47 +41,61 @@
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +    0 | double_x[0]             | The double number that   |   |
 ;|   | +    4 | double_x[1]             | we want to print.        |   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +    8 | decimal_places          | Number of decimal places |   |
 ;|   |        |                         | to print.                |   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +   12 | addr_out_string^        | Address to the out       |   |
 ;|   |        |                         | string.                  |   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +   16 | addr_out_strlen^        | Address to the out       |   |
 ;|   |        |                         | strlen.                  |   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +   20 | integer_part            | Stores integer part      |   |
 ;|   |        |                         | number for double_x      |   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +   24 | decimal_part[0]         | Stores decimal part      |   |
 ;|   | +   28 | decimal_part[1]         | number for double_x.     |   |
 ;|   |        |                         | decimal_part[1] is not   |   |
 ;|   |        |                         | used. Reserved for future|   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +   32 | decimal_part_str[0]     | Stores decimal part      |   |
 ;|   | +   36 | decimal_part_str[1]     | number that has been     |   |
 ;|   |        |                         | converted to string.     |   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +   40 | decimal_part_strlen     | Length of decimal part   |   |
 ;|   |        |                         | string.                  |   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +   44 | fpu_controlword         | Used for modify FPU      |   |
 ;|   |        |                         | rounding mode.           |   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +   48 | temp                    | Used for adding integer  |   |
 ;|   |        |                         | part. The value can be   |   |
 ;|   |        |                         | +1 or -1.                |   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +   52 | dot_character           | Contains ASCII character |   |
 ;|   |        |                         | 0x2E which is a dot.     |   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +   56 | cur_dec_places          | Current decimal places.  |   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +   60 | zeroes_str[0]           | Stores 0x3030303030,     |   |
 ;|   | +   64 | zeroes_str[1]           | 0x30303030.              |   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | +   68 | zeroes_strlen           | Length of zeroes string. |   |
+;|   |        |                         |                          |   |
 ;|   +--------+-------------------------+--------------------------+   |
 ;|   | Total stack used for local variables = 72 bytes             |   |
 ;|   +-------------------------------------------------------------+   |
@@ -98,13 +112,18 @@
 ;|   008:     st0 = st1 - st0;                                         |
 ;|   009:     push decimal_places into FPU;                            |
 ;|   010:     st0 = st1 * st0;                                         |
-;|   011:     save st0 to decimal_part;                                |
+;|   011:     save and pop st0 to decimal_part;                        |
 ;|                                                                     |
-;|   012:     if decimal_part[0] & 0x80000000 != 0x80000000, skip      |
+;|   012:     if decimal_part[0] & 0x80000000 != 0x80000000, then      |
+;|                goto .decimal_part_is_pos;                           |
+;|                                                                     |
 ;|            .decimal_part_is_neg:                                    |
+;|                                                                     |
 ;|   013:         decimal_part[0] = (!decimal_part) + 1;               |
 ;|   014:         temp = -1;                                           |
+;|                                                                     |
 ;|            .decimal_part_is_pos:                                    |
+;|                                                                     |
 ;|   015:         temp = 1;                                            |
 ;|                                                                     |
 ;|   016:     print_int2string( decimal_part[0],                       |
@@ -112,11 +131,15 @@
 ;|                              @decimal_part_strlen,                  |
 ;|                              0);                                    |
 ;|                                                                     |
-;|   017:     if decimal_part[0] != decimal_places, skip               |
+;|   017:     if decimal_part[0] != decimal_places, then               |
+;|                goto .dont_round_integer_part                        |
+;|                                                                     |
 ;|            .round_integer_part:                                     |
+;|                                                                     |
 ;|   018:         integer_part = integer_part + temp;                  |
 ;|   019:         decimal_part_str[0] &= 0xfffffff0                    |
 ;|   020:         -- decimal_part_strlen;                              |
+;|                                                                     |
 ;|            .dont_round_integer_part:                                |
 ;|                                                                     |
 ;|   021:     print_int2string( integer_part,                          |
@@ -130,17 +153,27 @@
 ;|                           1 );                                      |
 ;|                                                                     |
 ;|   023:     cur_dec_places = pow_int( 10, decimal_part_strlen );     |
-;|   024:     if cur_dec_places >= decimal_places, skip;               |
+;|                                                                     |
+;|   024:     if cur_dec_places >= decimal_places, skip                |
+;|                goto .dont_insert_heading_zeroes                     |
+;|                                                                     |
 ;|            .insert_heading_zeroes:                                  |
+;|                                                                     |
 ;|                .loop_1:                                             |
+;|                                                                     |
 ;|   025:             cur_dec_places *= 10;                            |
 ;|   026:             ++ zeroes_strlen;                                |
-;|   027:             if cur_dec_places != decimal_places, .loop_1;    |
+;|                                                                     |
+;|   027:             if cur_dec_places != decimal_places, then        |
+;|                        goto .loop_1;                                |
+;|                                                                     |
 ;|                .endloop:                                            |
+;|                                                                     |
 ;|   028:         append_string( addr_out_string,                      |
 ;|                               addr_out_strlen,                      |
 ;|                               @zeroes_str[0],                       |
 ;|                               zeroes_strlen );                      |
+;|                                                                     |
 ;|            .dont_insert_heading_zeroes:                             |
 ;|                                                                     |
 ;|   029:     append_string( addr_out_string,                          |
