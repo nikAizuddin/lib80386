@@ -4,9 +4,6 @@
 ;+---------------------------------------------------------------------+
 ;|                       IMPORTANT AND URGENT                          |
 ;|                                                                     |
-;| * Update append_string's standard convention.                       |
-;|     Use the latest standard convention from print_int2string.       |
-;|                                                                     |
 ;| * Update write_dec2string's standard convention.                    |
 ;|     Use the latest standard convention from print_int2string.       |
 ;|                                                                     |
