@@ -14,10 +14,7 @@
 ;+---------------------------------------------------------------------+
 ;| BUGS: ---                                                           |
 ;+---------------------------------------------------------------------+
-;| FUTURE IMPROVEMENTS: * Rename src_strblock to src_buffer.   (DONE)  |
-;|                      * Rename dst_strblock to dst_buffer.   (DONE)  |
-;|                      * Rename bit_pos to dst_buffer_bitpos. (DONE)  |
-;|                      * Use ESI, EDI, MOVSD instruction for str.     |
+;| FUTURE IMPROVEMENTS: * Use ESI, EDI, MOVSD instruction for str.     |
 ;+---------------------------------------------------------------------+
 ;| PROCESS DESCRIPTION:                                                |
 ;|                                                                     |
@@ -46,44 +43,58 @@
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +    0 | addr_dst_str      | Stores address to destination  |   |
 ;|   |        |                   | string.                        |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +    4 | addr_dst_strlen   | Stores address to destination  |   |
 ;|   |        |                   | string length.                 |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +    8 | addr_src_str      | Stores address to source       |   |
 ;|   |        |                   | string.                        |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +   12 | src_strlen        | Stores length of source        |   |
 ;|   |        |                   | string.                        |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +   16 | dst_strlen        | Stores length of destination   |   |
 ;|   |        |                   | string.                        |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +   20 | current_dst_block | Current memory block number    |   |
 ;|   |        |                   | of destination string.         |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +   24 | block_byte_offset | Byte offset of memory block.   |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +   28 | dst_ptr           | Point to the address of        |   |
 ;|   |        |                   | current destination string     |   |
 ;|   |        |                   | memory block.                  |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +   32 | src_ptr           | Point to the address of        |   |
 ;|   |        |                   | current source string memory   |   |
 ;|   |        |                   | block.                         |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +   36 | src_buffer        | Stores buffer for the source   |   |
 ;|   |        |                   | source string.                 |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +   40 | dst_buffer        | Stores buffer for the          |   |
 ;|   |        |                   | destination string.            |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +   44 | dst_buffer_bitpos | Bit position of destination    |   |
 ;|   |        |                   | string.                        |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +   48 | i                 | General purpose counter.       |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | +   52 | ascii_char        | Stores a byte of character.    |   |
+;|   |        |                   |                                |   |
 ;|   +--------+-------------------+--------------------------------+   |
 ;|   | Total stack used for local variables = 56 bytes             |   |
 ;|   +-------------------------------------------------------------+   |
@@ -101,19 +112,29 @@
 ;|   008:     dst_buffer_bitpos = (dst_strlen - block_byte_offset) * 8;|
 ;|                                                                     |
 ;|   009:     i = src_strlen;                                          |
+;|                                                                     |
 ;|            loop_1:                                                  |
-;|   010:         if dst_buffer_bitpos != 32, goto .endcond_1;         |
+;|                                                                     |
+;|   010:         if dst_buffer_bitpos != 32, then                     |
+;|                    goto .endcond_1;                                 |
+;|                                                                     |
 ;|                cond_1:                                              |
+;|                                                                     |
 ;|   011:             dst_ptr^ = dst_buffer;                           |
 ;|   012:             dst_ptr += 4;                                    |
 ;|   013:             dst_buffer = 0;                                  |
 ;|   014:             dst_buffer_bitpos = 0;                           |
+;|                                                                     |
 ;|                endcond_1:                                           |
 ;|                                                                     |
-;|   015:         if src_buffer != 0, goto .endcond_2;                 |
+;|   015:         if src_buffer != 0, then                             |
+;|                    goto .endcond_2;                                 |
+;|                                                                     |
 ;|                cond_2:                                              |
+;|                                                                     |
 ;|   016:             src_ptr += 4;                                    |
 ;|   017:             src_buffer = src_ptr^;                           |
+;|                                                                     |
 ;|                endcond_2:                                           |
 ;|                                                                     |
 ;|   018:         ascii_char = (src_buffer&0xff) << dst_buffer_bitpos; |
@@ -122,7 +143,10 @@
 ;|   021:         ++ dst_strlen;                                       |
 ;|   022:         src_buffer >>= 8;                                    |
 ;|   023:         -- i;                                                |
-;|   024:         if i != 0, goto .loop_1;                             |
+;|                                                                     |
+;|   024:         if i != 0, then                                      |
+;|                    goto .loop_1;                                    |
+;|                                                                     |
 ;|            endloop_1:                                               |
 ;|                                                                     |
 ;|   025:     dst_ptr^ = dst_buffer;                                   |

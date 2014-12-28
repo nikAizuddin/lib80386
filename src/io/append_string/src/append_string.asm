@@ -19,7 +19,7 @@
 ;|           FORMAT: elf32                                             |
 ;|   EXTERNAL FILES: ---                                               |
 ;+---------------------------------------------------------------------+
-;|          VERSION: 0.1.1                                             |
+;|          VERSION: 0.1.12                                            |
 ;|           STATUS: Alpha                                             |
 ;|             BUGS: <See doc/bugs/index file>                         |
 ;+---------------------------------------------------------------------+
@@ -30,7 +30,9 @@
 ;=======================================================================
 
 section .text
+
 global append_string
+
 append_string:
 
 ;parameter 1 = addr_dst_str^:32bit
@@ -67,9 +69,11 @@ append_string:
     mov    dword [esp + 48], 0      ;i
     mov    dword [esp + 52], 0      ;ascii_char
 
+
 ;///////////////////////////////////////////////////////////////////////
 ;//                        ALGORITHM BEGIN                            //
 ;///////////////////////////////////////////////////////////////////////
+
 
 ;+---------------------------+
 ;| Initialize source pointer |==========================================
@@ -117,7 +121,7 @@ append_string:
     ;       then the value of src_buffer will be "! I ".
     ;-------------------------------------------------------------------
     mov    ebx, [esp + 32]          ;ebx = src_ptr
-    mov    eax, [ebx]               ;eax = ebx^
+    mov    eax, [ebx]               ;eax = src_ptr^
     mov    [esp + 36], eax          ;src_buffer = eax
 
 
@@ -131,7 +135,7 @@ append_string:
     ;    +-------------------------------------+
     ;-------------------------------------------------------------------
     mov    ebx, [esp +  4]          ;ebx = addr_dst_strlen
-    mov    eax, [ebx]               ;eax = ebx^
+    mov    eax, [ebx]               ;eax = addr_dst_strlen^
     mov    [esp + 16], eax          ;dst_strlen = eax
 
 
@@ -169,7 +173,7 @@ append_string:
     ;-------------------------------------------------------------------
     mov    eax, [esp + 16]          ;eax = dst_strlen
     mov    ebx, 4                   ;ebx = 4, to divide the eax
-    xor    edx, edx                 ;edx = 0
+    xor    edx, edx                 ;prevent errors when division.
     div    ebx                      ;eax = eax / ebx
     mov    [esp + 20], eax          ;current_dst_block = eax
 
@@ -179,8 +183,8 @@ append_string:
     ;       Find the byte offset of the memory block
     ;-------------------------------------------------------------------
     mov    eax, [esp + 20]          ;eax = current_dst_block
-    mov    ebx, 4                   ;ebx = 4
-    xor    edx, edx                 ;edx = 0
+    mov    ebx, 4
+    xor    edx, edx
     mul    ebx                      ;eax *= ebx
     mov    [esp + 24], eax          ;block_byte_offset = eax
 
@@ -209,7 +213,7 @@ append_string:
     ;-------------------------------------------------------------------
     mov    eax, [esp     ]          ;eax = addr_dst_str
     mov    ebx, [esp + 24]          ;ebx = block_byte_offset
-    add    eax, ebx                 ;eax += ebx
+    add    eax, ebx
     mov    [esp + 28], eax          ;dst_ptr = eax
 
 
@@ -223,7 +227,7 @@ append_string:
     ;    +-----------------------------+
     ;-------------------------------------------------------------------
     mov    ebx, [esp + 28]          ;ebx = dst_ptr
-    mov    eax, [ebx]               ;eax = ebx^
+    mov    eax, [ebx]               ;eax = dst_ptr^
     mov    [esp + 40], eax          ;dst_buffer = eax
 
 
@@ -270,9 +274,9 @@ append_string:
     ;-------------------------------------------------------------------
     mov    eax, [esp + 16]          ;eax = dst_strlen
     mov    ebx, [esp + 24]          ;ebx = block_byte_offset
-    sub    eax, ebx                 ;eax -= ebx
-    mov    ebx, 8                   ;ebx = 8
-    xor    edx, edx                 ;edx = 0
+    sub    eax, ebx
+    mov    ebx, 8
+    xor    edx, edx
     mul    ebx                      ;eax *= ebx
     mov    [esp + 44], eax          ;dst_buffer_bitpos = eax
 
@@ -316,13 +320,14 @@ append_string:
 ;      reset the buffer and bit position to zero.
 ;=======================================================================
 
-    ;    +---------------------------------------------------+
-    ;----| 010: if dst_buffer_bitpos != 32, goto .endcond_1; |----------
-    ;    +---------------------------------------------------+
+    ;    +---------------------------------------+
+    ;----| 010: if dst_buffer_bitpos != 32, then |----------------------
+    ;    +---------------------------------------+
+    ;       goto .endcond_1;
     ;-------------------------------------------------------------------
     mov    eax, [esp + 44]          ;eax = dst_buffer_bitpos
-    cmp    eax, 32                  ;compare eax with 32
-    jne    .endcond_1               ;if !=, goto .endcond_1
+    cmp    eax, 32
+    jne    .endcond_1
 
 .cond_1:
 
@@ -333,7 +338,7 @@ append_string:
     ;-------------------------------------------------------------------
     mov    eax, [esp + 40]          ;eax = dst_buffer
     mov    ebx, [esp + 28]          ;ebx = dst_ptr
-    mov    [ebx], eax               ;ebx^ = eax
+    mov    [ebx], eax               ;dst_ptr^ = eax
 
     ;    +--------------------+
     ;----| 012: dst_ptr += 4; |-----------------------------------------
@@ -371,13 +376,14 @@ append_string:
 ;      src_buffer with new data.
 ;=======================================================================
 
-    ;    +-------------------------------------------+
-    ;----| 015: if src_buffer != 0, goto .endcond_2; |------------------
-    ;    +-------------------------------------------+
+    ;    +-------------------------------+
+    ;----| 015: if src_buffer != 0, then |------------------------------
+    ;    +-------------------------------+
+    ;       goto .endcond_2;
     ;-------------------------------------------------------------------
     mov    eax, [esp + 36]          ;eax = src_buffer
-    cmp    eax, 0                   ;compare eax with 0
-    jne    .endcond_2               ;if !=, goto .endcond_2
+    cmp    eax, 0
+    jne    .endcond_2
 
 .cond_2:
 
@@ -396,7 +402,7 @@ append_string:
     ;       Fetch the data from the next memory location.
     ;-------------------------------------------------------------------
     mov    ebx, [esp + 32]          ;ebx = src_ptr
-    mov    eax, [ebx]               ;eax = ebx^
+    mov    eax, [ebx]               ;eax = src_ptr^
     mov    [esp + 36], eax          ;src_buffer = eax
 
 .endcond_2:
@@ -414,8 +420,8 @@ append_string:
     ;-------------------------------------------------------------------
     mov    ecx, [esp + 44]          ;ecx = dst_buffer_bitpos
     mov    eax, [esp + 36]          ;eax = src_buffer
-    and    eax, 0xff                ;eax &= 0xff
-    shl    eax, cl                  ;eax <<= cl
+    and    eax, 0xff
+    shl    eax, cl
     mov    [esp + 52], eax          ;ascii_char = eax
 
     ;    +--------------------------------+
@@ -426,7 +432,7 @@ append_string:
     ;-------------------------------------------------------------------
     mov    eax, [esp + 40]          ;eax = dst_buffer
     mov    ebx, [esp + 52]          ;ebx = ascii_char
-    or     eax, ebx                 ;eax |= ebx
+    or     eax, ebx
     mov    [esp + 40], eax          ;dst_buffer = eax
 
     ;    +------------------------------+
@@ -435,7 +441,7 @@ append_string:
     ;       Increment bit position of the destination string.
     ;-------------------------------------------------------------------
     mov    eax, [esp + 44]          ;eax = dst_buffer_bitpos
-    add    eax, 8                   ;eax += 8
+    add    eax, 8
     mov    [esp + 44], eax          ;dst_buffer_bitpos := eax
 
     ;    +---------------------+
@@ -444,7 +450,7 @@ append_string:
     ;       Increase the length of destination string length by 1 byte.
     ;-------------------------------------------------------------------
     mov    eax, [esp + 16]          ;eax = dst_strlen
-    add    eax, 1                   ;eax = eax + 1
+    add    eax, 1
     mov    [esp + 16], eax          ;dst_strlen = eax
 
     ;    +------------------------+
@@ -453,7 +459,7 @@ append_string:
     ;       Remove the source character that has been read.
     ;-------------------------------------------------------------------
     mov    eax, [esp + 36]          ;eax = src_buffer
-    shr    eax, 8                   ;eax >>= 8
+    shr    eax, 8
     mov    [esp + 36], eax          ;src_buffer = eax
 
     ;    +------------+
@@ -462,7 +468,7 @@ append_string:
     ;       Decrement length of source string by 1 byte.
     ;-------------------------------------------------------------------
     mov    eax, [esp + 48]          ;eax = i
-    sub    eax, 1                   ;eax -= 1
+    sub    eax, 1
     mov    [esp + 48], eax          ;i = eax
 
 
@@ -471,14 +477,14 @@ append_string:
 ;+--------------------------------------+
 ;=======================================================================
 
-    ;    +-------------------------------+
-    ;----| 024: if i != 0, goto .loop_1; |------------------------------
-    ;    +-------------------------------+
-    ; Jump to label .loop_1 if true.
+    ;    +----------------------+
+    ;----| 024: if i != 0, then |---------------------------------------
+    ;    +----------------------+
+    ;       goto .loop_1;           
     ;-------------------------------------------------------------------
-    mov    eax, [esp + 48]          ;eax := i
-    cmp    eax, 0                   ;compare eax with 0
-    jne    .loop_1                  ;if !=, goto .loop_1
+    mov    eax, [esp + 48]          ;eax = i
+    cmp    eax, 0
+    jne    .loop_1
 
 .endloop_1:
 
@@ -497,7 +503,7 @@ append_string:
     ;-------------------------------------------------------------------
     mov    ebx, [esp + 28]          ;ebx = dst_ptr
     mov    eax, [esp + 40]          ;eax = dst_buffer
-    mov    [ebx], eax               ;ebx^ = eax
+    mov    [ebx], eax               ;dst_ptr^ = eax
 
     ;    +-------------------------------------+
     ;----| 026: addr_dst_strlen^ = dst_strlen; |------------------------
@@ -506,11 +512,13 @@ append_string:
     ;-------------------------------------------------------------------
     mov    ebx, [esp +  4]          ;ebx = addr_dst_strlen
     mov    eax, [esp + 16]          ;eax = dst_strlen
-    mov    [ebx], eax               ;ebx^ = eax
+    mov    [ebx], eax               ;addr_dst_strlen^ = eax
+
 
 ;///////////////////////////////////////////////////////////////////////
 ;//                         ALGORITHM END                             //
 ;///////////////////////////////////////////////////////////////////////
+
 
 .return:
 

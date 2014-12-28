@@ -9,9 +9,7 @@
 ;|                                                                     |
 ;|     Rev #  |    Date     | Description                              |
 ;|   ---------+-------------+---------------------------------------   |
-;|     0.1.10 | 22-DEC-2014 | Improve performance + code readability.  |
-;|     0.1.11 | 25-DEC-2014 | Improve comments in the code.            |
-;|     0.1.12 | 28-DEC-2014 | Minor improvements on documentations.    |
+;|     0.1.1  | 27-DEC-2014 | Improve code readability.                |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;=======================================================================
