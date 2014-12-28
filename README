@@ -1,7 +1,7 @@
 The functions that are properly documented, are:
 
-    io/append_string
-    io/print_double2string
-    io/print_int2string
+    src/io/append_string
+    src/io/print_double2string
+    src/io/print_int2string
 
 Others are still in document process, not yet ready for release.
