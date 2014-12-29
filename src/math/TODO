@@ -1,2 +1,5 @@
+--> formula_hex2dec should be rename to converter_hex2dec
+    and moved /src/converter folder.
+
 --> create root_double()
   For example, if given problem case sqrt( 3.25, 12.13 ).
