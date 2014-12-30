@@ -399,135 +399,157 @@ write_dec2string:
     add    eax, 1
     mov    [esp + 28], eax          ;decimal_x[0]_len = eax + 1
 
-; While temp <> 0, goto .loop_4
-;-----------------------------------------------------------------------
-    mov    eax, [esp + 36] ;eax := temp
-    cmp    eax, 0          ;compare eax with 0
-    jne    .loop_4         ;if <>, goto .loop_4
+    ;    +-------------------------+
+    ;----| 031: if temp != 0, then |------------------------------------
+    ;    +-------------------------+
+    ;       goto .loop_4;
+    ;-------------------------------------------------------------------
+    mov    eax, [esp + 36]          ;eax = temp
+    cmp    eax, 0
+    jne    .loop_4
 
 .endloop_4:
 
-;+---------------------------------------------------------------------+
-;|           { Fill the ascii_x with decimal_x block 0 }               |
-;|           counter := decimal_x_b0_len;                              |
-;|           While counter <> 0 Do                                     |
-;|           Begin                                                     |
-;|               ascii_char :=                                         |
-;|                   ((decimal_x_b0 >> ((counter-1)*4)) and 0x0f) or   |
-;|                   0x30;                                             |
-;|               ascii_x_ptr^ :=                                       |
-;|                   ascii_x_ptr^ or (ascii_char << (byte_position*8));|
-;|               ++ ascii_x_len;                                       |
-;|               ++ byte_position;                                     |
-;|               If byte_position = 4 Then                             |
-;|                   ascii_x_ptr := ascii_x_ptr + 4;                   |
-;|                   byte_position := 0;                               |
-;|               -- counter;                                           |
-;|           End;                                                      |
-;+---------------------------------------------------------------------+
 
-; counter := decimal_x_b0_len
-;-----------------------------------------------------------------------
-    mov    eax, [esp + 28] ;eax := decimal_x_b0_len
-    mov    [esp + 40], eax ;counter := eax
+;+------------------------------------+
+;| Fill the ascii_x with decimal_x[0] |=================================
+;+------------------------------------+
+;=======================================================================
+
+    ;    +----------------------------+
+    ;----| 032: i = decimal_x[0]_len; |---------------------------------
+    ;    +----------------------------+
+    ;-------------------------------------------------------------------
+    mov    eax, [esp + 28]          ;eax = decimal_x[0]_len
+    mov    [esp + 40], eax          ;counter = eax
 
 .loop_5:
 
-; ascii_char := ((decimal_x_b0 >> ((counter-1)*4)) and 0x0f) or 0x30
-;-----------------------------------------------------------------------
-    mov    eax, [esp + 40] ;eax := counter
-    sub    eax, 1          ;eax := eax - 1
-    mov    ebx, 4          ;ebx := 4
-    xor    edx, edx        ;edx := 0
-    mul    ebx             ;eax := eax * ebx
-    mov    ecx, eax        ;ecx := eax
-    mov    eax, [esp + 20] ;eax := decimal_x_b0
-    shr    eax, cl         ;eax := eax >> cl
-    and    eax, 0x0f       ;eax := eax and 0x0f
-    or     eax, 0x30       ;eax := eax or 0x30
-    mov    [esp + 44], eax ;ascii_char := eax
+    ;    +-------------------+
+    ;----| 033: ascii_char = |------------------------------------------
+    ;    +-------------------+
+    ;       ( (decimal_x[0] >> ((i-1)*4)) & 0x0f ) | 0x30;
+    ;-------------------------------------------------------------------
+    mov    eax, [esp + 40]          ;eax = i
+    sub    eax, 1
+    mov    ebx, 4
+    xor    edx, edx
+    mul    ebx                      ;eax = (i-1) * 4
+    mov    ecx, eax
+    mov    eax, [esp + 20]          ;eax = decimal_x[0]
+    shr    eax, cl                  ;eax = decimal_x[0] >> ((i-1)*4)
+    and    eax, 0x0f
+    or     eax, 0x30
+    mov    [esp + 44], eax          ;ascii_char = eax
 
-; ascii_x_ptr^ := ascii_x_ptr^ or (ascii_char << (byte_position*8))
-;-----------------------------------------------------------------------
-    mov    eax, [esp + 48] ;eax := byte_position
-    mov    ebx, 8          ;ebx := 8
-    xor    edx, edx        ;edx := 0
-    mul    ebx             ;eax := eax * ebx
-    mov    ecx, eax        ;ecx := eax
-    mov    eax, [esp + 44] ;eax := ascii_char
-    shl    eax, cl         ;eax := eax << cl
-    mov    ecx, [esp +  8] ;ecx := ascii_x_ptr
-    mov    ebx, [ecx]      ;ebx := ecx^
-    or     eax, ebx        ;eax := eax or ebx
-    mov    [ecx], eax      ;ecx^ := eax
+    ;    +--------------------------+
+    ;----| 034: addr_out_string^ |= |-----------------------------------
+    ;    +--------------------------+
+    ;       ( ascii_char << (byte_pos*8) );
+    ;-------------------------------------------------------------------
+    mov    eax, [esp + 48]          ;eax = byte_pos
+    mov    ebx, 8
+    xor    edx, edx
+    mul    ebx                      ;eax = byte_pos * 8
+    mov    ecx, eax
+    mov    eax, [esp + 44]          ;eax = ascii_char
+    shl    eax, cl                  ;eax = ascii_char << (byte_pos*8)
+    mov    ecx, [esp +  8]          ;ecx = addr_out_string
+    mov    ebx, [ecx]               ;ebx = addr_out_string^
+    or     eax, ebx                 ;eax = result | addr_out_string
+    mov    [ecx], eax               ;addr_out_string^ = result
 
-; ++ ascii_x_len
-;-----------------------------------------------------------------------
-    mov    eax, [esp + 16] ;eax := ascii_x_len
-    add    eax, 1          ;eax := eax + 1
-    mov    [esp + 16], eax ;ascii_x_len := eax
+    ;    +---------------------+
+    ;----| 035: ++ out_strlen; |----------------------------------------
+    ;    +---------------------+
+    ;-------------------------------------------------------------------
+    mov    eax, [esp + 16]          ;eax = out_strlen
+    add    eax, 1
+    mov    [esp + 16], eax          ;out_strlen = out_strlen + 1
 
-; ++ byte_position
-;-----------------------------------------------------------------------
-    mov    eax, [esp + 48] ;eax := byte_position
-    add    eax, 1          ;eax := eax + 1
-    mov    [esp + 48], eax ;byte_position := eax
+    ;    +-------------------+
+    ;----| 036: ++ byte_pos; |------------------------------------------
+    ;    +-------------------+
+    ;-------------------------------------------------------------------
+    mov    eax, [esp + 48]          ;eax = byte_pos
+    add    eax, 1
+    mov    [esp + 48], eax          ;byte_pos = byte_pos + 1
 
-.check2_is_ascii_x_block_full:
-; If byte_position = 4 Then continue to .ascii_x_block_is_full
-;-----------------------------------------------------------------------
-    mov    eax, [esp + 48] ;eax := byte_position
-    cmp    eax, 4          ;compare eax with 4
-    ;if <>, goto .cond2_ascii_x_block_is_not_full
-    jne    .cond2_ascii_x_block_is_not_full
+    ;    +----------------------------+
+    ;----| 037: if byte_pos != 4 then |---------------------------------
+    ;    +----------------------------+
+    ;       goto .cond2_out_string_not_full;
+    ;-------------------------------------------------------------------
+    mov    eax, [esp + 48]          ;eax = byte_pos
+    cmp    eax, 4
+    jne    .cond2_out_string_not_full
 
-.cond2_ascii_x_block_is_full:
-; ascii_x_ptr := ascii_x_ptr + 4
-;-----------------------------------------------------------------------
-    mov    eax, [esp + 8] ;eax := ascii_x_ptr
-    add    eax, 4         ;eax := eax + 4
-    mov    [esp + 8], eax ;ascii_x_ptr := eax
+.cond2_out_string_full:
 
-; byte_position := 0
-;-----------------------------------------------------------------------
-    xor    eax, eax        ;eax := 0
-    mov    [esp + 48], eax ;byte_position := eax
+    ;    +----------------------------+
+    ;----| 038: addr_out_string += 4; |---------------------------------
+    ;    +----------------------------+
+    ;-------------------------------------------------------------------
+    mov    eax, [esp + 8]           ;eax = addr_out_string
+    add    eax, 4
+    mov    [esp + 8], eax           ;addr_out_string += 4
 
-.cond2_ascii_x_block_is_not_full:
+    ;    +--------------------+
+    ;----| 039: byte_pos = 0; |-----------------------------------------
+    ;    +--------------------+
+    ;-------------------------------------------------------------------
+    xor    eax, eax
+    mov    [esp + 48], eax          ;byte_pos = 0
 
-; -- counter
-;-----------------------------------------------------------------------
-    mov    eax, [esp + 40] ;eax := counter
-    sub    eax, 1          ;eax := eax - 1
-    mov    [esp + 40], eax ;counter := eax
+.cond2_out_string_not_full:
 
-; While counter <> 0, goto .loop_5
-;-----------------------------------------------------------------------
-    mov    eax, [esp + 40] ;eax := counter
-    cmp    eax, 0          ;compare eax with 0
-    jne    .loop_5 ;if <>, goto .loop_5
+    ;    +------------+
+    ;----| 040: -- i; |-------------------------------------------------
+    ;    +------------+
+    ;-------------------------------------------------------------------
+    mov    eax, [esp + 40]          ;eax = i
+    sub    eax, 1
+    mov    [esp + 40], eax          ;i = i + 1
+
+    ;    +----------------------+
+    ;----| 041: if i != 0, then |---------------------------------------
+    ;    +----------------------+
+    ;       goto .loop_5;
+    ;-------------------------------------------------------------------
+    mov    eax, [esp + 40]          ;eax = i
+    cmp    eax, 0
+    jne    .loop_5
 
 .endloop_5:
 
-.save_out_strlen:
-;+---------------------------------------------------------------------+
-;|       { Save the length of ascii_x }                                |
-;|       ascii_x_len_ptr^ := ascii_x_len;                              |
-;+---------------------------------------------------------------------+
 
-; ascii_x_len_ptr^ := ascii_x_len
-;-----------------------------------------------------------------------
-    mov    eax, [esp + 16] ;eax := ascii_x_len
-    mov    ebx, [esp + 12] ;ebx := ascii_x_len_ptr
-    mov    [ebx], eax      ;ebx^ := eax
+.save_out_strlen:
+
+;+-------------------------------+
+;| Save the length of out_string |======================================
+;+-------------------------------+
+;=======================================================================
+
+    ;    +-------------------------------------+
+    ;----| 042: addr_out_strlen^ = out_strlen; |------------------------
+    ;    +-------------------------------------+
+    ;-------------------------------------------------------------------
+    mov    eax, [esp + 16]          ;eax = out_strlen
+    mov    ebx, [esp + 12]          ;ebx = addr_out_strlen
+    mov    [ebx], eax               ;addr_out_strlen^ = out_strlen
+
+
+;///////////////////////////////////////////////////////////////////////
+;//                          ALGORITHM END                            //
+;///////////////////////////////////////////////////////////////////////
+
 
 .return:
 
 .clean_stackframe:
-    sub    ebp, 8     ;-8 offset to ebp
-    mov    esp, ebp   ;restore stack pointer to its initial value
-    mov    ebp, [esp] ;restore ebp to its initial value
-    add    esp, 4     ;restore 4 bytes
+    sub    ebp, 8                   ;-8 offset to ebp
+    mov    esp, ebp                 ;restore stack ptr to initial value
+    mov    ebp, [esp]               ;restore ebp to its initial value
+    add    esp, 4                   ;restore 4 bytes
 
     ret
-

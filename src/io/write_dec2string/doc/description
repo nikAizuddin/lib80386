@@ -165,27 +165,46 @@
 ;|                                                                     |
 ;|   029:             temp >>= 4;                                      |
 ;|   030:             ++ decimal_x[0]_len;                             |
-;|   ???:         End;                                                 |
 ;|                                                                     |
-;|                { Fill the ascii_x with decimal_x block 0 }          |
-;|   ???:         counter := decimal_x_b0_len;                         |
-;|   ???:         While counter <> 0 Do                                |
-;|   ???:         Begin                                                |
-;|   ???:             ascii_char :=                                    |
-;|                    ((decimal_x[0] >> ((i-1)*4)) & 0x0f) |           |
+;|   031:             if temp != 0, then                               |
+;|                        goto .loop_4;                                |
+;|                                                                     |
+;|                .endloop_4:                                          |
+;|                                                                     |
+;|   032:         i = decimal_x[0]_len;                                |
+;|                                                                     |
+;|                .loop_5:                                             |
+;|                                                                     |
+;|   033:             ascii_char =                                     |
+;|                    ( (decimal_x[0] >> ((i-1)*4)) & 0x0f ) |         |
 ;|                    0x30;                                            |
-;|   ???:             ascii_x_ptr^ :=                                  |
-;|                    ascii_x_ptr^ or (ascii_char << (byte_pos*8));    |
-;|   ???:             ++ ascii_x_len;                                  |
-;|   ???:             ++ byte_position;                                |
-;|   ???:             If byte_position = 4 Then                        |
-;|   ???:                 ascii_x_ptr := ascii_x_ptr + 4;              |
-;|   ???:                 byte_position := 0;                          |
-;|   ???:             -- counter;                                      |
-;|   ???:         End;                                                 |
 ;|                                                                     |
-;|       { Save the length of ascii_x }                                |
-;|       ascii_x_len_ptr^ := ascii_x_len;                              |
+;|   034:             addr_out_string^ |=                              |
+;|                    ( ascii_char << (byte_pos*8) );                  |
+;|                                                                     |
+;|   035:             ++ out_strlen;                                   |
+;|   036:             ++ byte_pos;                                     |
+;|                                                                     |
+;|   037:             if byte_pos != 4 then                            |
+;|                        goto .cond2_out_string_not_full;             |
+;|                                                                     |
+;|                    .cond2_out_string_full:                          |
+;|                                                                     |
+;|   038:                 addr_out_string += 4;                        |
+;|   039:                 byte_pos = 0;                                |
+;|                                                                     |
+;|                    .cond2_out_string_not_full:                      |
+;|                                                                     |
+;|   040:             -- i;                                            |
+;|                                                                     |
+;|   041:             if i != 0, then                                  |
+;|                        goto .loop_5                                 |
+;|                                                                     |
+;|                .endloop_5:                                          |
+;|                                                                     |
+;|            .save_out_strlen:                                        |
+;|                                                                     |
+;|   042:         addr_out_strlen^ = out_strlen;                       |
 ;|                                                                     |
 ;|   End.                                                              |
 ;|                                                                     |

@@ -4,12 +4,7 @@
 ;+---------------------------------------------------------------------+
 ;|                       IMPORTANT AND URGENT                          |
 ;|                                                                     |
-;| * Update write_dec2string's standard convention.                    |
-;|     Use the latest standard convention from print_int2string.       |
-;|                                                                     |
-;| * Improve append_string by using EDI, ESI, MOVSD.                   |
-;|     These operations is usually used for string operations. Use     |
-;|     these, there should be some reasons why others use these.       |
+;| ---                                                                 |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;|                     IMPORTANT, BUT NOT URGENT                       |
@@ -19,6 +14,13 @@
 ;|                                                                     |
 ;| * create read_doublefromstring()                                    |
 ;|     This function will read a double number from a readbuffer.      |
+;|                                                                     |
+;| * documentations in write_dec2string() is not clear.                |
+;|     Need to explain more detail and precise.                        |
+;|                                                                     |
+;| * Improve append_string by using EDI, ESI, MOVSD.                   |
+;|     These operations is usually used for string operations. Use     |
+;|     these, there should be some reasons why others use these.       |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;=======================================================================
