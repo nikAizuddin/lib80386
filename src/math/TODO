@@ -1,5 +1,29 @@
---> formula_hex2dec should be rename to converter_hex2dec
-    and moved /src/converter folder.
-
---> create root_double()
-  For example, if given problem case sqrt( 3.25, 12.13 ).
+;          1         2         3         4         5         6         7
+;01234567890123456789012345678901234567890123456789012345678901234567890
+;=======================================================================
+;+---------------------------------------------------------------------+
+;|                       IMPORTANT AND URGENT                          |
+;|                                                                     |
+;| * Update calculate_integer_length's standard convention.            |
+;|     Follow /src/io/print_int2string's standard.                     |
+;|                                                                     |
+;| * Update formula_hex2dec's standard convention.                     |
+;|     Follow /src/io/print_int2string's standard.                     |
+;|                                                                     |
+;| * Update pow_double's standard convention.                          |
+;|     Follow /src/io/print_int2string's standard.                     |
+;|                                                                     |
+;| * Update pow_int's standard convention.                             |
+;|     Follow /src/io/print_int2string's standard.                     |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;|                     IMPORTANT, BUT NOT URGENT                       |
+;|                                                                     |
+;| * formula_hex2dec should be rename to converter_hex2dec             |
+;|     and moved /src/converter folder.                                |
+;|                                                                     |
+;| * Create root_double()                                              |
+;|     For example, if given problem case sqrt( 3.25, 12.13 ).         |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;=======================================================================
