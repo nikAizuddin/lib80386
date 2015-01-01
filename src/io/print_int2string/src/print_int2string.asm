@@ -40,6 +40,11 @@ section .text
 
 print_int2string:
 
+;parameter 1 = integer_x:32bit
+;parameter 2 = addr_out_string^:32bit
+;parameter 3 = addr_out_strlen^:32bit
+;parameter 4 = flag:32bit
+
 .setup_stackframe:
     sub    esp, 4                   ;reserve 4 bytes to store ebp
     mov    [esp], ebp               ;store ebp

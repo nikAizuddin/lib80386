@@ -33,6 +33,11 @@ section .text
 
 write_dec2string:
 
+;parameter 1 = addr_decimal_x:32bit
+;parameter 2 = num_of_blocks:32bit
+;parameter 3 = addr_out_string:32bit
+;parameter 4 = addr_out_strlen:32bit
+
 .setup_stackframe:
     sub    esp, 4                   ;reserve 4 bytes to store ebp
     mov    [esp], ebp               ;store ebp to stack

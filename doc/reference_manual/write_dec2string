@@ -9,29 +9,29 @@
 ;+---------------------------------------------------------------------+
 ;| FUNCTION:                                                           |
 ;|                                                                     |
-;| write_dec2string( decimal_x_ptr^:32bit,                             |
+;| write_dec2string( addr_decimal_x:32bit,                             |
 ;|                   num_of_blocks:32bit,                              |
-;|                   ascii_x_ptr^:32bit,                               |
-;|                   ascii_x_len_ptr^:32bit )                          |
+;|                   addr_out_string:32bit,                            |
+;|                   addr_out_strlen:32bit )                           |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;| INPUT PARAMETERS:                                                   |
 ;|                                                                     |
-;| decimal_x_ptr                                                       |
+;| addr_decimal_x                                                                    |
 ;|     The address to decimal number block 0.                          |
 ;| num_of_blocks                                                       |
 ;|     Number of decimal number blocks.                                |
-;| ascii_x_ptr                                                         |
+;| addr_out_string                                                         |
 ;|     The address to ascii block 0.                                   |
-;| ascii_x_len_ptr                                                     |
+;| addr_out_strlen                                                     |
 ;|     The address to length of ascii.                                 |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;| OUTPUT PARAMETERS:                                                  |
 ;|                                                                     |
-;| ascii_x_ptr                                                         |
+;| addr_out_string                                                         |
 ;|     The string will be filled with ASCII integer numbers.           |
-;| ascii_x_len_ptr                                                     |
+;| addr_out_strlen                                                     |
 ;|     The string length.                                              |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
