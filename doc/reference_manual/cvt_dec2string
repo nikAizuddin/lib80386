@@ -4,15 +4,15 @@
 ;+---------------------------------------------------------------------+
 ;| NAME:                                                               |
 ;|                                                                     |
-;| write_dec2string -- Fill the string with the decimal number.        |
+;| cvt_dec2string -- Fill the string with the decimal number.          |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;| FUNCTION:                                                           |
 ;|                                                                     |
-;| write_dec2string( addr_decimal_x:32bit,                             |
-;|                   num_of_blocks:32bit,                              |
-;|                   addr_out_string:32bit,                            |
-;|                   addr_out_strlen:32bit )                           |
+;| cvt_dec2string( addr_decimal_x:32bit,                               |
+;|                 num_of_blocks:32bit,                                |
+;|                 addr_out_string:32bit,                              |
+;|                 addr_out_strlen:32bit )                             |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;| INPUT PARAMETERS:                                                   |

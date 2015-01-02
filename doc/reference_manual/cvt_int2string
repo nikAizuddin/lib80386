@@ -4,58 +4,52 @@
 ;+---------------------------------------------------------------------+
 ;| NAME:                                                               |
 ;|                                                                     |
-;| print_double2string -- Print double precision value to string.      |
+;| cvt_int2string -- Convert signed or unsigned int to string.         |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;| FUNCTION:                                                           |
 ;|                                                                     |
-;| procedure print_double2string( double_x:64bit,                      |
-;|                                decimal_places:32bit,                |
-;|                                addr_out_string^:32bit,              |
-;|                                addr_out_strlen^:32bit )             |
+;| cvt_int2string( integer_x:32bit,                                    |
+;|                 addr_out_string^:32bit,                             |
+;|                 addr_out_strlen^:32bit,                             |
+;|                 flag:32bit )                                        |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;| INPUT PARAMETERS:                                                   |
 ;|                                                                     |
-;| double_x                                                            |
-;|     The double precision value.                                     |
-;| decimal_places                                                      |
-;|     Specify the number of decimal places to print the double_x.     |
+;| integer_x                                                           |
+;|     The integer number, can be signed or unsigned int.              |
 ;| addr_out_string                                                     |
-;|     Stores address to the ascii string block 0.                     |
+;|     Address to the destination string.                              |
 ;| addr_out_strlen                                                     |
-;|     Stores address to the ascii string length.                      |
+;|     Address to the destination string length.                       |
+;| flag                                                                |
+;|     Specify whether the integer_x is signed or unsigned int.        |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;| OUTPUT PARAMETERS:                                                  |
 ;|                                                                     |
 ;| addr_out_string                                                     |
-;|     The string will be filled with the double value in ASCII.       |
+;|     String filled with ASCII integer numbers.                       |
 ;| addr_out_strlen                                                     |
-;|     The length of the string after filled.                          |
+;|     The string length.                                              |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;| RETURNS: ---                                                        |
 ;+---------------------------------------------------------------------+
 ;| PARAMETER DESCRIPTION:                                              |
 ;|                                                                     |
-;| The specifications of the decimal places value are as follows:      |
+;| The specifications of the flag value are as follows:                |
 ;|                                                                     |
-;| decimal_places = 10        --> prints 1 decimal places              |
-;| decimal_places = 100       --> prints 2 decimal places              |
-;| decimal_places = 1000      --> prints 3 decimal places              |
-;| decimal_places = 10000     --> prints 4 decimal places              |
-;| decimal_places = 100000    --> prints 5 decimal places              |
-;| decimal_places = 1000000   --> prints 6 decimal places              |
-;| decimal_places = 10000000  --> prints 7 decimal places              |
-;| decimal_places = 100000000 --> prints 8 decimal places              |
-;|                                                                     |
-;| The value for double_x must be:                                     |
-;|     -2147483647.0 <= double_x <= 2147483647.0                       |
+;| flag = 0b00000000000000000000000000000000                           |
+;|     The integer_x is Longword (unsigned int 32-bit)                 |
+;| flag = 0b00000000000000000000000000000001                           |
+;|     The integer_x is Longint (signed int 32-bit)                    |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;| REQUIRES: io/append_string.asm                                      |
-;|           io/print_int2string.asm                                   |
-;|           math/pow_int.asm                                          |
+;| REQUIRES: math/calculate_integer_length.asm                         |
+;|           string/append_string.asm                                  |
+;|           converter/cvt_hex2dec.asm                                 |
+;|           converter/cvt_dec2string.asm                              |
 ;+---------------------------------------------------------------------+
 ;=======================================================================

@@ -4,12 +4,12 @@
 ;+---------------------------------------------------------------------+
 ;| NAME:                                                               |
 ;|                                                                     |
-;| formula_hex2dec -- Convert hexadecimal number to decimal number.    |
+;| cvt_hex2dec -- Convert hexadecimal number to decimal number.        |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;| FUNCTION:                                                           |
 ;|                                                                     |
-;| formula_hex2dec( hexadecimal_num:32bit ) : 32bit                    |
+;| cvt_hex2dec( hexadecimal_num:32bit ) : 32bit                        |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;| INPUT PARAMETERS:                                                   |
