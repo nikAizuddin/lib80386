@@ -1,5 +1,4 @@
-ABOUT lib80386
-- - - - - - - -
+# ABOUT lib80386
 
 The functions that are properly documented, are:
 
@@ -9,8 +8,7 @@ The functions that are properly documented, are:
 
 Others are still in document process.
 
-ATTENTION
-- - - - -
+## ATTENTION
 
     Directory changes and most functions have been renamed!
 
