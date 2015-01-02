@@ -4,29 +4,33 @@ FORMAT    = elf32
 MACHINE   = elf_i386
 _START    = _start.asm
 
+# Mathematics
+
 POW_INT = \
-  "../../../math/pow_int/src/pow_int.asm"
+  "../../../../math/pow_int/src/pow_int.asm"
 
 POW_DOUBLE = \
-  "../../../math/pow_double/src/pow_double.asm"
+  "../../../../math/pow_double/src/pow_double.asm"
 
 CALCULATE_INTEGER_LENGTH = \
-  "../../../math/calculate_integer_length/src/calculate_integer_length.asm"
+  "../../../../math/calculate_integer_length/src/calculate_integer_length.asm"
 
 CVT_HEX2DEC = \
-  "../../../converter/cvt_hex2dec/src/cvt_hex2dec.asm"
+  "../../../../converter/cvt_hex2dec/src/cvt_hex2dec.asm"
+
+# Input/Output
 
 APPEND_STRING = \
-  "../../../string/append_string/src/append_string.asm"
+  "../../../../string/append_string/src/append_string.asm"
 
 CVT_DOUBLE2STRING = \
-  "../../../converter/cvt_double2string/src/cvt_double2string.asm"
+  "../../../../converter/cvt_double2string/src/cvt_double2string.asm"
 
 CVT_INT2STRING = \
-  "../../../converter/cvt_int2string/src/cvt_int2string.asm"
+  "../../../../converter/cvt_int2string/src/cvt_int2string.asm"
 
 CVT_DEC2STRING = \
-  "../../../converter/cvt_dec2string/src/cvt_dec2string.asm"
+  "../../../../converter/cvt_dec2string/src/cvt_dec2string.asm"
 
 OBJ = _start.o \
       cvt_int2string.o \

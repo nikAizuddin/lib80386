@@ -9,7 +9,7 @@
 ;=======================================================================
 
 extern pow_double
-extern print_double2string
+extern cvt_double2string
 extern append_string
 
 section .bss
@@ -88,9 +88,9 @@ _start:
     mov    dword [esp     ], 0      ;temp_string_b0
     mov    dword [esp +  4], 0      ;temp_string_b1
     mov    dword [esp +  8], 0      ;temp_string_len
-    ;    +-----------------------------------+
-    ;----| call function print_double2string |--------------------------
-    ;    +-----------------------------------+
+    ;    +---------------------------------+
+    ;----| call function cvt_double2string |----------------------------
+    ;    +---------------------------------+
     sub    esp, 20                  ;reserve 20 bytes
     mov    eax, [x    ]             ;get x (part1/2)
     mov    ebx, [x + 4]             ;get x (part2/2)
@@ -104,7 +104,7 @@ _start:
     add    ebx, (20 + 8)            ;get @temp_string_len
     mov    [esp + 12], eax          ;arg4: @temp_string_b0
     mov    [esp + 16], ebx          ;arg5: @temp_string_len
-    call   print_double2string
+    call   cvt_double2string
     add    esp, 20                  ;restore 20 bytes
     ;    +-----------------------------+
     ;----| call function append_string |--------------------------------
@@ -157,9 +157,9 @@ _start:
     mov    dword [esp     ], 0      ;temp_string_b0
     mov    dword [esp +  4], 0      ;temp_string_b1
     mov    dword [esp +  8], 0      ;temp_string_len
-    ;    +-----------------------------------+
-    ;----| call function print_double2string |--------------------------
-    ;    +-----------------------------------+
+    ;    +---------------------------------+
+    ;----| call function cvt_double2string |----------------------------
+    ;    +---------------------------------+
     sub    esp, 20                  ;reserve 20 bytes
     mov    eax, [y    ]             ;get y (part 1/2)
     mov    ebx, [y + 4]             ;get y (part 2/2)
@@ -173,7 +173,7 @@ _start:
     add    ebx, (20 + 8)            ;get @temp_string_len
     mov    [esp + 12], eax          ;arg3: @temp_string_b0
     mov    [esp + 16], ebx          ;arg4: @temp_string_len
-    call   print_double2string
+    call   cvt_double2string
     add    esp, 20                  ;restore 20 bytes
     ;    +-----------------------------+
     ;----| call function append_string |--------------------------------
@@ -230,9 +230,9 @@ _start:
     mov    dword [esp + 16], 0      ;temp_string_b4
     mov    dword [esp + 20], 0      ;temp_string_b5
     mov    dword [esp + 24], 0      ;temp_string_len
-    ;    +-----------------------------------+
-    ;----| call function print_double2string |--------------------------
-    ;    +-----------------------------------+
+    ;    +---------------------------------+
+    ;----| call function cvt_double2string |----------------------------
+    ;    +---------------------------------+
     sub    esp, 20                  ;reserve 20 bytes
     mov    eax, [pow_result    ]    ;get pow_result (part 1/2)
     mov    ebx, [pow_result + 4]    ;get pow_result (part 2/2)
@@ -246,7 +246,7 @@ _start:
     add    ebx, (20 + 24)           ;get @temp_string_len
     mov    [esp + 12], eax          ;arg3: @temp_string_b0
     mov    [esp + 16], ebx          ;arg4: @temp_string_len
-    call   print_double2string
+    call   cvt_double2string
     add    esp, 20                  ;restore 20 bytes
     ;    +-----------------------------+
     ;----| call function append_string |--------------------------------

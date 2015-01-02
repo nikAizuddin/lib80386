@@ -4,14 +4,17 @@
 ;+---------------------------------------------------------------------+
 ;|                       IMPORTANT AND URGENT                          |
 ;|                                                                     |
-;| * Create converter_dec2string()                                     |
-;|     To convert 0x76543210 to 0x37363534323130. But forget it!       |
+;| * create cvt_string2int()                                           |
+;|     This function will convert string to integer number.            |
+;|                                                                     |
+;| * create cvt_string2double()                                        |
+;|     This function will convert string to double number.             |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;|                     IMPORTANT, BUT NOT URGENT                       |
 ;|                                                                     |
-;| ----                                                                |
+;| * documentations in cvt_dec2string() is not clear.                  |
+;|     Need to explain more detail and precise.                        |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;=======================================================================
-

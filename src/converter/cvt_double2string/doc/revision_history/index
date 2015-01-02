@@ -2,19 +2,16 @@
 ;01234567890123456789012345678901234567890123456789012345678901234567890
 ;=======================================================================
 ;+---------------------------------------------------------------------+
-;|                       IMPORTANT AND URGENT                          |
 ;|                                                                     |
-;| * Update pow_double's standard convention.                          |
-;|     Follow /src/math/calculate_integer_length's standard.           |
-;|                                                                     |
-;| * Update pow_int's standard convention.                             |
-;|     Follow /src/math/calculate_integer_length's standard.           |
+;|                         REVISION HISTORY                            |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
-;|                     IMPORTANT, BUT NOT URGENT                       |
 ;|                                                                     |
-;| * Create root_double()                                              |
-;|     For example, if given problem case sqrt( 3.25, 12.13 ).         |
+;|     Rev #  |    Date     | Description                              |
+;|   ---------+-------------+---------------------------------------   |
+;|     0.1.10 | 25-DEC-2014 | Improve performance + code readability.  |
+;|     0.1.11 | 28-DEC-2014 | Minor improvements on documentations.    |
+;|     0.1.20 | 03-JAN-2015 | New function name.                       |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;=======================================================================

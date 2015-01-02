@@ -4,17 +4,12 @@
 ;+---------------------------------------------------------------------+
 ;|                       IMPORTANT AND URGENT                          |
 ;|                                                                     |
-;| * Update pow_double's standard convention.                          |
-;|     Follow /src/math/calculate_integer_length's standard.           |
-;|                                                                     |
-;| * Update pow_int's standard convention.                             |
-;|     Follow /src/math/calculate_integer_length's standard.           |
+;| ---                                                                 |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;|                     IMPORTANT, BUT NOT URGENT                       |
 ;|                                                                     |
-;| * Create root_double()                                              |
-;|     For example, if given problem case sqrt( 3.25, 12.13 ).         |
+;| ---                                                                 |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;=======================================================================

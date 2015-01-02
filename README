@@ -1,15 +1,27 @@
+ABOUT lib80386
+--------------
+
 The functions that are properly documented, are:
 
-    src/io/append_string
-    src/io/print_double2string
-    src/io/print_int2string
+    src/string/append_string
+    src/converters/cvt_double2string
+    src/converters/cvt_int2string
 
-Others are still in document process, not yet ready for release.
+Others are still in document process.
 
-ATTENTION!
-    Directory changes!
+ATTENTION
+---------
 
-    -> src/io/append_string have been moved to src/string.
-    -> others in src/io/* have been moved to src/converter.
-    -> src/math/formula_hex2dec have been moved to src/converter,
-       and renamed as cvt_hex2dec.
+    Directory changes and most functions have been renamed!
+
+    -> src/io/append_string has been moved to
+       src/string/append_string.
+
+    -> src/io/print_int2string has been moved to
+       src/converter/cvt_int2string.
+
+    -> src/io/print_double2string has been moved to
+       src/converter/cvt_double2string.
+
+    -> src/math/formula_hex2dec has been moved to
+       src/converter/cvt_hex2dec.
