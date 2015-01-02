@@ -1,3 +1,5 @@
+--> fix path in Makefile due to the directory changes.
+
 --> create a complete test on print_double2string. make sure no error.
 
 --> make a research about EDI, ESI, MOVSD,... instructions
