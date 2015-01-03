@@ -2,19 +2,46 @@
 ;01234567890123456789012345678901234567890123456789012345678901234567890
 ;=======================================================================
 ;+---------------------------------------------------------------------+
+;|                                                                     |
 ;|                          *** TEST ***                               |
+;|                                                                     |
 ;+---------------------------------------------------------------------+
-;|          AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi                  |
-;|    DATE CREATED: 26-DEC-2014                                        |
-;|    TEST PURPOSE: Make sure the append_string have no errors.        |
+;|                                                                     |
+;|                                                                     |
+;|            AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi                |
+;|      DATE CREATED: 26-DEC-2014                                      |
+;|                                                                     |
+;|                                                                     |
+;|      TEST PURPOSE: Make sure the append_string have no errors.      |
+;|                                                                     |
+;|                                                                     |
+;|          LANGUAGE: x86 Assembly Language                            |
+;|            SYNTAX: Intel                                            |
+;|         ASSEMBLER: NASM                                             |
+;|      ARCHITECTURE: i386                                             |
+;|            KERNEL: Linux 32-bit                                     |
+;|            FORMAT: elf32                                            |
+;|    EXTERNAL FILES: append_string.asm                                |
+;|                                                                     |
+;|                                                                     |
 ;+---------------------------------------------------------------------+
-;|        LANGUAGE: x86 Assembly Language                              |
-;|          SYNTAX: Intel                                              |
-;|       ASSEMBLER: NASM                                               |
-;|    ARCHITECTURE: i386                                               |
-;|          KERNEL: Linux 32-bit                                       |
-;|          FORMAT: elf32                                              |
-;|  EXTERNAL FILES: append_string.asm                                  |
+;|                                                                     |
+;|                                                                     |
+;|    TERM ABBREVIATIONS USED IN THIS SOURCE CODE:                     |
+;|                                                                     |
+;|        ====================================================         |
+;|              Term       |          Abbreviation                     |
+;|        ----------------------------------------------------         |
+;|          src            |  source.                                  |
+;|          dst            |  destination.                             |
+;|          strlen         |  string length.                           |
+;|          t0001          |  test 0001.                               |
+;|          s01            |  string 01.                               |
+;|          beg            |  begin.                                   |
+;|          outstr         |  output string.                           |
+;|          t0001_s04_beg  |  begin of test 0001 string 04.            |
+;|        ====================================================         |
+;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;=======================================================================
 
@@ -69,25 +96,24 @@ section .text
 
 _start:
 
+    ;
+    ;
+    ;    *** TEST 0001 begin ***
+    ;
+    ;
 
-;///////////////////////////////////////////////////////////////////////
-;//                           TEST BEGIN                              //
-;///////////////////////////////////////////////////////////////////////
 
+    ;
+    ;
+    ;    append t0001_s01_beg to t0001_outstr.
+    ;
+    ;        append_string( @t0001_outstr,
+    ;                       @t0001_outlen,
+    ;                       @t0001_s01_beg,
+    ;                       @t0001_s01_end - @t0001_s01_beg );
+    ;
+    ;
 
-;+-----------+
-;| TEST 0001 |==========================================================
-;+-----------+
-;=======================================================================
-
-    ;    +--------------------------------------+
-    ;----| append t0001_s01_beg to t0001_outstr |-----------------------
-    ;    +--------------------------------------+
-    ;       append_string( @t0001_outstr,
-    ;                      @t0001_outlen,
-    ;                      @t0001_s01_beg,
-    ;                      @t0001_s01_end - @t0001_s01_beg );
-    ;-------------------------------------------------------------------
     sub    esp, 16                              ;reserve 16 bytes
     mov    eax, t0001_outstr                    ;get addr dst string
     mov    ebx, t0001_outlen                    ;get addr dst strlen
@@ -100,14 +126,18 @@ _start:
     call   append_string
     add    esp, 16                              ;restore 16 bytes
 
-    ;    +--------------------------------------+
-    ;----| append t0001_s02_beg to t0001_outstr |-----------------------
-    ;    +--------------------------------------+
-    ;       append_string( @t0001_outstr,
-    ;                      @t0001_outlen,
-    ;                      @t0001_s02_beg,
-    ;                      @t0001_s02_end - @t0001_s02_beg );
-    ;-------------------------------------------------------------------
+
+    ;
+    ;
+    ;    append t0001_s02_beg to t0001_outstr.
+    ;
+    ;        append_string( @t0001_outstr,
+    ;                       @t0001_outlen,
+    ;                       @t0001_s02_beg,
+    ;                       @t0001_s02_end - @t0001_s02_beg );
+    ;
+    ;
+
     sub    esp, 16                              ;reserve 16 bytes
     mov    eax, t0001_outstr                    ;get addr dst string
     mov    ebx, t0001_outlen                    ;get addr dst strlen
@@ -120,14 +150,18 @@ _start:
     call   append_string
     add    esp, 16                              ;restore 16 bytes
 
-    ;    +--------------------------------------+
-    ;----| append t0001_s03_beg to t0001_outstr |-----------------------
-    ;    +--------------------------------------+
-    ;       append_string( @t0001_outstr,
-    ;                      @t0001_outlen,
-    ;                      @t0001_s03_beg,
-    ;                      @t0001_s03_end - @t0001_s03_beg );
-    ;-------------------------------------------------------------------
+
+    ;
+    ;
+    ;    append t0001_s03_beg to t0001_outstr.
+    ;
+    ;        append_string( @t0001_outstr,
+    ;                       @t0001_outlen,
+    ;                       @t0001_s03_beg,
+    ;                       @t0001_s03_end - @t0001_s03_beg );
+    ;
+    ;
+
     sub    esp, 16                              ;reserve 16 bytes
     mov    eax, t0001_outstr                    ;get addr dst string
     mov    ebx, t0001_outlen                    ;get addr dst strlen
@@ -140,14 +174,18 @@ _start:
     call   append_string
     add    esp, 16                              ;restore 16 bytes
 
-    ;    +--------------------------------------+
-    ;----| append t0001_s04_beg to t0001_outstr |-----------------------
-    ;    +--------------------------------------+
-    ;       append_string( @t0001_outstr,
-    ;                      @t0001_outlen,
-    ;                      @t0001_s04_beg,
-    ;                      @t0001_s04_end - @t0001_s04_beg );
-    ;-------------------------------------------------------------------
+
+    ;
+    ;
+    ;    append t0001_s04_beg to t0001_outstr.
+    ;
+    ;        append_string( @t0001_outstr,
+    ;                       @t0001_outlen,
+    ;                       @t0001_s04_beg,
+    ;                       @t0001_s04_end - @t0001_s04_beg );
+    ;
+    ;
+
     sub    esp, 16                              ;reserve 16 bytes
     mov    eax, t0001_outstr                    ;get addr dst string
     mov    ebx, t0001_outlen                    ;get addr dst strlen
@@ -160,24 +198,30 @@ _start:
     call   append_string
     add    esp, 16                              ;restore 16 bytes
 
-    ;    +-----------------------------------------+
-    ;----| systemcall write t0001_outstr to stdout |--------------------
-    ;    +-----------------------------------------+
-    ;       write( stdout, @t0001_outstr, t0001_outlen );
-    ;-------------------------------------------------------------------
+
+    ;
+    ;
+    ;    systemcall write t0001_outstr to stdout.
+    ;
+    ;        write( stdout, @t0001_outstr, t0001_outlen );
+    ;
+    ;
+
     mov    eax, 0x04                            ;systemcall write
     mov    ebx, 0x01                            ;to stdout
-    mov    ecx, t0001_outstr                    ;src string
+    mov    ecx, t0001_outstr                    ;source string
     mov    edx, [t0001_outlen]                  ;strlen
     int    0x80
 
 
-;///////////////////////////////////////////////////////////////////////
-;//                           TEST END                                //
-;///////////////////////////////////////////////////////////////////////
+    ;
+    ;
+    ;    *** TEST 0001 end ***
+    ;
+    ;
 
 
 .exit:
-    mov    eax, 0x01                ;systemcall exit
-    xor    ebx, ebx                 ;return 0
+    mov    eax, 0x01                            ;systemcall exit
+    xor    ebx, ebx                             ;return 0
     int    0x80

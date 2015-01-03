@@ -1,7 +1,7 @@
-This will test the append_string, make sure no errors.
+# Test Program for append_string
+## Make sure there is no errors!
 
-We will test the function by using these values:
-================================================
+### We will test append_string by using these values:
 
 test 0001:
     t0001_s01_beg = "For humans, written communication is crucial.
