@@ -48,7 +48,7 @@
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
 ;| REQUIRES: math/calculate_integer_length.asm                         |
-;|           string/append_string.asm                                  |
+;|           string/string_append.asm                                  |
 ;|           converter/cvt_hex2dec.asm                                 |
 ;|           converter/cvt_dec2string.asm                              |
 ;+---------------------------------------------------------------------+

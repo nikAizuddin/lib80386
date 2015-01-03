@@ -18,9 +18,9 @@
 ;|    INCLUDE FILES: calculate_integer_length.asm,                     |
 ;|                   cvt_hex2dec.asm,                                  |
 ;|                   cvt_dec2string.asm,                               |
-;|                   append_string.asm                                 |
+;|                   string_append.asm                                 |
 ;+---------------------------------------------------------------------+
-;|          VERSION: 0.1.2                                             |
+;|          VERSION: 0.1.21                                            |
 ;|           STATUS: Alpha                                             |
 ;|             BUGS: --- <See doc/bugs/index file>                     |
 ;+---------------------------------------------------------------------+
@@ -33,7 +33,7 @@
 extern calculate_integer_length
 extern cvt_hex2dec
 extern cvt_dec2string
-extern append_string
+extern string_append
 global cvt_int2string
 
 section .text
@@ -298,7 +298,7 @@ cvt_int2string:
     ;    +-----------------------------------+
     ;----| 018: fill ascii_x into out_string |--------------------------
     ;    +-----------------------------------+
-    ;       append_string( addr_out_string,
+    ;       string_append( addr_out_string,
     ;                      addr_out_strlen,
     ;                      @ascii_x[0],   
     ;                      ascii_x_len );
@@ -313,7 +313,7 @@ cvt_int2string:
     mov    [esp +  4], ebx          ;arg2: addr_out_strlen
     mov    [esp +  8], ecx          ;arg3: @ascii_x[0]
     mov    [esp + 12], edx          ;arg4: ascii_x_len
-    call   append_string
+    call   string_append
     add    esp, 16                  ;restore 16 bytes
 
 

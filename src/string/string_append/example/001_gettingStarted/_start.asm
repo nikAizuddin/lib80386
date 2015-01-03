@@ -7,7 +7,7 @@
 ;|          AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi                  |
 ;|    DATE CREATED: 22-DEC-2014                                        |
 ;| EXAMPLE PURPOSE: Demonstrates how to use the function               |
-;|                  append_string.                                     |
+;|                  string_append.                                     |
 ;+---------------------------------------------------------------------+
 ;|        LANGUAGE: x86 Assembly Language                              |
 ;|          SYNTAX: Intel                                              |
@@ -15,11 +15,11 @@
 ;|    ARCHITECTURE: i386                                               |
 ;|          KERNEL: Linux 32-bit                                       |
 ;|          FORMAT: elf32                                              |
-;|  EXTERNAL FILES: append_string.asm                                  |
+;|  EXTERNAL FILES: string_append.asm                                  |
 ;+---------------------------------------------------------------------+
 ;=======================================================================
 
-extern append_string
+extern string_append
 global _start
 
 section .data
@@ -49,7 +49,7 @@ _start:
     ;    +---------------------------+
     ;----| append string2 to string1 |---------------------------------
     ;    +---------------------------+
-    ;       append_string( @string1, @strlen1, @string2, strlen2 );
+    ;       string_append( @string1, @strlen1, @string2, strlen2 );
     ;-------------------------------------------------------------------
     sub    esp, 16                  ;reserve 16 bytes
     mov    eax, string1             ;get @string1
@@ -60,7 +60,7 @@ _start:
     mov    [esp +  4], ebx          ;arg2: @strlen1
     mov    [esp +  8], ecx          ;arg3: @string2
     mov    [esp + 12], edx          ;arg4: strlen2
-    call   append_string
+    call   string_append
     add    esp, 16                  ;restore 16 bytes
 
     ;    +------------------------------------+

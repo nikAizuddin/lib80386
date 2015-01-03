@@ -9,7 +9,7 @@
 ;| REQUIRES: calculate_integer_length.asm,                             |
 ;|           cvt_hex2dec.asm,                                          |
 ;|           cvt_dec2string.asm,                                       |
-;|           append_string.asm                                         |
+;|           string_append.asm                                         |
 ;+---------------------------------------------------------------------+
 ;| BUGS: ---                                                           |
 ;+---------------------------------------------------------------------+
@@ -136,7 +136,7 @@
 ;|                                                                     |
 ;|            .is_negative_false:                                      |
 ;|                                                                     |
-;|   018: append_string( addr_out_string,                              |
+;|   018: string_append( addr_out_string,                              |
 ;|                       addr_out_strlen,                              |
 ;|                       @ascii_x[0],                                  |
 ;|                       ascii_x_len );                                |

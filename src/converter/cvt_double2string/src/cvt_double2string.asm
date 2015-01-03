@@ -17,11 +17,11 @@
 ;|     ARCHITECTURE: i386                                              |
 ;|           KERNEL: Linux 32-bit                                      |
 ;|           FORMAT: elf32                                             |
-;|   EXTERNAL FILES: append_string.asm                                 |
+;|   EXTERNAL FILES: string_append.asm                                 |
 ;|                   cvt_int2string.asm                                |
 ;|                   pow_int.asm                                       |
 ;+---------------------------------------------------------------------+
-;|          VERSION: 0.1.2                                             |
+;|          VERSION: 0.1.21                                            |
 ;|           STATUS: Alpha                                             |
 ;|             BUGS: --- <See doc/bugs/index file>                     |
 ;+---------------------------------------------------------------------+
@@ -31,7 +31,7 @@
 ;+---------------------------------------------------------------------+
 ;=======================================================================
 
-extern append_string
+extern string_append
 extern cvt_int2string
 extern pow_int
 global cvt_double2string
@@ -555,9 +555,9 @@ cvt_double2string:
 ;=======================================================================
 
     ;    +-------------------------+
-    ;----| 022: call append_string |------------------------------------
+    ;----| 022: call string_append |------------------------------------
     ;    +-------------------------+
-    ;       append_string( addr_out_string,
+    ;       string_append( addr_out_string,
     ;                      addr_out_strlen,
     ;                      @dot_character,
     ;                      1 );
@@ -572,7 +572,7 @@ cvt_double2string:
     mov    [esp +  4], ebx          ;arg2: addr_out_strlen
     mov    [esp +  8], ecx          ;arg3: @dot_character
     mov    [esp + 12], edx          ;arg4: src_strlen = 1 character
-    call   append_string
+    call   string_append
     add    esp, 16                  ;restore 16 bytes
 
 
@@ -659,12 +659,12 @@ cvt_double2string:
 .endloop:
 
     ;    +-------------------------+
-    ;----| 028: call append_string |------------------------------------
+    ;----| 028: call string_append |------------------------------------
     ;    +-------------------------+
     ;       Now, we have found out how many required heading zeroes.
     ;       Append the heading zeroes string to the out_string.
     ;
-    ;       append_string( addr_out_string,
+    ;       string_append( addr_out_string,
     ;                      addr_out_strlen,
     ;                      @zeroes_str[0],
     ;                      zeroes_strlen );
@@ -679,7 +679,7 @@ cvt_double2string:
     mov    [esp +  4], ebx          ;arg2: addr_out_strlen
     mov    [esp +  8], ecx          ;arg3: @zeroes_str[0]
     mov    [esp + 12], edx          ;arg4: zeroes_strlen
-    call   append_string
+    call   string_append
     add    esp, 16                  ;restore 16 bytes
 
 .dont_insert_heading_zeroes:
@@ -692,9 +692,9 @@ cvt_double2string:
 ;=======================================================================
 
     ;    +-------------------------+
-    ;----| 029: call append_string |------------------------------------
+    ;----| 029: call string_append |------------------------------------
     ;    +-------------------------+
-    ;       append_string( addr_out_string,
+    ;       string_append( addr_out_string,
     ;                      addr_out_strlen,
     ;                      @decimal_part_str[0],
     ;                      decimal_part_strlen );
@@ -709,7 +709,7 @@ cvt_double2string:
     mov    [esp +  4], ebx          ;arg2: addr_out_strlen
     mov    [esp +  8], ecx          ;arg3: @decimal_part_str[0]
     mov    [esp + 12], edx          ;arg4: decimal_part_strlen
-    call   append_string
+    call   string_append
     add    esp, 16                  ;restore 16 bytes
 
 

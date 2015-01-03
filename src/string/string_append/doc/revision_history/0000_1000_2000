@@ -1,0 +1,18 @@
+;          1         2         3         4         5         6         7
+;01234567890123456789012345678901234567890123456789012345678901234567890
+;=======================================================================
+;+-------------------+-------------------------------------------------+
+;| REV#: 0.1.20      | DESCRIPTION:                                    |
+;| DATE: 03-JAN-2015 |     Change name to string_append.               |
+;+-------------------+-------------------------------------------------+
+;| DETAILS:                                                            |
+;|                                                                     |
+;|     Changes the function name from append_string to string_append.  |
+;|                                                                     |
+;|     This naming convention makes things easier when there are       |
+;|     lots of string function. We can easily identify where           |
+;|     this function comes from, string_append we can guess it         |
+;|     as comes from the folder string.                                |
+;|                                                                     |
+;+---------------------------------------------------------------------+
+;=======================================================================

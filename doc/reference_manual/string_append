@@ -4,7 +4,7 @@
 ;+---------------------------------------------------------------------+
 ;| NAME:                                                               |
 ;|                                                                     |
-;| append_string -- Append a source string to destination string.      |
+;| string_append -- Append a source string to destination string.      |
 ;|                                                                     |
 ;|     Lets say, the destination string is "Hello World",              |
 ;|     and the source string is "! I am good", after append            |

@@ -5,7 +5,7 @@ MACHINE   = elf_i386
 _START    = _start.asm
 BIN       = exe
 OBJ       = _start.o \
-            append_string.o \
+            string_append.o \
             cvt_double2string.o \
             cvt_int2string.o \
             cvt_hex2dec.o \
@@ -20,8 +20,8 @@ OBJ       = _start.o \
 ## Required string functions for this test program.
 ##
 
-APPEND_STRING = \
-  "../../../string/append_string/src/append_string.asm"
+STRING_APPEND = \
+  "../../../string/string_append/src/string_append.asm"
 
 
 
@@ -67,8 +67,8 @@ all:
 		-f${FORMAT}
 
 	@${ASSEMBLER} \
-		${APPEND_STRING} \
-		-oappend_string.o \
+		${STRING_APPEND} \
+		-ostring_append.o \
 		-f${FORMAT}
 
 	@${ASSEMBLER} \

@@ -12,7 +12,7 @@
 ;|      DATE CREATED: 26-DEC-2014                                      |
 ;|                                                                     |
 ;|                                                                     |
-;|      TEST PURPOSE: Make sure the append_string have no errors.      |
+;|      TEST PURPOSE: Make sure the string_append have no errors.      |
 ;|                                                                     |
 ;|                                                                     |
 ;|          LANGUAGE: x86 Assembly Language                            |
@@ -21,7 +21,7 @@
 ;|      ARCHITECTURE: i386                                             |
 ;|            KERNEL: Linux 32-bit                                     |
 ;|            FORMAT: elf32                                            |
-;|    EXTERNAL FILES: append_string.asm                                |
+;|    EXTERNAL FILES: string_append.asm                                |
 ;|                                                                     |
 ;|                                                                     |
 ;+---------------------------------------------------------------------+
@@ -45,7 +45,7 @@
 ;+---------------------------------------------------------------------+
 ;=======================================================================
 
-extern append_string
+extern string_append
 global _start
 
 section .bss
@@ -107,7 +107,7 @@ _start:
     ;
     ;    append t0001_s01_beg to t0001_outstr.
     ;
-    ;        append_string( @t0001_outstr,
+    ;        string_append( @t0001_outstr,
     ;                       @t0001_outlen,
     ;                       @t0001_s01_beg,
     ;                       @t0001_s01_end - @t0001_s01_beg );
@@ -123,7 +123,7 @@ _start:
     mov    [esp +  4], ebx                      ;arg2: addr dst strlen
     mov    [esp +  8], ecx                      ;arg3: addr src string
     mov    [esp + 12], edx                      ;arg4: src strlen
-    call   append_string
+    call   string_append
     add    esp, 16                              ;restore 16 bytes
 
 
@@ -131,7 +131,7 @@ _start:
     ;
     ;    append t0001_s02_beg to t0001_outstr.
     ;
-    ;        append_string( @t0001_outstr,
+    ;        string_append( @t0001_outstr,
     ;                       @t0001_outlen,
     ;                       @t0001_s02_beg,
     ;                       @t0001_s02_end - @t0001_s02_beg );
@@ -147,7 +147,7 @@ _start:
     mov    [esp +  4], ebx                      ;arg2: addr dst strlen
     mov    [esp +  8], ecx                      ;arg3: addr src string
     mov    [esp + 12], edx                      ;arg4: src strlen
-    call   append_string
+    call   string_append
     add    esp, 16                              ;restore 16 bytes
 
 
@@ -155,7 +155,7 @@ _start:
     ;
     ;    append t0001_s03_beg to t0001_outstr.
     ;
-    ;        append_string( @t0001_outstr,
+    ;        string_append( @t0001_outstr,
     ;                       @t0001_outlen,
     ;                       @t0001_s03_beg,
     ;                       @t0001_s03_end - @t0001_s03_beg );
@@ -171,7 +171,7 @@ _start:
     mov    [esp +  4], ebx                      ;arg2: addr dst strlen
     mov    [esp +  8], ecx                      ;arg3: addr src string
     mov    [esp + 12], edx                      ;arg4: src strlen
-    call   append_string
+    call   string_append
     add    esp, 16                              ;restore 16 bytes
 
 
@@ -179,7 +179,7 @@ _start:
     ;
     ;    append t0001_s04_beg to t0001_outstr.
     ;
-    ;        append_string( @t0001_outstr,
+    ;        string_append( @t0001_outstr,
     ;                       @t0001_outlen,
     ;                       @t0001_s04_beg,
     ;                       @t0001_s04_end - @t0001_s04_beg );
@@ -195,7 +195,7 @@ _start:
     mov    [esp +  4], ebx                      ;arg2: addr dst strlen
     mov    [esp +  8], ecx                      ;arg3: addr src string
     mov    [esp + 12], edx                      ;arg4: src strlen
-    call   append_string
+    call   string_append
     add    esp, 16                              ;restore 16 bytes
 
 

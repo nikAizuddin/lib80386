@@ -2,7 +2,7 @@
 ;01234567890123456789012345678901234567890123456789012345678901234567890
 ;=======================================================================
 ;+---------------------------------------------------------------------+
-;|         FUNCTION: append_string                                     |
+;|         FUNCTION: string_append                                     |
 ;+---------------------------------------------------------------------+
 ;|           AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi                 |
 ;|            EMAIL: nickaizuddin93@gmail.com                          |
@@ -19,7 +19,7 @@
 ;|           FORMAT: elf32                                             |
 ;|   EXTERNAL FILES: ---                                               |
 ;+---------------------------------------------------------------------+
-;|          VERSION: 0.1.12                                            |
+;|          VERSION: 0.1.2                                             |
 ;|           STATUS: Alpha                                             |
 ;|             BUGS: <See doc/bugs/index file>                         |
 ;+---------------------------------------------------------------------+
@@ -31,9 +31,9 @@
 
 section .text
 
-global append_string
+global string_append
 
-append_string:
+string_append:
 
 ;parameter 1 = addr_dst_str^:32bit
 ;parameter 2 = addr_dst_strlen^:32bit

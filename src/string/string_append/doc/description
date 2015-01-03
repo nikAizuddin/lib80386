@@ -2,7 +2,7 @@
 ;01234567890123456789012345678901234567890123456789012345678901234567890
 ;=======================================================================
 ;+---------------------------------------------------------------------+
-;| FUNCTION: append_string                                             |
+;| FUNCTION: string_append                                             |
 ;+---------------------------------------------------------------------+
 ;| DESCRIPTION: Append a source string to destination string.          |
 ;|              Lets say, the destination string is "Hello World",     |
@@ -18,7 +18,7 @@
 ;+---------------------------------------------------------------------+
 ;| PROCESS DESCRIPTION:                                                |
 ;|                                                                     |
-;|   append_string( addr_dst_str^:32bit,                               |
+;|   string_append( addr_dst_str^:32bit,                               |
 ;|                  addr_dst_strlen^:32bit,                            |
 ;|                  addr_src_str^:32bit,                               |
 ;|                  src_strlen:32bit )                                 |

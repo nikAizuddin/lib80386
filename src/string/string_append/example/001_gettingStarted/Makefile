@@ -5,10 +5,10 @@ MACHINE   = elf_i386
 _START    = _start.asm
 BIN       = exe
 OBJ       = _start.o \
-            append_string.o
+            string_append.o
 
-APPEND_STRING = \
-  "../../../../io/append_string/src/append_string.asm"
+STRING_APPEND = \
+  "../../../../string/string_append/src/string_append.asm"
 
 .PHONY: all clean
 
@@ -19,8 +19,8 @@ all:
 		-f${FORMAT}
 
 	@${ASSEMBLER} \
-		${APPEND_STRING} \
-		-oappend_string.o \
+		${STRING_APPEND} \
+		-ostring_append.o \
 		-f${FORMAT}
 
 	@${LINKER} \

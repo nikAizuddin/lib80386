@@ -6,7 +6,7 @@
 ;+---------------------------------------------------------------------+
 ;| DESCRIPTION: Convert a double value to string.                      |
 ;+---------------------------------------------------------------------+
-;| REQUIRES: append_string.asm,                                        |
+;| REQUIRES: string_append.asm,                                        |
 ;|           cvt_int2string.asm,                                       |
 ;|           pow_int.asm                                               |
 ;+---------------------------------------------------------------------+
@@ -147,7 +147,7 @@
 ;|                            addr_out_strlen,                         |
 ;|                            1 );                                     |
 ;|                                                                     |
-;|   022:     append_string( addr_out_string,                          |
+;|   022:     string_append( addr_out_string,                          |
 ;|                           addr_out_strlen,                          |
 ;|                           @dot_character,                           |
 ;|                           1 );                                      |
@@ -169,14 +169,14 @@
 ;|                                                                     |
 ;|                .endloop:                                            |
 ;|                                                                     |
-;|   028:         append_string( addr_out_string,                      |
+;|   028:         string_append( addr_out_string,                      |
 ;|                               addr_out_strlen,                      |
 ;|                               @zeroes_str[0],                       |
 ;|                               zeroes_strlen );                      |
 ;|                                                                     |
 ;|            .dont_insert_heading_zeroes:                             |
 ;|                                                                     |
-;|   029:     append_string( addr_out_string,                          |
+;|   029:     string_append( addr_out_string,                          |
 ;|                           addr_out_strlen,                          |
 ;|                           @decimal_part_str[0],                     |
 ;|                           decimal_part_strlen );                    |
