@@ -2,16 +2,14 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 ------------------+---------------------------------------------------
-REV#: 0.1.11      | SUMMARY:
-DATE: 25-DEC-2014 |     Improve comments in the code.
+REV#: 0.1.21      | SUMMARY:
+DATE: 04-JAN-2015 |     Update code and doc standard convention.
 ------------------+---------------------------------------------------
 DETAILS:
 
-  Remove the condition begin, condition end, loop begin, and
-  loop end comments. Also seperate the a group of instructions
-  with the newline.
+  Using new standard for the source code and documentations.
 
-  However, the source code readability still looks too heavy
-     with comments.
+  This new standard is much more clean and simple.
+  The doc/description's algorithm now have comments.
 
 ======================================================================

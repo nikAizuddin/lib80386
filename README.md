@@ -1,10 +1,8 @@
 # ABOUT lib80386
 
-The functions that are properly documented, are:
+The functions that are properly documented:
 
     src/string/string_append
-    src/converters/cvt_double2string
-    src/converters/cvt_int2string
 
 Others are still in document process.
 
