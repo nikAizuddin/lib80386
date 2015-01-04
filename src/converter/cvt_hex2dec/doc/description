@@ -1,0 +1,95 @@
+       1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: cvt_hex2dec
+
+DESCRIPTION: Convert hexadecimal number to decimal number.
+             Lets say, X = 0xF230, and X will be converted to
+             decimal number. After conversion, X becomes 0x62000.
+
+REQUIRES: ---
+
+BUGS: ---
+
+LIMITATIONS: hexadecimal_num must be less than 0x05f5e100.
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  cvt_hex2dec( hexadecimal_num:32bit ) : 32bit
+
+  Input parameters
+    1) hexadecimal_num = the hexadecimal number
+
+  Output parameters
+    ---
+
+  Returns
+    EAX = decimal number
+
+  +-------------------------------------------------------------+
+  |                     STACK STRUCTURE                         |
+  +--------+-----------------+----------------------------------+
+  | Offset |      Data       |          Descriptions            |
+  +--------+-----------------+----------------------------------+
+  | +    0 | hexadecimal_num | Stores hexadecimal number.       |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +    4 | decimal_num     | Stores decimal number.           |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +    8 | A               | Temporary local variables,       |
+  | +   12 | B               | used by the formula.             |
+  | +   16 | C               |                                  |
+  | +   20 | D               |                                  |
+  | +   24 | E               |                                  |
+  | +   28 | F               |                                  |
+  | +   32 | G               |                                  |
+  | +   36 | H               |                                  |
+  | +   40 | I               |                                  |
+  | +   44 | J               |                                  |
+  | +   48 | K               |                                  |
+  | +   52 | L               |                                  |
+  | +   56 | M               |                                  |
+  | +   60 | N               |                                  |
+  | +   64 | O               |                                  |
+  | +   68 | P               |                                  |
+  | +   72 | Q               |                                  |
+  | +   76 | R               |                                  |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | Total stack used for local variables = 80 bytes             |
+  +-------------------------------------------------------------+
+
+       begin
+
+  001:     A = (hexadecimal_num / 1000000000);
+  002:     B = 16 * A;
+  003:     C = (hexadecimal_num / 100000000) + B;
+  004:     D = 16 * C;
+  005:     E = (hexadecimal_num / 10000000) + D;
+  006:     F = 16 * E;
+  007:     G = (hexadecimal_num / 1000000) + F;
+  008:     H = 16 * G;
+  009:     I = (hexadecimal_num / 100000) + H;
+  010:     J = 16 * I;
+  011:     K = (hexadecimal_num / 10000) + J;
+  012:     L = 16 * K;
+  013:     M = (hexadecimal_num / 1000) + L;
+  014:     N = 16 * M;
+  015:     O = (hexadecimal_num / 100) + N;
+  016:     P = 16 * O;
+  017:     Q = (hexadecimal_num / 10) + P;
+  018:     R = 6 * Q;
+  019:     decimal_num = hexadecimal_num + R;
+
+  020:     exit( decimal_num );
+
+       end.
+
+======================================================================
+

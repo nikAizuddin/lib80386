@@ -3,6 +3,7 @@
 The functions that are properly documented:
 
     src/string/string_append
+    src/converter/cvt_hex2dec
 
 Others are still in document process.
 

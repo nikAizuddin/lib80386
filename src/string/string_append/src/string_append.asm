@@ -29,9 +29,9 @@
 ;
 ;=====================================================================
 
-section .text
-
 global string_append
+
+section .text
 
 string_append:
 

@@ -1,0 +1,32 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+                           cvt_hex2dec
+
+             Use this function if you want to convert
+               hexadecimal number to decimal number
+
+    For example:
+        Convert 0x0000000A to 0x00000010,
+                0x00000F15 to 0x00003861,
+                0x05F5E0FF to 0x99999999
+
+    However, this function can only convert hexadecimal number up
+    to 0x05F5E0FF. Any value more than this, the function will not
+    work properly.
+
+    See the tricks in "example/003_convertLargeValue" if you want to
+    convert a hexadecimal number larger than 0x05F5E0FF, but not
+    more than 0xFFFFFFFF.
+
+----------------------------------------------------------------------
+
+ DIRECTORY INFORMATION
+
+     doc: Contains documentations about the function.
+ example: Some basic tutorials on how to use this function.
+     src: Contains source code.
+    test: For testing purpose, to ensure the function has no error.
+
+======================================================================
