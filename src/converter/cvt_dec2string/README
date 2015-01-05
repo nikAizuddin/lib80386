@@ -1,0 +1,25 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+                         cvt_dec2string
+
+             Use this function if you want to convert
+                 decimal number to ASCII string.
+
+    For example:
+        Convert 0x00000007 to 0x00000037
+        Convert 0x00000023 to 0x00003332
+        Convert 0x00009831 to 0x31333839
+        Convert 0x12345678 to 0x3837363534333231
+
+----------------------------------------------------------------------
+
+ DIRECTORY INFORMATION
+
+     doc: Contains documentations about the function.
+ example: Some basic tutorials on how to use this function.
+     src: Contains source code.
+    test: For testing purpose, to ensure the function has no error.
+
+======================================================================

@@ -1,31 +1,33 @@
-;          1         2         3         4         5         6         7
-;01234567890123456789012345678901234567890123456789012345678901234567890
-;=======================================================================
-;+---------------------------------------------------------------------+
-;|         FUNCTION: cvt_dec2string                                    |
-;+---------------------------------------------------------------------+
-;|           AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi                 |
-;|            EMAIL: nickaizuddin93@gmail.com                          |
-;|     DATE CREATED: 14/OCT/2014                                       |
-;| FUNCTION PURPOSE: <See doc/description file>                        |
-;+---------------------------------------------------------------------+
-;|         LANGUAGE: x86 Assembly Language                             |
-;|           SYNTAX: Intel                                             |
-;|        ASSEMBLER: NASM                                              |
-;|     ARCHITECTURE: i386, i586, i686, x86_64                          |
-;|           KERNEL: Linux 32-bit                                      |
-;|           FORMAT: elf32                                             |
-;|    INCLUDE FILES: ---                                               |
-;+---------------------------------------------------------------------+
-;|          VERSION: 0.1.2                                             |
-;|           STATUS: Alpha                                             |
-;|             BUGS: --- <See doc/bugs/index file>                     |
-;+---------------------------------------------------------------------+
-;| REVISION HISTORY: <See doc/revision_history/index file>             |
-;+---------------------------------------------------------------------+
-;|                 MIT Licensed. See /LICENSE file.                    |
-;+---------------------------------------------------------------------+
-;=======================================================================
+;        1         2         3         4         5         6         7
+;234567890123456789012345678901234567890123456789012345678901234567890
+;=====================================================================
+;
+;            FUNCTION: cvt_dec2string
+;    FUNCTION PURPOSE: <See doc/description file>
+;
+;              AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
+;               EMAIL: nickaizuddin93@gmail.com
+;        DATE CREATED: 14/OCT/2014
+;
+;        CONTRIBUTORS: ---
+;
+;            LANGUAGE: x86 Assembly Language
+;              SYNTAX: Intel
+;           ASSEMBLER: NASM
+;        ARCHITECTURE: i386
+;              KERNEL: Linux 32-bit
+;              FORMAT: elf32
+;      EXTERNAL FILES: ---
+;
+;             VERSION: 0.1.21
+;              STATUS: Alpha
+;                BUGS: --- <See doc/bugs/index file>
+;
+;    REVISION HISTORY: <See doc/revision_history/index file>
+;
+;                 MIT Licensed. See /LICENSE file.
+;
+;=====================================================================
 
 global cvt_dec2string
 
@@ -57,140 +59,173 @@ cvt_dec2string:
     mov    [esp +  8], ecx          ;addr_out_string
     mov    [esp + 12], edx          ;addr_out_strlen
     mov    dword [esp + 16], 0      ;out_strlen 
-    mov    dword [esp + 20], 0      ;decimal_x[0]
-    mov    dword [esp + 24], 0      ;decimal_x[1]
-    mov    dword [esp + 28], 0      ;decimal_x[0]_len
-    mov    dword [esp + 32], 0      ;decimal_x[1]_len
+    mov    dword [esp + 20], 0      ;decimal_y[0]
+    mov    dword [esp + 24], 0      ;decimal_y[1]
+    mov    dword [esp + 28], 0      ;decimal_y[0]_len
+    mov    dword [esp + 32], 0      ;decimal_y[1]_len
     mov    dword [esp + 36], 0      ;temp
     mov    dword [esp + 40], 0      ;i
     mov    dword [esp + 44], 0      ;ascii_char
     mov    dword [esp + 48], 0      ;byte_pos
 
 
-;///////////////////////////////////////////////////////////////////////
-;//                        ALGORITHM BEGIN                            //
-;///////////////////////////////////////////////////////////////////////
-
-
-;+----------------------------------+
-;| Check number of decimal_x blocks |===================================
-;+----------------------------------+
-;=======================================================================
-
-    ;    +----------------------------------+
-    ;----| 001: if num_of_blocks != 2, then |---------------------------
-    ;    +----------------------------------+
-    ;       goto .decimal_x_1_block
-    ;-------------------------------------------------------------------
+;
+;
+;   Check the number of decimal_x memory blocks.
+;
+;   If there are 2 memory blocks, that means decimal_x has
+;   an integer value that more than 8 digits, such as 9 or 10
+;   digits.
+;
+;   001: if num_of_blocks != 2, then
+;            goto .decimal_x_1_block
+;
+;
     mov    eax, [esp + 4]           ;eax = num_of_blocks
     cmp    eax, 2
     jne    .decimal_x_1_block
 
+
+;
+;
+;   If the decimal_x has 2 memory blocks.
+;
+;
 .decimal_x_2_blocks:
 
-    ;    +-------------------------------------+
-    ;----| 002: decimal_x[0] = addr_decimal_x^ |------------------------
-    ;    +-------------------------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   002: decimal_y[0] = addr_decimal_x^
+;
+;
     mov    eax, [esp]               ;eax = addr_decimal_x
     mov    eax, [eax]               ;eax = addr_decimal_x^
-    mov    [esp + 20], eax          ;decimal_x[0] = addr_decimal_x^
+    mov    [esp + 20], eax          ;decimal_y[0] = addr_decimal_x^
 
-    ;    +-----------------------------------------+
-    ;----| 003: decimal_x[1] = (addr_decimal_x+4)^ |--------------------
-    ;    +-----------------------------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   003: decimal_y[1] = (addr_decimal_x+4)^
+;
+;
     mov    eax, [esp]               ;eax = addr_decimal_x
     add    eax, 4
     mov    eax, [eax]               ;eax = (addr_decimal_x+4)^
-    mov    [esp + 24], eax          ;decimal_x[1] = eax
+    mov    [esp + 24], eax          ;decimal_y[1] = eax
 
-    ;    +---------------------------+
-    ;----| 004: decimal_x[0]_len = 8 |----------------------------------
-    ;    +---------------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   004: decimal_y[0]_len = 8
+;
+;
     mov    eax, 8
-    mov    [esp + 28], eax          ;decimal_x[0]_len = 8
+    mov    [esp + 28], eax          ;decimal_y[0]_len = 8
 
 
-;+--------------------------------------------+
-;| Find the number of nipples in decimal_x[1] |=========================
-;+--------------------------------------------+
-;=======================================================================
+;
+;
+;   .LOOP_1: Find the number of nibbles in decimal_y[1].
+;            The decimal_y[1]_len itself stores the number of
+;            nibbles from decimal_y[1].
+;
+;
 
-    ;    +--------------------------+
-    ;----| 005: temp = decimal_x[1] |-----------------------------------
-    ;    +--------------------------+
-    ;-------------------------------------------------------------------
-    mov    eax, [esp + 24]          ;eax = decimal_x[1]
+
+;
+;
+;   Initialize counter for .loop_1
+;
+;   005: temp = decimal_y[1]
+;
+;
+    mov    eax, [esp + 24]          ;eax = decimal_y[1]
     mov    [esp + 36], eax          ;temp = eax
+
 
 .loop_1:
 
-    ;    +-----------------+
-    ;----| 006: temp >>= 4 |--------------------------------------------
-    ;    +-----------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   006: temp >>= 4
+;
+;
     mov    eax, [esp + 36]          ;eax = temp
     shr    eax, 4
     mov    [esp + 36], eax          ;temp = eax
 
-    ;    +--------------------------+
-    ;----| 007: ++ decimal_x[1]_len |-----------------------------------
-    ;    +--------------------------+
-    ;-------------------------------------------------------------------
-    mov    eax, [esp + 32]          ;eax = decimal_x[1]_len
-    add    eax, 1
-    mov    [esp + 32], eax          ;decimal_x[1]_len = eax
 
-    ;    +-------------------------+
-    ;----| 008: if temp != 0, then |------------------------------------
-    ;    +-------------------------+
-    ;       goto .loop_1
-    ;-------------------------------------------------------------------
+;
+;
+;   007: ++ decimal_y[1]_len
+;
+;
+    mov    eax, [esp + 32]          ;eax = decimal_y[1]_len
+    add    eax, 1
+    mov    [esp + 32], eax          ;decimal_y[1]_len = eax
+
+
+;
+;
+;   008: if temp != 0, then
+;            goto .loop_1
+;
+;
     mov    eax, [esp + 36]          ;eax = temp
     cmp    eax, 0
     jne    .loop_1
 
+
 .endloop_1:
 
 
-;+--------------------------------+
-;| Fill ascii_x with decimal_x[1] |=====================================
-;+--------------------------------+
-;=======================================================================
+;
+;
+;   .LOOP_2: Convert decimal_y[1] to ASCII string,
+;            and stores to output string.
+;
+;
 
-    ;    +---------------------------+
-    ;----| 009: i = decimal_x[1]_len |----------------------------------
-    ;    +---------------------------+
-    ;-------------------------------------------------------------------
-    mov    eax, [esp + 32]          ;eax = decimal_x[1]_len
-    mov    [esp + 40], eax          ;i = decimal_x[1]_len
+
+;
+;
+;   Initialize counter for .loop_2
+;
+;   009: i = decimal_y[1]_len
+;
+;
+    mov    eax, [esp + 32]          ;eax = decimal_y[1]_len
+    mov    [esp + 40], eax          ;i = decimal_y[1]_len
+
 
 .loop_2:
 
-    ;    +-------------------+
-    ;----| 010: ascii_char = |------------------------------------------
-    ;    +-------------------+
-    ;       ( (decimal_x[1] >> ( (i-1)*4 )) & 0x0f ) | 0x30;
-    ;-------------------------------------------------------------------
+
+;
+;
+;   010: ascii_char = ( (decimal_y[1] >> ( (i-1)*4 )) & 0x0f ) | 0x30;
+;
+;
     mov    eax, [esp + 40]          ;eax = i
     sub    eax, 1
     mov    ebx, 4
     xor    edx, edx
     mul    ebx                      ;eax *= ebx
     mov    ecx, eax
-    mov    eax, [esp + 24]          ;eax = decimal_x[1]
-    shr    eax, cl                  ;decimal_x[1] >>= ((i-1)*4)
+    mov    eax, [esp + 24]          ;eax = decimal_y[1]
+    shr    eax, cl                  ;decimal_y[1] >>= ((i-1)*4)
     and    eax, 0x0f
     or     eax, 0x30
     mov    [esp + 44], eax          ;ascii_char = result
 
-    ;    +--------------------------+
-    ;----| 011: addr_out_string^ |= |-----------------------------------
-    ;    +--------------------------+
-    ;       ( ascii_char << (byte_pos*8) );
-    ;-------------------------------------------------------------------
+
+;
+;
+;   011: addr_out_string^ |= ( ascii_char << (byte_pos*8) );
+;
+;
     mov    eax, [esp + 48]          ;eax = byte_pos
     mov    ebx, 8
     xor    edx, edx
@@ -203,78 +238,96 @@ cvt_dec2string:
     or     eax, ebx                 ;addr_out_string^ |= result
     mov    [ecx], eax               ;save result to addr_out_string^
 
-    ;    +--------------------+
-    ;----| 012: ++ out_strlen |-----------------------------------------
-    ;    +--------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   012: ++ out_strlen
+;
+;
     mov    eax, [esp + 16]          ;eax = out_strlen
     add    eax, 1
     mov    [esp + 16], eax          ;out_strlen = out_strlen + 1
 
-    ;    +------------------+
-    ;----| 013: ++ byte_pos |-------------------------------------------
-    ;    +------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   013: ++ byte_pos
+;
+;
     mov    eax, [esp + 48]          ;eax = byte_pos
     add    eax, 1
     mov    [esp + 48], eax          ;byte_pos = byte_pox + 1
 
-    ;    +-----------+
-    ;----| 014: -- i |--------------------------------------------------
-    ;    +-----------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   014: -- i 
+;
+;
     mov    eax, [esp + 40]          ;eax = i
     sub    eax, 1
     mov    [esp + 40], eax          ;i = i - 1
 
-    ;    +----------------------+
-    ;----| 015: if i != 0, then |---------------------------------------
-    ;    +----------------------+
-    ;       goto .loop_2;
-    ;-------------------------------------------------------------------
+
+;
+;
+;   015: if i != 0, then
+;            goto .loop_2;
+;
+;
     mov    eax, [esp + 40]         ;eax = i
     cmp    eax, 0
     jne    .loop_2
 
+
 .endloop_2:
 
 
-;+--------------------------------+
-;| Fill ascii_x with decimal_x[0] |=====================================
-;+--------------------------------+
-;=======================================================================
+;
+;
+;   .LOOP_3: Convert decimal_y[0] to ASCII string,
+;            and append to output string.
+;
+;
 
-    ;    +---------------------------+
-    ;----| 016: i = decimal_x[0]_len |----------------------------------
-    ;    +---------------------------+
-    ;-------------------------------------------------------------------
-    mov    eax, [esp + 28]          ;eax = decimal_x[0]_len
-    mov    [esp + 40], eax          ;i = decimal_x[0]_len
+
+;
+;
+;   Initialize counter for .loop_3
+;
+;   016: i = decimal_y[0]_len
+;
+;
+    mov    eax, [esp + 28]          ;eax = decimal_y[0]_len
+    mov    [esp + 40], eax          ;i = decimal_y[0]_len
+
 
 .loop_3:
 
-    ;    +--------------------+
-    ;----| 017:  ascii_char = |-----------------------------------------
-    ;    +--------------------+
-    ;       ( (decimal_x[0] >> ( (i-1)*4) ) & 0x0f ) | 0x30;
-    ;-------------------------------------------------------------------
+
+;
+;
+;   017: ascii_char = ( (decimal_y[0] >> ( (i-1)*4) ) & 0x0f ) | 0x30;
+;
+;
     mov    eax, [esp + 40]          ;eax = i
     sub    eax, 1
     mov    ebx, 4
     xor    edx, edx
     mul    ebx                      ;eax *= 4
     mov    ecx, eax                 ;ecx = ((i-1)*4)
-    mov    eax, [esp + 20]          ;eax = decimal_x[0]
+    mov    eax, [esp + 20]          ;eax = decimal_y[0]
     shr    eax, cl                  ;eax >>= ((i-1)*4)
     and    eax, 0x0f
     or     eax, 0x30
     mov    [esp + 44], eax          ;ascii_char = result
 
-    ;    +--------------------------+
-    ;----| 018: addr_out_string^ |= |-----------------------------------
-    ;    +--------------------------+
-    ;       ( ascii_char << (byte_pos*8) );
-    ;-------------------------------------------------------------------
+
+;
+;
+;   018: addr_out_string^ |= ( ascii_char << (byte_pos*8) );
+;
+;
     mov    eax, [esp + 48]          ;eax = byte_pos
     mov    ebx, 8
     xor    edx, edx
@@ -287,171 +340,226 @@ cvt_dec2string:
     or     eax, ebx                 ;addr_out_string^ |= result
     mov    [ecx], eax               ;save result to addr_out_string^
 
-    ;    +---------------------+
-    ;----| 019: ++ out_strlen; |----------------------------------------
-    ;    +---------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   019: ++ out_strlen;
+;
+;
     mov    eax, [esp + 16]          ;eax = out_strlen 
     add    eax, 1
     mov    [esp + 16], eax          ;out_strlen = out_strlen + 1
 
-    ;    +------------------+
-    ;----| 020: ++ byte_pos |-------------------------------------------
-    ;    +------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   020: ++ byte_pos
+;
+;
     mov    eax, [esp + 48]          ;eax = byte_pos
     add    eax, 1
     mov    [esp + 48], eax          ;byte_pos = byte_pos + 1
 
-    ;    +-----------------------------+
-    ;----| 021: if byte_pos != 4, then |--------------------------------
-    ;    +-----------------------------+
-    ;       goto .cond1_out_string_not_full;
-    ;-------------------------------------------------------------------
+
+;
+;
+;   Check if output string memory block is full.
+;
+;   TRUE  = The output string memory block is not yet full.
+;   FALSE = The output string memory block is full.
+;
+;   If the output string memory block is full, point the
+;   addr_out_string to the next memory block of output string,
+;   and reset the byte position to 0.
+;
+;   021: if byte_pos != 4, then
+;            goto .cond1_out_string_not_full;
+;
+;
     mov    eax, [esp + 48]          ;eax = byte_pos
     cmp    eax, 4
     jne    .cond1_out_string_not_full      
 
+
 .cond1_out_string_full:
 
-    ;    +----------------------------+
-    ;----| 022: addr_out_string += 4; |---------------------------------
-    ;    +----------------------------+
-    ;-------------------------------------------------------------------
+
+;
+;   022: addr_out_string += 4;
+;
+;
     mov    eax, [esp + 8]           ;eax = addr_out_string
     add    eax, 4
     mov    [esp + 8], eax           ;addr_out_string = (eax + 4)
 
-    ;    +-------------------+
-    ;----| 023: byte_pos = 0 |------------------------------------------
-    ;    +-------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   023: byte_pos = 0;
+;
+;
     xor    eax, eax
     mov    [esp + 48], eax          ;byte_pos = eax
 
+
 .cond1_out_string_not_full:
 
-    ;    +------------+
-    ;----| 024: -- i; |-------------------------------------------------
-    ;    +------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   024: -- i;
+;
+;
     mov    eax, [esp + 40]          ;eax = i
     sub    eax, 1
     mov    [esp + 40], eax          ;i = i + 1
 
-    ;    +----------------------+
-    ;----| 025: if i != 0, then |---------------------------------------
-    ;    +----------------------+
-    ;       goto .loop_3;
-    ;-------------------------------------------------------------------
+
+;
+;
+;   025: if i != 0, then
+;           goto .loop_3;
+;
+;
     mov    eax, [esp + 40]          ;eax = i
     cmp    eax, 0
     jne    .loop_3
 
+
 .endloop_3:
 
-    ;    +-----------------------------+
-    ;----| 026: goto .save_out_strlen; |--------------------------------
-    ;    +-----------------------------+
-    ;       skip .decimal_x_1_block.
-    ;-------------------------------------------------------------------
+
+;
+;
+;   Skip .decimal_x_1_block.
+;
+;   026: goto .save_out_strlen;
+;
+;
     jmp    .save_out_strlen
 
 
+;
+;
+;   If the decimal_x has only 1 memory block.
+;   Means, the decimal_x's value is less than 8 digits.
+;
+;
 .decimal_x_1_block:
 
-;+--------------------------+
-;| If number of blocks is 1 |===========================================
-;+--------------------------+
-;=======================================================================
 
-    ;    +---------------------------------------+
-    ;----| 027: decimal_x[0] = addr_out_string^; |----------------------
-    ;    +---------------------------------------+
-    ;-------------------------------------------------------------------
+;
+;
+;   027: decimal_y[0] = addr_out_string^;
+;
+;
     mov    eax, [esp     ]          ;eax = addr_out_string
     mov    eax, [eax]               ;eax = addr_out_string^
     mov    [esp + 20], eax          ;decimal_x_b0 = eax
 
 
-;+--------------------------------------------+
-;| Find the number of nipples in decimal_x[0] |=========================
-;+--------------------------------------------+
-;=======================================================================
+;
+;
+;   .LOOP_4: Find the number of nibbles in decimal_y[0].
+;            The decimal_y[0]_len itself stores the number
+;            of nibbles from decimal_y[0].
+;
+;
 
-    ;    +---------------------------+
-    ;----| 028: temp = decimal_x[0]; |----------------------------------
-    ;    +---------------------------+
-    ;-------------------------------------------------------------------
-    mov    eax, [esp + 20]          ;eax = decimal_x[0]
+
+;
+;
+;   Initialize counter for .loop_4
+;
+;   028: temp = decimal_y[0];
+;
+;
+    mov    eax, [esp + 20]          ;eax = decimal_y[0]
     mov    [esp + 36], eax          ;temp = eax
+
 
 .loop_4:
 
-    ;    +------------------+
-    ;----| 029: temp >>= 4; |-------------------------------------------
-    ;    +------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   029: temp >>= 4;
+;
+;
     mov    eax, [esp + 36]          ;eax = temp
     shr    eax, 4
     mov    [esp + 36], eax          ;temp = temp >> 4
 
-    ;    +---------------------------+
-    ;----| 030: ++ decimal_x[0]_len; |----------------------------------
-    ;    +---------------------------+
-    ;-------------------------------------------------------------------
-    mov    eax, [esp + 28]          ;eax = decimal_x[0]_len
-    add    eax, 1
-    mov    [esp + 28], eax          ;decimal_x[0]_len = eax + 1
 
-    ;    +-------------------------+
-    ;----| 031: if temp != 0, then |------------------------------------
-    ;    +-------------------------+
-    ;       goto .loop_4;
-    ;-------------------------------------------------------------------
+;
+;
+;   030: ++ decimal_y[0]_len;
+;
+;
+    mov    eax, [esp + 28]          ;eax = decimal_y[0]_len
+    add    eax, 1
+    mov    [esp + 28], eax          ;decimal_y[0]_len = eax + 1
+
+
+;
+;
+;   031: if temp != 0, then
+;            goto .loop_4;
+;
+;
     mov    eax, [esp + 36]          ;eax = temp
     cmp    eax, 0
     jne    .loop_4
 
+
 .endloop_4:
 
 
-;+------------------------------------+
-;| Fill the ascii_x with decimal_x[0] |=================================
-;+------------------------------------+
-;=======================================================================
+;
+;
+;   .LOOP_5: Convert decimal_y[0] to ASCII string,
+;            and stores to output string.
+;
+;
 
-    ;    +----------------------------+
-    ;----| 032: i = decimal_x[0]_len; |---------------------------------
-    ;    +----------------------------+
-    ;-------------------------------------------------------------------
-    mov    eax, [esp + 28]          ;eax = decimal_x[0]_len
+
+;
+;
+;   Initialize counter for .loop_5
+;
+;   032: i = decimal_y[0]_len;
+;
+;
+    mov    eax, [esp + 28]          ;eax = decimal_y[0]_len
     mov    [esp + 40], eax          ;counter = eax
+
 
 .loop_5:
 
-    ;    +-------------------+
-    ;----| 033: ascii_char = |------------------------------------------
-    ;    +-------------------+
-    ;       ( (decimal_x[0] >> ((i-1)*4)) & 0x0f ) | 0x30;
-    ;-------------------------------------------------------------------
+
+;
+;
+;   033: ascii_char = ( (decimal_y[0] >> ((i-1)*4)) & 0x0f ) | 0x30;
+;
+;
     mov    eax, [esp + 40]          ;eax = i
     sub    eax, 1
     mov    ebx, 4
     xor    edx, edx
     mul    ebx                      ;eax = (i-1) * 4
     mov    ecx, eax
-    mov    eax, [esp + 20]          ;eax = decimal_x[0]
-    shr    eax, cl                  ;eax = decimal_x[0] >> ((i-1)*4)
+    mov    eax, [esp + 20]          ;eax = decimal_y[0]
+    shr    eax, cl                  ;eax = decimal_y[0] >> ((i-1)*4)
     and    eax, 0x0f
     or     eax, 0x30
     mov    [esp + 44], eax          ;ascii_char = eax
 
-    ;    +--------------------------+
-    ;----| 034: addr_out_string^ |= |-----------------------------------
-    ;    +--------------------------+
-    ;       ( ascii_char << (byte_pos*8) );
-    ;-------------------------------------------------------------------
+
+;
+;
+;   034: addr_out_string^ |= ( ascii_char << (byte_pos*8) );
+;
+;
     mov    eax, [esp + 48]          ;eax = byte_pos
     mov    ebx, 8
     xor    edx, edx
@@ -464,89 +572,111 @@ cvt_dec2string:
     or     eax, ebx                 ;eax = result | addr_out_string
     mov    [ecx], eax               ;addr_out_string^ = result
 
-    ;    +---------------------+
-    ;----| 035: ++ out_strlen; |----------------------------------------
-    ;    +---------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   035: ++ out_strlen;
+;
+;
     mov    eax, [esp + 16]          ;eax = out_strlen
     add    eax, 1
     mov    [esp + 16], eax          ;out_strlen = out_strlen + 1
 
-    ;    +-------------------+
-    ;----| 036: ++ byte_pos; |------------------------------------------
-    ;    +-------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   036: ++ byte_pos;
+;
+;
     mov    eax, [esp + 48]          ;eax = byte_pos
     add    eax, 1
     mov    [esp + 48], eax          ;byte_pos = byte_pos + 1
 
-    ;    +----------------------------+
-    ;----| 037: if byte_pos != 4 then |---------------------------------
-    ;    +----------------------------+
-    ;       goto .cond2_out_string_not_full;
-    ;-------------------------------------------------------------------
+
+;
+;
+;   Check if output string memory block is full.
+;
+;   TRUE  = The output string memory block is not yet full.
+;   FALSE = The output string memory block is full.
+;
+;   If the output string memory block is full, point the
+;   addr_out_string to the next memory block of output string,
+;   and reset the byte position to 0.
+;
+;   037: if byte_pos != 4 then
+;            goto .cond2_out_string_not_full;
+;
+;
     mov    eax, [esp + 48]          ;eax = byte_pos
     cmp    eax, 4
     jne    .cond2_out_string_not_full
 
+
 .cond2_out_string_full:
 
-    ;    +----------------------------+
-    ;----| 038: addr_out_string += 4; |---------------------------------
-    ;    +----------------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   038: addr_out_string += 4;
+;
+;
     mov    eax, [esp + 8]           ;eax = addr_out_string
     add    eax, 4
     mov    [esp + 8], eax           ;addr_out_string += 4
 
-    ;    +--------------------+
-    ;----| 039: byte_pos = 0; |-----------------------------------------
-    ;    +--------------------+
-    ;-------------------------------------------------------------------
+
+;
+;   039: byte_pos = 0;
+;
+;
     xor    eax, eax
     mov    [esp + 48], eax          ;byte_pos = 0
 
+
 .cond2_out_string_not_full:
 
-    ;    +------------+
-    ;----| 040: -- i; |-------------------------------------------------
-    ;    +------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   040: -- i;
+;
+;
     mov    eax, [esp + 40]          ;eax = i
     sub    eax, 1
     mov    [esp + 40], eax          ;i = i + 1
 
-    ;    +----------------------+
-    ;----| 041: if i != 0, then |---------------------------------------
-    ;    +----------------------+
-    ;       goto .loop_5;
-    ;-------------------------------------------------------------------
+
+;
+;
+;   041: if i != 0, then
+;            goto .loop_5;
+;
+;
     mov    eax, [esp + 40]          ;eax = i
     cmp    eax, 0
     jne    .loop_5
 
+
 .endloop_5:
 
 
+;
+;
+;    Save the length of out_string
+;
+;
 .save_out_strlen:
 
-;+-------------------------------+
-;| Save the length of out_string |======================================
-;+-------------------------------+
-;=======================================================================
 
-    ;    +-------------------------------------+
-    ;----| 042: addr_out_strlen^ = out_strlen; |------------------------
-    ;    +-------------------------------------+
-    ;-------------------------------------------------------------------
+;
+;
+;   042: addr_out_strlen^ = out_strlen;
+;
+;
     mov    eax, [esp + 16]          ;eax = out_strlen
     mov    ebx, [esp + 12]          ;ebx = addr_out_strlen
     mov    [ebx], eax               ;addr_out_strlen^ = out_strlen
-
-
-;///////////////////////////////////////////////////////////////////////
-;//                          ALGORITHM END                            //
-;///////////////////////////////////////////////////////////////////////
 
 
 .return:

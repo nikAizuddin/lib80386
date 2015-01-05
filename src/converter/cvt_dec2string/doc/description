@@ -1,213 +1,265 @@
-;          1         2         3         4         5         6         7
-;01234567890123456789012345678901234567890123456789012345678901234567890
-;=======================================================================
-;+---------------------------------------------------------------------+
-;| FUNCTION: write_dec2string                                          |
-;+---------------------------------------------------------------------+
-;| DESCRIPTION: Fill the string with the decimal number.               |
-;+---------------------------------------------------------------------+
-;| REQUIRES: ---                                                       |
-;+---------------------------------------------------------------------+
-;| BUGS: ---                                                           |
-;+---------------------------------------------------------------------+
-;| FUTURE IMPROVEMENTS: ---                                            |
-;+---------------------------------------------------------------------+
-;| PROCESS DESCRIPTION:                                                |
-;|                                                                     |
-;|   write_dec2string( addr_decimal_x:32bit,                           |
-;|                     num_of_blocks:32bit,                            |
-;|                     addr_out_string:32bit,                          |
-;|                     addr_out_strlen:32bit )                         |
-;|                                                                     |
-;|   Input parameters                                                  |
-;|       1) addr_decimal_x  = address to the decimal number.           |
-;|       2) num_of_blocks   = number of blocks from decimal number.    |
-;|       3) addr_out_string = the address to destination string.       |
-;|       4) addr_out_strlen = the address to destination strlen.       |
-;|                                                                     |
-;|   Output parameters                                                 |
-;|       3) addr_out_string = filled with ASCII decimal numbers.       |
-;|       4) addr_out_strlen = length of the filled string.             |
-;|                                                                     |
-;|   Returns                                                           |
-;|       ---                                                           |
-;|                                                                     |
-;|   +-------------------------------------------------------------+   |
-;|   |                     STACK STRUCTURE                         |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | Offset |      Data        |           Description           |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | +    0 | addr_decimal_x   |                                 |   |
-;|   |        |                  |                                 |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | +    4 | num_of_blocks    |                                 |   |
-;|   |        |                  |                                 |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | +    8 | addr_out_string  |                                 |   |
-;|   |        |                  |                                 |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | +   12 | addr_out_strlen  |                                 |   |
-;|   |        |                  |                                 |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | +   16 | out_strlen       |                                 |   |
-;|   |        |                  |                                 |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | +   20 | decimal_x[0]     |                                 |   |
-;|   |        |                  |                                 |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | +   24 | decimal_x[1]     |                                 |   |
-;|   |        |                  |                                 |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | +   28 | decimal_x[0]_len |                                 |   |
-;|   |        |                  |                                 |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | +   32 | decimal_x[1]_len |                                 |   |
-;|   |        |                  |                                 |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | +   36 | temp             |                                 |   |
-;|   |        |                  |                                 |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | +   40 | i                |                                 |   |
-;|   |        |                  |                                 |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | +   44 | ascii_char       |                                 |   |
-;|   |        |                  |                                 |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | +   48 | byte_pos         |                                 |   |
-;|   |        |                  |                                 |   |
-;|   +--------+------------------+---------------------------------+   |
-;|   | Total stack used for local variables = 52 bytes             |   |
-;|   +-------------------------------------------------------------+   |
-;|                                                                     |
-;|        Begin                                                        |
-;|                                                                     |
-;|   001:     if num_of_blocks != 2, then                              |
-;|                goto .decimal_x_1_block;                             |
-;|                                                                     |
-;|            .decimal_x_2_blocks:                                     |
-;|                                                                     |
-;|   002:         decimal_x[0] = addr_decimal_x^;                      |
-;|   003:         decimal_x[1] = (addr_decimal_x+4)^;                  |
-;|   004:         decimal_x[0]_len = 8;                                |
-;|                                                                     |
-;|   005:         temp = decimal_x[1];                                 |
-;|                                                                     |
-;|                .loop_1:                                             |
-;|                                                                     |
-;|   006:             temp >>= 4;                                      |
-;|   007:             ++ decimal_x[1]_len;                             |
-;|                                                                     |
-;|   008:             if temp != 0, then                               |
-;|                        goto .loop_1;                                |
-;|                                                                     |
-;|                .endloop_1:                                          |
-;|                                                                     |
-;|   009:         i = decimal_x[1]_len;                                |
-;|                                                                     |
-;|                .loop_2:                                             |
-;|                                                                     |
-;|   010:             ascii_char =                                     |
-;|                    ( (decimal_x[1] >> ( (i-1)*4 )) & 0x0f ) |       |
-;|                    0x30;                                            |
-;|                                                                     |
-;|   011:             addr_out_string^ |=                              |
-;|                    ( ascii_char << (byte_pos*8) );                  |
-;|                                                                     |
-;|   012:             ++ out_strlen;                                   |
-;|   013:             ++ byte_pos;                                     |
-;|   014:             -- i;                                            |
-;|                                                                     |
-;|   015:             if i != 0, then                                  |
-;|                        goto .loop_2;                                |
-;|                                                                     |
-;|                .endloop_2:                                          |
-;|                                                                     |
-;|   016:         i = decimal_x[0]_len;                                |
-;|                                                                     |
-;|                .loop_3                                              |
-;|                                                                     |
-;|   017:             ascii_char =                                     |
-;|                    ( (decimal_x[0] >> ( (i-1)*4) ) & 0x0f ) |       |
-;|                    0x30;                                            |
-;|                                                                     |
-;|   018:             addr_out_string^ |=                              |
-;|                    ( ascii_char << (byte_pos*8) );                  |
-;|                                                                     |
-;|   019:             ++ out_strlen;                                   |
-;|   020:             ++ byte_pos;                                     |
-;|                                                                     |
-;|   021:             if byte_pos != 4, then                           |
-;|                        goto .cond1_out_string_not_full;             |
-;|                                                                     |
-;|                    .cond1_out_string_full:                          |
-;|                                                                     |
-;|   022:                 addr_out_string += 4;                        |
-;|   023:                 byte_pos = 0;                                |
-;|                                                                     |
-;|                    .cond1_out_string_not_full:                      |
-;|                                                                     |
-;|   024:             -- i;                                            |
-;|                                                                     |
-;|   025:             if i != 0, then                                  |
-;|                        goto .loop_3;                                |
-;|                                                                     |
-;|                .endloop_3:                                          |
-;|                                                                     |
-;|   026:         goto .save_out_strlen;                               |
-;|                                                                     |
-;|            .decimal_x_1_block:                                      |
-;|                                                                     |
-;|   027:         decimal_x[0] = addr_out_string^;                     |
-;|                                                                     |
-;|   028:         temp = decimal_x[0];                                 |
-;|                                                                     |
-;|                .loop_4:                                             |
-;|                                                                     |
-;|   029:             temp >>= 4;                                      |
-;|   030:             ++ decimal_x[0]_len;                             |
-;|                                                                     |
-;|   031:             if temp != 0, then                               |
-;|                        goto .loop_4;                                |
-;|                                                                     |
-;|                .endloop_4:                                          |
-;|                                                                     |
-;|   032:         i = decimal_x[0]_len;                                |
-;|                                                                     |
-;|                .loop_5:                                             |
-;|                                                                     |
-;|   033:             ascii_char =                                     |
-;|                    ( (decimal_x[0] >> ((i-1)*4)) & 0x0f ) |         |
-;|                    0x30;                                            |
-;|                                                                     |
-;|   034:             addr_out_string^ |=                              |
-;|                    ( ascii_char << (byte_pos*8) );                  |
-;|                                                                     |
-;|   035:             ++ out_strlen;                                   |
-;|   036:             ++ byte_pos;                                     |
-;|                                                                     |
-;|   037:             if byte_pos != 4 then                            |
-;|                        goto .cond2_out_string_not_full;             |
-;|                                                                     |
-;|                    .cond2_out_string_full:                          |
-;|                                                                     |
-;|   038:                 addr_out_string += 4;                        |
-;|   039:                 byte_pos = 0;                                |
-;|                                                                     |
-;|                    .cond2_out_string_not_full:                      |
-;|                                                                     |
-;|   040:             -- i;                                            |
-;|                                                                     |
-;|   041:             if i != 0, then                                  |
-;|                        goto .loop_5                                 |
-;|                                                                     |
-;|                .endloop_5:                                          |
-;|                                                                     |
-;|            .save_out_strlen:                                        |
-;|                                                                     |
-;|   042:         addr_out_strlen^ = out_strlen;                       |
-;|                                                                     |
-;|   End.                                                              |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;=======================================================================
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
 
+FUNCTION: cvt_dec2string
+
+DESCRIPTION: Convert the decimal number to ASCII string.
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  cvt_dec2string( addr_decimal_x:32bit,
+                  num_of_blocks:32bit,
+                  addr_out_string:32bit,
+                  addr_out_strlen:32bit )
+
+  Input parameters
+      1) addr_decimal_x  = address to the decimal number.
+      2) num_of_blocks   = number of blocks from decimal number.
+      3) addr_out_string = the address to destination string.
+      4) addr_out_strlen = the address to destination strlen.
+
+  Output parameters
+      3) addr_out_string = filled with ASCII decimal numbers.
+      4) addr_out_strlen = length of the filled string.
+
+  Returns
+      ---
+
+  +-------------------------------------------------------------+
+  |                     STACK STRUCTURE                         |
+  +--------+------------------+---------------------------------+
+  | Offset |      Data        |           Description           |
+  +--------+------------------+---------------------------------+
+  | +    0 | addr_decimal_x   | Decimal number from input       |
+  |        |                  | parameter.                      |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +    4 | num_of_blocks    | Number of decimal_x memory      |
+  |        |                  | blocks.                         |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +    8 | addr_out_string  | Address to the output string.   |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +   12 | addr_out_strlen  | Address to the output string    |
+  |        |                  | length.                         |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +   16 | out_strlen       | Output string length. This is   |
+  |        |                  | for local variable purpose, and |
+  |        |                  | at the end of this function, it |
+  |        |                  | will be saved to output param.  |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +   20 | decimal_y[0]     | Stores value from decimal_x[0]. |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +   24 | decimal_y[1]     | Stores value from decimal_x[1]. |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +   28 | decimal_y[0]_len | Stores the number of nibbles    |
+  |        |                  | from decimal_x[0].              |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +   32 | decimal_y[1]_len | Stores the number of nibbles    |
+  |        |                  | from decimal_x[1].              |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +   36 | temp             | Multipurpose temporary variable.|
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +   40 | i                | Multipurpose variable. Usually  |
+  |        |                  | used as counter.                |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +   44 | ascii_char       | Store a ASCII character.        |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +   48 | byte_pos         | Stores byte position value.     |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | Total stack used for local variables = 52 bytes             |
+  +-------------------------------------------------------------+
+
+       Begin
+
+           ##
+           ## Check the number of decimal_x memory blocks.
+           ##
+
+  001:     if num_of_blocks != 2, then
+               goto .decimal_x_1_block;
+
+           ##
+           ## If the decimal_x has 2 memory blocks.
+           ##
+
+           .decimal_x_2_blocks:
+
+  002:         decimal_y[0] = addr_decimal_x^;
+  003:         decimal_y[1] = (addr_decimal_x+4)^;
+  004:         decimal_y[0]_len = 8;
+
+               ##
+               ## .LOOP_1: Find the number of nibbles in
+               ##          decimal_y[1].
+               ##          The decimal_y[1]_len itself stores
+               ##          the number of nibbles from decimal_y[1].
+               ##
+
+  005:         temp = decimal_y[1];
+
+               .loop_1:
+
+  006:             temp >>= 4;
+  007:             ++ decimal_y[1]_len;
+
+  008:             if temp != 0, then
+                       goto .loop_1;
+
+               .endloop_1:
+
+               ##
+               ## .LOOP_2: Convert decimal_y[1] to ASCII string,
+               ##          and stores to output string.
+               ##
+
+  009:         i = decimal_y[1]_len;
+
+               .loop_2:
+
+  010:             ascii_char =
+                   ( (decimal_x[1] >> ( (i-1)*4 )) & 0x0f ) | 0x30;
+
+  011:             addr_out_string^ |= ( ascii_char << (byte_pos*8) );
+
+  012:             ++ out_strlen;
+  013:             ++ byte_pos;
+  014:             -- i;
+
+  015:             if i != 0, then
+                       goto .loop_2;
+
+               .endloop_2:
+
+  016:         i = decimal_y[0]_len;
+
+               ##
+               ## .LOOP_3: Convert decimal_y[0] to ASCII string,
+               ##          and append to output string.
+               ##
+
+               .loop_3
+
+  017:             ascii_char =
+                   ( (decimal_x[0] >> ( (i-1)*4) ) & 0x0f ) | 0x30;
+
+  018:             addr_out_string^ |=
+                   ( ascii_char << (byte_pos*8) );
+
+  019:             ++ out_strlen;
+  020:             ++ byte_pos;
+
+                   ##
+                   ## Check if output string memory block is full.
+                   ##
+
+  021:             if byte_pos != 4, then
+                       goto .cond1_out_string_not_full;
+
+                   .cond1_out_string_full:
+
+  022:                 addr_out_string += 4;
+  023:                 byte_pos = 0;
+
+                   .cond1_out_string_not_full:
+
+  024:             -- i;
+
+  025:             if i != 0, then
+                       goto .loop_3;
+
+               .endloop_3:
+
+  026:         goto .save_out_strlen;
+
+           ##
+           ## If the decimal_x has only 1 memory block.
+           ##
+
+           .decimal_x_1_block:
+
+  027:         decimal_y[0] = addr_out_string^;
+
+               ##
+               ## .LOOP_4: Find the number of nibbles in
+               ##          decimal_y[0].
+               ##          The decimal_y[0]_len itself stores
+               ##          the number of nibbles from decimal_y[0].
+               ##
+
+  028:         temp = decimal_y[0];
+
+               .loop_4:
+
+  029:             temp >>= 4;
+  030:             ++ decimal_y[0]_len;
+
+  031:             if temp != 0, then
+                       goto .loop_4;
+
+               .endloop_4:
+
+  032:         i = decimal_y[0]_len;
+
+               .loop_5:
+
+  033:             ascii_char =
+                   ( (decimal_x[0] >> ((i-1)*4)) & 0x0f ) | 0x30;
+
+  034:             addr_out_string^ |= ( ascii_char << (byte_pos*8) );
+
+  035:             ++ out_strlen;
+  036:             ++ byte_pos;
+
+                   ##
+                   ## Check if output string memory block is full.
+                   ##
+
+  037:             if byte_pos != 4 then
+                       goto .cond2_out_string_not_full;
+
+                   .cond2_out_string_full:
+
+  038:                 addr_out_string += 4;
+  039:                 byte_pos = 0;
+
+                   .cond2_out_string_not_full:
+
+  040:             -- i;
+
+  041:             if i != 0, then
+                       goto .loop_5
+
+               .endloop_5:
+
+           ##
+           ## Save the length of out_string.
+           ##
+
+           .save_out_strlen:
+
+  042:         addr_out_strlen^ = out_strlen;
+
+  End.
+
+======================================================================

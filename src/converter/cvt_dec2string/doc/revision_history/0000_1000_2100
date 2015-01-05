@@ -2,12 +2,12 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 ------------------+---------------------------------------------------
-REV#: 0.1.2       | SUMMARY:
-DATE: 02-JAN-2015 |     New function name.
+REV#: 0.1.21      | SUMMARY:
+DATE: 05-JAN-2015 |     New standard for code and doc.
 ------------------+---------------------------------------------------
 DETAILS:
 
-  The function write_dec2string has been renamed to
-  cvt_dec2string. Means convert decimal to string.
+  Using more simple and clean format for the source code and the
+  documentations.
 
 ======================================================================
