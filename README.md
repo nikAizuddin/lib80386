@@ -4,6 +4,7 @@ The functions that are properly documented:
 
     src/string/string_append
     src/converter/cvt_hex2dec
+    src/converter/cvt_dec2string
 
 Others are still in document process.
 
