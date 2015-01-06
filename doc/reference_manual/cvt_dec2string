@@ -1,44 +1,62 @@
-;          1         2         3         4         5         6         7
-;01234567890123456789012345678901234567890123456789012345678901234567890
-;=======================================================================
-;+---------------------------------------------------------------------+
-;| NAME:                                                               |
-;|                                                                     |
-;| cvt_dec2string -- Fill the string with the decimal number.          |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| FUNCTION:                                                           |
-;|                                                                     |
-;| cvt_dec2string( addr_decimal_x:32bit,                               |
-;|                 num_of_blocks:32bit,                                |
-;|                 addr_out_string:32bit,                              |
-;|                 addr_out_strlen:32bit )                             |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| INPUT PARAMETERS:                                                   |
-;|                                                                     |
-;| addr_decimal_x                                                                    |
-;|     The address to decimal number block 0.                          |
-;| num_of_blocks                                                       |
-;|     Number of decimal number blocks.                                |
-;| addr_out_string                                                         |
-;|     The address to ascii block 0.                                   |
-;| addr_out_strlen                                                     |
-;|     The address to length of ascii.                                 |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| OUTPUT PARAMETERS:                                                  |
-;|                                                                     |
-;| addr_out_string                                                         |
-;|     The string will be filled with ASCII integer numbers.           |
-;| addr_out_strlen                                                     |
-;|     The string length.                                              |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| RETURNS: ---                                                        |
-;+---------------------------------------------------------------------+
-;| PARAMETER DESCRIPTION: ---                                          |
-;+---------------------------------------------------------------------+
-;| REQUIRES: ---                                                       |
-;+---------------------------------------------------------------------+
-;=======================================================================
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+NAME:
+
+    cvt_dec2string -- Fill the string with the decimal number.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+FUNCTION:
+
+    cvt_dec2string( addr_decimal_x:32bit,
+                    num_of_blocks:32bit,
+                    addr_out_string:32bit,
+                    addr_out_strlen:32bit )
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+INPUT PARAMETERS:
+
+    addr_decimal_x
+        The address to decimal number block 0.
+
+    num_of_blocks
+        Number of decimal number blocks.
+
+    addr_out_string
+        The address to ascii block 0.
+
+    addr_out_strlen
+        The address to length of ascii.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+OUTPUT PARAMETERS:
+
+    addr_out_string
+        The string will be filled with ASCII integer numbers.
+
+    addr_out_strlen
+        The string length.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+RETURNS:
+
+    ---
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+PARAMETER DESCRIPTION:
+
+    ---
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+REQUIRES:
+
+    ---
+
+======================================================================

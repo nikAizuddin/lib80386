@@ -1,55 +1,71 @@
-;          1         2         3         4         5         6         7
-;01234567890123456789012345678901234567890123456789012345678901234567890
-;=======================================================================
-;+---------------------------------------------------------------------+
-;| NAME:                                                               |
-;|                                                                     |
-;| cvt_int2string -- Convert signed or unsigned int to string.         |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| FUNCTION:                                                           |
-;|                                                                     |
-;| cvt_int2string( integer_x:32bit,                                    |
-;|                 addr_out_string^:32bit,                             |
-;|                 addr_out_strlen^:32bit,                             |
-;|                 flag:32bit )                                        |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| INPUT PARAMETERS:                                                   |
-;|                                                                     |
-;| integer_x                                                           |
-;|     The integer number, can be signed or unsigned int.              |
-;| addr_out_string                                                     |
-;|     Address to the destination string.                              |
-;| addr_out_strlen                                                     |
-;|     Address to the destination string length.                       |
-;| flag                                                                |
-;|     Specify whether the integer_x is signed or unsigned int.        |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| OUTPUT PARAMETERS:                                                  |
-;|                                                                     |
-;| addr_out_string                                                     |
-;|     String filled with ASCII integer numbers.                       |
-;| addr_out_strlen                                                     |
-;|     The string length.                                              |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| RETURNS: ---                                                        |
-;+---------------------------------------------------------------------+
-;| PARAMETER DESCRIPTION:                                              |
-;|                                                                     |
-;| The specifications of the flag value are as follows:                |
-;|                                                                     |
-;| flag = 0b00000000000000000000000000000000                           |
-;|     The integer_x is Longword (unsigned int 32-bit)                 |
-;| flag = 0b00000000000000000000000000000001                           |
-;|     The integer_x is Longint (signed int 32-bit)                    |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| REQUIRES: math/calculate_integer_length.asm                         |
-;|           string/string_append.asm                                  |
-;|           converter/cvt_hex2dec.asm                                 |
-;|           converter/cvt_dec2string.asm                              |
-;+---------------------------------------------------------------------+
-;=======================================================================
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+NAME:
+
+    cvt_int2string -- Convert signed or unsigned int to string.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+FUNCTION:
+
+    cvt_int2string( integer_x:32bit,
+                    addr_out_string^:32bit,
+                    addr_out_strlen^:32bit,
+                    flag:32bit )
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+INPUT PARAMETERS:
+
+    integer_x
+        The integer number, can be signed or unsigned int.
+
+    addr_out_string
+        Address to the destination string.
+
+    addr_out_strlen
+        Address to the destination string length.
+
+    flag
+        Specify whether the integer_x is signed or unsigned int.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+OUTPUT PARAMETERS:
+
+    addr_out_string
+        String filled with ASCII integer numbers.
+
+    addr_out_strlen
+        The string length.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+RETURNS:
+
+    ---
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+PARAMETER DESCRIPTION:
+
+    The specifications of the flag value are as follows:
+
+        flag = 0b00000000000000000000000000000000
+            The integer_x is Longword (unsigned int 32-bit)
+
+        flag = 0b00000000000000000000000000000001
+            The integer_x is Longint (signed int 32-bit)
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+REQUIRES:
+
+    math/calculate_integer_length.asm
+    string/string_append.asm
+    converter/cvt_hex2dec.asm
+    converter/cvt_dec2string.asm
+
+======================================================================

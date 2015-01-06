@@ -1,61 +1,74 @@
-;          1         2         3         4         5         6         7
-;01234567890123456789012345678901234567890123456789012345678901234567890
-;=======================================================================
-;+---------------------------------------------------------------------+
-;| NAME:                                                               |
-;|                                                                     |
-;| cvt_double2string -- Convert double precision value to string.      |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| FUNCTION:                                                           |
-;|                                                                     |
-;| cvt_double2string( double_x:64bit,                                  |
-;|                    decimal_places:32bit,                            |
-;|                    addr_out_string^:32bit,                          |
-;|                    addr_out_strlen^:32bit )                         |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| INPUT PARAMETERS:                                                   |
-;|                                                                     |
-;| double_x                                                            |
-;|     The double precision value.                                     |
-;| decimal_places                                                      |
-;|     Specify the number of decimal places to print the double_x.     |
-;| addr_out_string                                                     |
-;|     Stores address to the ascii string block 0.                     |
-;| addr_out_strlen                                                     |
-;|     Stores address to the ascii string length.                      |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| OUTPUT PARAMETERS:                                                  |
-;|                                                                     |
-;| addr_out_string                                                     |
-;|     The string will be filled with the double value in ASCII.       |
-;| addr_out_strlen                                                     |
-;|     The length of the string after filled.                          |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| RETURNS: ---                                                        |
-;+---------------------------------------------------------------------+
-;| PARAMETER DESCRIPTION:                                              |
-;|                                                                     |
-;| The specifications of the decimal places value are as follows:      |
-;|                                                                     |
-;| decimal_places = 10        --> prints 1 decimal places              |
-;| decimal_places = 100       --> prints 2 decimal places              |
-;| decimal_places = 1000      --> prints 3 decimal places              |
-;| decimal_places = 10000     --> prints 4 decimal places              |
-;| decimal_places = 100000    --> prints 5 decimal places              |
-;| decimal_places = 1000000   --> prints 6 decimal places              |
-;| decimal_places = 10000000  --> prints 7 decimal places              |
-;| decimal_places = 100000000 --> prints 8 decimal places              |
-;|                                                                     |
-;| The value for double_x must be:                                     |
-;|     -2147483647.0 <= double_x <= 2147483647.0                       |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;| REQUIRES: math/pow_int.asm                                          |
-;|           string/string_append.asm                                  |
-;|           convert/cvt_int2string.asm                                |
-;+---------------------------------------------------------------------+
-;=======================================================================
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+NAME:
+
+    cvt_double2string -- Convert double precision value to string.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+FUNCTION:
+
+    cvt_double2string( double_x:64bit,
+                       decimal_places:32bit,
+                       addr_out_string^:32bit,
+                       addr_out_strlen^:32bit )
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+INPUT PARAMETERS:
+
+    double_x
+        The double precision value.
+  
+    decimal_places
+        Specify the number of decimal places to print the double_x.
+
+    addr_out_string
+        Stores address to the ascii string block 0.
+
+    addr_out_strlen
+        Stores address to the ascii string length.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+OUTPUT PARAMETERS:
+
+    addr_out_string
+        The string will be filled with the double value in ASCII.
+    addr_out_strlen
+        The length of the string after filled.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+RETURNS:
+    ---
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+PARAMETER DESCRIPTION:
+
+    The specifications of the decimal places value are as follows:
+
+    decimal_places = 10        --> prints 1 decimal places
+    decimal_places = 100       --> prints 2 decimal places
+    decimal_places = 1000      --> prints 3 decimal places
+    decimal_places = 10000     --> prints 4 decimal places
+    decimal_places = 100000    --> prints 5 decimal places
+    decimal_places = 1000000   --> prints 6 decimal places
+    decimal_places = 10000000  --> prints 7 decimal places
+    decimal_places = 100000000 --> prints 8 decimal places
+ 
+    The value for double_x must be:
+        -2147483647.0 <= double_x <= 2147483647.0
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+REQUIRES:
+
+    math/pow_int.asm
+    string/string_append.asm
+    convert/cvt_int2string.asm
+ 
+======================================================================
