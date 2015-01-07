@@ -1,34 +1,36 @@
-;          1         2         3         4         5         6         7
-;01234567890123456789012345678901234567890123456789012345678901234567890
-;=======================================================================
-;+---------------------------------------------------------------------+
-;|         FUNCTION: cvt_int2string                                    |
-;+---------------------------------------------------------------------+
-;|           AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi                 |
-;|            EMAIL: nickaizuddin93@gmail.com                          |
-;|     DATE CREATED: 01/NOV/2014                                       |
-;| FUNCTION PURPOSE: <See doc/description file>                        |
-;+---------------------------------------------------------------------+
-;|         LANGUAGE: x86 Assembly Language                             |
-;|           SYNTAX: Intel                                             |
-;|        ASSEMBLER: NASM                                              |
-;|     ARCHITECTURE: i386                                              |
-;|           KERNEL: Linux 32-bit                                      |
-;|           FORMAT: elf32                                             |
-;|    INCLUDE FILES: calculate_integer_length.asm,                     |
-;|                   cvt_hex2dec.asm,                                  |
-;|                   cvt_dec2string.asm,                               |
-;|                   string_append.asm                                 |
-;+---------------------------------------------------------------------+
-;|          VERSION: 0.1.21                                            |
-;|           STATUS: Alpha                                             |
-;|             BUGS: --- <See doc/bugs/index file>                     |
-;+---------------------------------------------------------------------+
-;| REVISION HISTORY: <See doc/revision_history/index file>             |
-;+---------------------------------------------------------------------+
-;|                 MIT Licensed. See /LICENSE file.                    |
-;+---------------------------------------------------------------------+
-;=======================================================================
+;        1         2         3         4         5         6         7
+;234567890123456789012345678901234567890123456789012345678901234567890
+;=====================================================================
+;
+;      FUNCTION NAME: cvt_int2string
+;   FUNCTION PURPOSE: <See doc/description file>
+;
+;             AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
+;              EMAIL: nickaizuddin93@gmail.com
+;       DATE CREATED: 01-NOV-2014
+;
+;       CONTRIBUTORS: ---
+;
+;           LANGUAGE: x86 Assembly Language
+;             SYNTAX: Intel
+;          ASSEMBLER: NASM
+;       ARCHITECTURE: i386
+;             KERNEL: Linux 32-bit
+;             FORMAT: elf32
+;     EXTERNAL FILES: calculate_integer_length.asm,
+;                     cvt_hex2dec.asm,
+;                     cvt_dec2string.asm,
+;                     string_append.asm
+;
+;            VERSION: 0.1.21
+;             STATUS: Alpha
+;               BUGS: --- <See doc/bugs/index file>
+;
+;   REVISION HISTORY: <See doc/revision_history/index file>
+;
+;                 MIT Licensed. See /LICENSE file.
+;
+;=====================================================================
 
 extern calculate_integer_length
 extern cvt_hex2dec

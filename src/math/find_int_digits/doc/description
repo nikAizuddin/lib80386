@@ -1,0 +1,208 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: find_int_digits
+
+DESCRIPTION: Find the number of digits from an integer number.
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  find_int_digits( integer_x:32bit,
+                   flag:32bit ) : 32bit
+
+  Input parameters
+      1) integer_x = the integer number, can be signed or unsigned.
+      2) flag      = specify whether the integer_x is signed or not.
+
+  Output parameters
+      ---
+
+  Returns
+     the number of digits from integer_x.
+
+  +-------------------------------------------------------------+
+  |                     STACK STRUCTURE                         |
+  +--------+---------------+------------------------------------+
+  | Offset |     Data      |            Description             |
+  +--------+---------------+------------------------------------+
+  | +    0 | integer_x     | The 32bit integer number.          |
+  |        |               |                                    |
+  +--------+---------------+------------------------------------+
+  | +    4 | flag          | Specify whether integer_x is signed|
+  |        |               | or unsigned.                       |
+  |        |               |                                    |
+  +--------+---------------+------------------------------------+
+  | +    8 | num_of_digits | Number of digits of integer_x.     |
+  |        |               |                                    |
+  +--------+---------------+------------------------------------+
+  | Total stack used for local variables = 16 bytes             |
+  +-------------------------------------------------------------+
+
+       begin
+
+           ##
+           ## Is integer_x positive or negative?
+           ##
+
+  001:     if flag != 1, then
+               goto .integer_x_is_unsigned;
+
+           .integer_x_is_signed:
+
+  002:         if (integer_x & 0x80000000) == 0, then
+                   goto .integer_x_is_positive;
+
+               .integer_x_is_negative:
+
+  003:             integer_x = !integer_x;
+  004:             integer_x += 1;
+
+               .integer_x_is_positive:
+
+           .integer_x_is_unsigned:
+
+           ##
+           ## Find the number of digits of integer_x.
+           ##
+
+  005:     if integer_x < 10, then
+               goto .jumper_10;
+
+  006:     if integer_x < 100, then
+               goto .jumper_100;
+
+  007:     if integer_x < 1000, then
+               goto .jumper_1000;
+
+  008:     if integer_x < 10000, then
+               goto .jumper_10000;
+
+  009:     if integer_x < 100000, then
+               goto .jumper_100000;
+
+  010:     if integer_x < 1000000, then
+               goto .jumper_1000000;
+
+  011:     if integer_x < 10000000, then
+               goto .jumper_10000000;
+
+  012:     if integer_x < 100000000, then
+               goto .jumper_100000000;
+
+  013:     if integer_x < 1000000000, then
+               goto .jumper_1000000000;
+
+  014:     if integer_x >= 1000000000, then
+               goto .more_equal_1000000000;
+
+           ##
+           ## Jumpers.
+           ##
+
+           .jumper_10:
+
+  015:         goto .less_than_10;
+
+           .jumper_100:
+
+  016:         goto .less_than_100;
+
+           .jumper_1000:
+
+  017:         goto .less_than_1000;
+
+           .jumper_10000:
+
+  018:         goto .less_than_10000;
+
+           .jumper_100000:
+
+  019:         goto .less_than_100000;
+
+           .jumper_1000000:
+
+  020:         goto .less_than_1000000;
+
+           .jumper_10000000:
+
+  021:         goto .less_than_10000000;
+
+           .jumper_100000000:
+
+  022:         goto .less_than_100000000;
+
+           .jumper_1000000000:
+
+  023:         goto .less_than_1000000000;
+
+           ##
+           ## Number of digit assignments.
+           ##
+
+           .less_than_10:
+
+  024:         num_of_digits = 1;
+  025:         goto .endcondition;
+
+           .less_than_100:
+
+  026:         num_of_digits = 2;
+  027:         goto .endcondition;
+
+           .less_than_1000:
+
+  028:         num_of_digits = 3;
+  029:         goto .endcondition;
+
+           .less_than_10000:
+
+  030:         num_of_digits = 4;
+  031:         goto .endcondition;
+
+           .less_than_100000:
+
+  032:         num_of_digits = 5;
+  033:         goto .endcondition;
+
+           .less_than_1000000:
+
+  034:         num_of_digits = 6;
+  035:         goto .endcondition;
+
+           .less_than_10000000:
+
+  036:         num_of_digits = 7;
+  037:         goto .endcondition;
+
+           .less_than_100000000:
+
+  038:         num_of_digits = 8;
+  039:         goto .endcondition;
+
+           .less_than_1000000000:
+
+  040:         num_of_digits = 9;
+  041:         goto .endcondition;
+
+           .more_equal_1000000000:
+
+  042:         num_of_digits = 10;
+  043:         goto .endcondition;
+
+           .endcondition:
+
+  044:     return EAX = num_of_digits;
+
+       end.
+
+======================================================================
+

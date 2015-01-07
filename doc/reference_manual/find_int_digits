@@ -4,15 +4,15 @@
 
 NAME:
 
-    calculate_integer_length -- Find the number of digits
-                                from an integer number.
+    find_int_digits -- Find the number of digits
+                       from an integer number.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 FUNCTION:
 
-    calculate_integer_length( integer_x:32bit,
-                              flag:32bit ) : 32bit
+    find_int_digits( integer_x:32bit,
+                     flag:32bit ) : 32bit
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
