@@ -12,19 +12,19 @@ OBJ       = _start.o \
             string_append.o
 
 CVT_INT2STRING = \
-  "../../../../converter/cvt_int2string/src/cvt_int2string.asm"
+  "../../../converter/cvt_int2string/src/cvt_int2string.asm"
 
 CVT_HEX2DEC = \
-  "../../../../converter/cvt_hex2dec/src/cvt_hex2dec.asm"
+  "../../../converter/cvt_hex2dec/src/cvt_hex2dec.asm"
 
 CVT_DEC2STRING = \
-  "../../../../converter/cvt_dec2string/src/cvt_dec2string.asm"
+  "../../../converter/cvt_dec2string/src/cvt_dec2string.asm"
 
 FIND_INT_DIGITS = \
-  "../../../../math/find_int_digits/src/find_int_digits.asm"
+  "../../../math/find_int_digits/src/find_int_digits.asm"
 
 STRING_APPEND = \
-  "../../../../string/string_append/src/string_append.asm"
+  "../../../string/string_append/src/string_append.asm"
 
 .PHONY: all clean
 

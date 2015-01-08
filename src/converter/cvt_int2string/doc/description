@@ -1,148 +1,175 @@
-;          1         2         3         4         5         6         7
-;01234567890123456789012345678901234567890123456789012345678901234567890
-;=======================================================================
-;+---------------------------------------------------------------------+
-;| FUNCTION: cvt_int2string                                            |
-;+---------------------------------------------------------------------+
-;| DESCRIPTION: Print signed or unsigned int to string.                |
-;+---------------------------------------------------------------------+
-;| REQUIRES: calculate_integer_length.asm,                             |
-;|           cvt_hex2dec.asm,                                          |
-;|           cvt_dec2string.asm,                                       |
-;|           string_append.asm                                         |
-;+---------------------------------------------------------------------+
-;| BUGS: ---                                                           |
-;+---------------------------------------------------------------------+
-;| FUTURE IMPROVEMENTS: ---                                            |
-;+---------------------------------------------------------------------+
-;| PROCESS DESCRIPTION:                                                |
-;|                                                                     |
-;|   cvt_int2string( integer_x:32bit,                                  |
-;|                   addr_out_string^:32bit,                           |
-;|                   addr_out_strlen^:32bit,                           |
-;|                   flag:32bit )                                      |
-;|                                                                     |
-;|   Input parameters                                                  |
-;|     1) integer_x        = the integer number, can be signed/unsign. |
-;|     2) addr_out_string^ = address to the destination string.        |
-;|     3) addr_out_strlen^ = address to the destination strlen.        |
-;|     4) flag             = specify whether integer_x is signed/unsi. |
-;|                                                                     |
-;|   Output parameters                                                 |
-;|     2) addr_out_string^ = string filled with ASCII integer numbers. |
-;|     3) addr_out_strlen^ = the string length.                        |
-;|                                                                     |
-;|   Returns                                                           |
-;|     ---                                                             |
-;|                                                                     |
-;|   +-------------------------------------------------------------+   |
-;|   |                     STACK STRUCTURE                         |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | Offset |      Data       |          Descriptions            |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +    0 | integer_x       | The integer number, can be       |   |
-;|   |        |                 | signed or unsigned integer.      |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +    4 | addr_out_string | Stores address to the destination|   |
-;|   |        |                 | string.                          |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +    8 | addr_out_strlen | Stores address to the destination|   |
-;|   |        |                 | string length.                   |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +   12 | flag            | Will be used to specify whether  |   |
-;|   |        |                 | integer_x is signed or unsigned. |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +   16 | integer_x_len   | Stores number of digits of       |   |
-;|   |        |                 | integer_x.                       |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +   20 | integer_x_quo   | Stores the quotient value of a   |   |
-;|   |        |                 | division that involves integer_x.|   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +   24 | integer_x_rem   | Stores the remainder value of a  |   |
-;|   |        |                 | division that involves integer_x.|   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +   28 | decimal_x[0]    | integer_x is hexadecimal number. |   |
-;|   | +   32 | decimal_x[1]    | But, decimal_x stores the        |   |
-;|   |        |                 | decimal number of integer_x.     |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +   36 | ascii_x[0]      | Stores the ascii value of the    |   |
-;|   | +   40 | ascii_x[1]      | decimal_x number.                |   |
-;|   | +   44 | ascii_x[2]      |                                  |   |
-;|   |        |                 |                                  |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +   48 | ascii_x_len     | Length of the ascii_x string.    |   |
-;|   |        |                 |                                  |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | +   52 | is_negative     | Specify whether the integer_x is |   |
-;|   |        |                 | a negative value or not.         |   |
-;|   +--------+-----------------+----------------------------------+   |
-;|   | Total stack used for local variables = 56 bytes             |   |
-;|   +-------------------------------------------------------------+   |
-;|                                                                     |
-;|        Begin                                                        |
-;|                                                                     |
-;|   001:     integer_x_len = calculate_integer_length( integer_x,     |
-;|                                                      flag );        |
-;|                                                                     |
-;|   002:     if flag != 1, then                                       |
-;|                goto .flag_notequal_1;                               |
-;|                                                                     |
-;|            .flag_equal_1:                                           |
-;|                                                                     |
-;|   003:         if (integer_x & 0x80000000) != 0x80000000, then      |
-;|                    goto .sign_false;                                |
-;|                                                                     |
-;|                .sign_true:                                          |
-;|                                                                     |
-;|   004:             integer_x = (!integer_x) + 1;                    |
-;|   005:             is_negative = 1;                                 |
-;|                                                                     |
-;|                .sign_false:                                         |
-;|                                                                     |
-;|            .flag_notequal_1:                                        |
-;|                                                                     |
-;|   006:     if integer_x_len <= 8, then                              |
-;|                goto .integer_x_len_lessequal_8;                     |
-;|                                                                     |
-;|            .integer_x_len_morethan_8:                               |
-;|                                                                     |
-;|   007:         integer_x_quo = integer_x / 100000000;               |
-;|   008:         integer_x_rem = remainder from the division;         |
-;|   009:         decimal_x[0] = cvt_hex2dec( integer_x_rem );         |
-;|   010:         decimal_x[1] = cvt_hex2dec( integer_x_quo );         |
-;|   011:         cvt_dec2string( @decimal_x[0],                       |
-;|                                2,                                   |
-;|                                @ascii_x[0],                         |
-;|                                @ascii_x_len );                      |
-;|   012:         goto .skip_integer_x_len_equalmore_8;                |
-;|                                                                     |
-;|            .integer_x_len_lessequal_8:                              |
-;|                                                                     |
-;|   013:         decimal_x[0] = cvt_hex2dec( integer_x );             |
-;|   014:         cvt_dec2string( @decimal_x[0],                       |
-;|                                1,                                   |
-;|                                @ascii_x[0],                         |
-;|                                @ascii_x_len );                      |
-;|                                                                     |
-;|            .skip_integer_x_len_equalmore_8:                         |
-;|                                                                     |
-;|   015:     if is_negative != 1, then                                |
-;|                goto .is_negative_false;                             |
-;|                                                                     |
-;|            .is_negative_true:                                       |
-;|                                                                     |
-;|   016:         addr_out_string^ = 0x2d;                             |
-;|   017:         ++ addr_out_strlen^;                                 |
-;|                                                                     |
-;|            .is_negative_false:                                      |
-;|                                                                     |
-;|   018: string_append( addr_out_string,                              |
-;|                       addr_out_strlen,                              |
-;|                       @ascii_x[0],                                  |
-;|                       ascii_x_len );                                |
-;|                                                                     |
-;|        End.                                                         |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;=======================================================================
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: cvt_int2string
+
+DESCRIPTION: Print signed or unsigned int to string.
+
+REQUIRES: find_int_digits.asm,
+          cvt_hex2dec.asm,
+          cvt_dec2string.asm,
+          string_append.asm
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  cvt_int2string( integer_x:32bit,
+                  addr_out_string^:32bit,
+                  addr_out_strlen^:32bit,
+                  flag:32bit )
+
+  Input parameters
+      1) integer_x        = the integer number, can be signed/unsign.
+      2) addr_out_string^ = address to the destination string.
+      3) addr_out_strlen^ = address to the destination strlen.
+      4) flag             = specify whether integer_x is signed/unsi.
+
+  Output parameters
+      2) addr_out_string^ = string filled with ASCII integer numbers.
+      3) addr_out_strlen^ = the string length.
+
+  Returns
+      ---
+
+  +-------------------------------------------------------------+
+  |                     STACK STRUCTURE                         |
+  +--------+-----------------+----------------------------------+
+  | Offset |      Data       |          Descriptions            |
+  +--------+-----------------+----------------------------------+
+  | +    0 | integer_x       | The integer number, can be       |
+  |        |                 | signed or unsigned integer.      |
+  +--------+-----------------+----------------------------------+
+  | +    4 | addr_out_string | Stores address to the destination|
+  |        |                 | string.                          |
+  +--------+-----------------+----------------------------------+
+  | +    8 | addr_out_strlen | Stores address to the destination|
+  |        |                 | string length.                   |
+  +--------+-----------------+----------------------------------+
+  | +   12 | flag            | Will be used to specify whether  |
+  |        |                 | integer_x is signed or unsigned. |
+  +--------+-----------------+----------------------------------+
+  | +   16 | integer_x_len   | Stores number of digits of       |
+  |        |                 | integer_x.                       |
+  +--------+-----------------+----------------------------------+
+  | +   20 | integer_x_quo   | Stores the quotient value of a   |
+  |        |                 | division that involves integer_x.|
+  +--------+-----------------+----------------------------------+
+  | +   24 | integer_x_rem   | Stores the remainder value of a  |
+  |        |                 | division that involves integer_x.|
+  +--------+-----------------+----------------------------------+
+  | +   28 | decimal_x[0]    | integer_x is hexadecimal number. |
+  | +   32 | decimal_x[1]    | But, decimal_x stores the        |
+  |        |                 | decimal number of integer_x.     |
+  +--------+-----------------+----------------------------------+
+  | +   36 | ascii_x[0]      | Stores the ascii value of the    |
+  | +   40 | ascii_x[1]      | decimal_x number.                |
+  | +   44 | ascii_x[2]      |                                  |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   48 | ascii_x_len     | Length of the ascii_x string.    |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   52 | is_negative     | Specify whether the integer_x is |
+  |        |                 | a negative value or not.         |
+  +--------+-----------------+----------------------------------+
+  | Total stack used for local variables = 56 bytes             |
+  +-------------------------------------------------------------+
+
+       Begin
+
+           ##
+           ## Find the number of digits in integer_x
+           ##
+
+  001:     integer_x_len = find_int_digits( integer_x,
+                                            flag );
+
+           ##
+           ## Checks whether integer_x is signed or unsigned
+           ##
+
+  002:     if flag != 1, then
+               goto .flag_notequal_1;
+
+           ##
+           ## If integer_x is signed
+           ##
+
+           .flag_equal_1:
+
+  003:         if (integer_x & 0x80000000) != 0x80000000, then
+                   goto .sign_false;
+
+
+               ##
+               ## If integer_x is negative
+               ##
+
+               .sign_true:
+
+  004:             integer_x = (!integer_x) + 1;
+  005:             is_negative = 1;
+
+
+               ##
+               ## If integer_x is positive
+               ##
+
+               .sign_false:
+
+           ##
+           ## If integer_x is unsigned
+           ##
+
+           .flag_notequal_1:
+
+  006:     if integer_x_len <= 8, then
+               goto .integer_x_len_lessequal_8;
+
+           .integer_x_len_morethan_8:
+
+  007:         integer_x_quo = integer_x / 100000000;
+  008:         integer_x_rem = remainder from the division;
+  009:         decimal_x[0] = cvt_hex2dec( integer_x_rem );
+  010:         decimal_x[1] = cvt_hex2dec( integer_x_quo );
+  011:         cvt_dec2string( @decimal_x[0],
+                               2,
+                               @ascii_x[0],
+                               @ascii_x_len );
+  012:         goto .skip_integer_x_len_equalmore_8;
+
+           .integer_x_len_lessequal_8:
+
+  013:         decimal_x[0] = cvt_hex2dec( integer_x );
+  014:         cvt_dec2string( @decimal_x[0],
+                               1,
+                               @ascii_x[0],
+                               @ascii_x_len );
+
+           .skip_integer_x_len_equalmore_8:
+ 
+  015:     if is_negative != 1, then
+               goto .is_negative_false;
+
+           .is_negative_true:
+
+  016:         addr_out_string^ = 0x2d;
+  017:         ++ addr_out_strlen^;
+
+           .is_negative_false:
+
+  018: string_append( addr_out_string,
+                      addr_out_strlen,
+                      @ascii_x[0],
+                      ascii_x_len );
+
+       End.
+
+======================================================================
 

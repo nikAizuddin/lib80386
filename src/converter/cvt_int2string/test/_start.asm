@@ -2,25 +2,27 @@
 ;234567890123456789012345678901234567890123456789012345678901234567890
 ;=====================================================================
 ;
-;       EXAMPLE 001: Getting Started
-;   EXAMPLE PURPOSE: Demonstrates how to use the function
-;                    cvt_int2string.
+;                          *** TEST ***
 ;
-;            AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
-;      DATE CREATED: 08-JAN-2015
+;---------------------------------------------------------------------
 ;
-;          LANGUAGE: x86 Assembly Language
-;            SYNTAX: Intel
-;         ASSEMBLER: NASM
-;      ARCHITECTURE: i386
-;            KERNEL: Linux 32-bit
-;            FORMAT: elf32
+;           AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
+;     DATE CREATED: 08-JAN-2015
 ;
-;    EXTERNAL FILES: cvt_int2string.asm,
-;                    cvt_hex2dec.asm,
-;                    cvt_dec2string.asm,
-;                    find_int_digits.asm,
-;                    string_append.asm
+;     TEST PURPOSE: Make sure cvt_int2string have no errors.
+;
+;         LANGUAGE: x86 Assembly Language
+;           SYNTAX: Intel
+;        ASSEMBLER: NASM
+;     ARCHITECTURE: i386
+;           KERNEL: Linux 32-bit
+;           FORMAT: elf32
+;
+;   EXTERNAL FILES: cvt_int2string.asm,
+;                   cvt_hex2dec.asm,
+;                   cvt_dec2string.asm,
+;                   find_int_digits.asm,
+;                   string_append.asm
 ;
 ;=====================================================================
 

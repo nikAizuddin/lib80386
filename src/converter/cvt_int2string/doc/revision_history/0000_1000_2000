@@ -1,21 +1,20 @@
-;          1         2         3         4         5         6         7
-;01234567890123456789012345678901234567890123456789012345678901234567890
-;=======================================================================
-;+-------------------+-------------------------------------------------+
-;| REV#: 0.1.2       | DESCRIPTION:                                    |
-;| DATE: 02-JAN-2015 |     Fix changes due to renaming.                |
-;+-------------------+-------------------------------------------------+
-;| DETAILS:                                                            |
-;|                                                                     |
-;|     The formula_hex2dec has been renamed to cvt_hex2dec. Also       |
-;|     the directory to formula_hex2dec has been changed.              |
-;|                                                                     |
-;|     Several functions have been renamed:                            |
-;|         formula_hex2dec has been renamed to cvt_hex2dec,            |
-;|         write_dec2string has been renamed to cvt_dec2string.        |
-;|                                                                     |
-;|     Also the print_int2string itself has been renamed to            |
-;|     cvt_int2string.                                                 |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;=======================================================================
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+------------------+---------------------------------------------------
+REV#: 0.1.2       | SUMMARY:
+DATE: 02-JAN-2015 |     Fix changes due to renaming.
+------------------+---------------------------------------------------
+DETAILS:
+
+  The formula_hex2dec has been renamed to cvt_hex2dec. Also
+  the directory to formula_hex2dec has been changed.
+
+  Several functions have been renamed:
+      formula_hex2dec has been renamed to cvt_hex2dec,
+      write_dec2string has been renamed to cvt_dec2string.
+
+  Also the print_int2string itself has been renamed to
+  cvt_int2string.
+
+======================================================================

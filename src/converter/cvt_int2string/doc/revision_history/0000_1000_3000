@@ -2,12 +2,14 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 ------------------+---------------------------------------------------
-REV#: 0.1.1       | SUMMARY:
-DATE: 27-DEC-2014 |     Improve code readability.
+REV#: 0.1.3       | SUMMARY:
+DATE: 08-JAN-2015 |     Fix due to renaming and new standard.
 ------------------+---------------------------------------------------
 DETAILS:
 
-  Introduces a new style which is more organized.
-  Also reduce the duplicated instructions by using append_string.
+  Fix problem due to function renamed: calculate_integer_length
+  has been renamed to find_int_digits.
+
+  The source code and documents now uses the new updated standard.
 
 ======================================================================
