@@ -6,6 +6,7 @@ The functions that are properly documented:
     src/converter/cvt_hex2dec
     src/converter/cvt_dec2string
     src/converter/cvt_int2string
+    src/converter/cvt_double2string
     src/math/find_int_digits
 
 Others are still in document process.

@@ -1,26 +1,25 @@
-;          1         2         3         4         5         6         7
-;01234567890123456789012345678901234567890123456789012345678901234567890
-;=======================================================================
-;+-------------------+-------------------------------------------------+
-;| REV#: 0.1.11      | DESCRIPTION:                                    |
-;| DATE: 28-DEC-2014 |      Minor improvements on documentations.      |
-;+-------------------+-------------------------------------------------+
-;| DETAILS:                                                            |
-;|                                                                     |
-;|     Minimize the amount of comments in the source code, only        |
-;|     shows useful comments.                                          |
-;|                                                                     |
-;|     Minor update to the source code and description standard        |
-;|     convention format, especially at "if" statement:                |
-;|                                                                     |
-;|         Old standard convention:                                    |
-;|                                                                     |
-;|             001: if alpha == bravo, .goto charlie;                  |
-;|                                                                     |
-;|         New updated standard convention:                            |
-;|                                                                     |
-;|             001: if alpha == bravo, then                            |
-;|                      .goto charlie;                                 |
-;|                                                                     |
-;+---------------------------------------------------------------------+
-;=======================================================================
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+------------------+---------------------------------------------------
+REV#: 0.1.11      | SUMMARY:
+DATE: 28-DEC-2014 |      Minor improvements on documentations.
+------------------+---------------------------------------------------
+DETAILS:
+
+  Minimize the amount of comments in the source code, only
+  shows useful comments.
+
+  Minor update to the source code and description standard
+  convention format, especially at "if" statement:
+
+      Old standard convention:
+
+          001: if alpha == bravo, .goto charlie;
+
+      New updated standard convention:
+
+          001: if alpha == bravo, then
+                   .goto charlie;
+
+======================================================================

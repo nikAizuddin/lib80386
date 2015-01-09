@@ -2,12 +2,11 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 ------------------+---------------------------------------------------
-REV#: 0.1.21      | SUMMARY:
-DATE: 03-JAN-2015 |     Fix due to string_append changes.
+REV#: 0.1.22      | SUMMARY:
+DATE: 09-JAN-2015 |     New standard for code and doc.
 ------------------+---------------------------------------------------
 DETAILS:
 
-  Fix due to the function append_string that has been
-  renamed to string_append.
+  The source code and documents now uses the new updated standard.
 
 ======================================================================

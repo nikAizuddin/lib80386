@@ -1,26 +1,35 @@
-;          1         2         3         4         5         6         7
-;01234567890123456789012345678901234567890123456789012345678901234567890
-;=======================================================================
-;+---------------------------------------------------------------------+
-;|                          *** TEST ***                               |
-;+---------------------------------------------------------------------+
-;|          AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi                  |
-;|    DATE CREATED: 25-DEC-2014                                        |
-;|    TEST PURPOSE: Make sure the cvt_double2string have no errors.    |
-;+---------------------------------------------------------------------+
-;|        LANGUAGE: x86 Assembly Language                              |
-;|          SYNTAX: Intel                                              |
-;|       ASSEMBLER: NASM                                               |
-;|    ARCHITECTURE: i386                                               |
-;|          KERNEL: Linux 32-bit                                       |
-;|          FORMAT: elf32                                              |
-;|  EXTERNAL FILES: cvt_double2string.asm                              |
-;|                  append_string.asm                                  |
-;+---------------------------------------------------------------------+
-;=======================================================================
+;        1         2         3         4         5         6         7
+;234567890123456789012345678901234567890123456789012345678901234567890
+;=====================================================================
+;
+;                           *** TEST ***
+;
+;---------------------------------------------------------------------
+;
+;           AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
+;     DATE CREATED: 25-DEC-2014
+;
+;     TEST PURPOSE: Make sure the cvt_double2string have no errors.
+;
+;         LANGUAGE: x86 Assembly Language
+;           SYNTAX: Intel
+;        ASSEMBLER: NASM
+;     ARCHITECTURE: i386
+;           KERNEL: Linux 32-bit
+;           FORMAT: elf32
+;
+;   EXTERNAL FILES: cvt_double2string.asm,
+;                   cvt_int2string.asm,
+;                   cvt_dec2string.asm,
+;                   cvt_hex2dec.asm,
+;                   find_int_digits.asm,
+;                   pow_int.asm,
+;                   string_append.asm
+;
+;======================================================================
 
 extern cvt_double2string
-extern append_string
+extern string_append
 global _start
 
 section .bss
@@ -58,30 +67,29 @@ section .text
 _start:
 
 
-;///////////////////////////////////////////////////////////////////////
-;//                           TEST BEGIN                              //
-;///////////////////////////////////////////////////////////////////////
+;
+;
+;   TEST 0001
+;
+;
 
 
-;+-----------+
-;| TEST 0001 |==========================================================
-;+-----------+
-;=======================================================================
-
-    ;    +--------------+
-    ;----| display info |-----------------------------------------------
-    ;    +--------------+
-    ;-------------------------------------------------------------------
+;
+;
+;   display info
+;
+;
     mov    eax, 0x04                      ;systemcall write
     mov    ebx, 0x01                      ;to stdout
     mov    ecx, t0001_ibeg                ;src = t0001_ibeg
     mov    edx, (t0001_iend - t0001_ibeg) ;strlen
     int    0x80
 
-    ;    +-------------------+
-    ;----| cvt_double2string |------------------------------------------
-    ;    +-------------------+
-    ;-------------------------------------------------------------------
+;
+;
+;   cvt_double2string
+;
+;
     sub    esp, 20                        ;reserve 20 bytes
     mov    eax, [t0001_doux    ]          ;get t0001_doux[0]
     mov    ebx, [t0001_doux + 4]          ;get t0001_doux[1]
@@ -96,10 +104,13 @@ _start:
     call   cvt_double2string
     add    esp, 20                        ;restore 20 bytes
 
-    ;    +-----------------------------+
-    ;----| append newline to t0001_str |--------------------------------
-    ;    +-----------------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   append newline to t0001_str
+;
+;
+;
     sub    esp, 16                        ;reserve 16 bytes
     mov    eax, t0001_str                 ;get @t0001_str
     mov    ebx, t0001_len                 ;get @t0001_len
@@ -109,13 +120,15 @@ _start:
     mov    [esp +  4], ebx                ;arg2: @t0001_len
     mov    [esp +  8], ecx                ;arg3: @newline
     mov    [esp + 12], edx                ;arg4: append 1 char only
-    call   append_string
+    call   string_append
     add    esp, 16                        ;restore 16 bytes
 
-    ;    +--------------------------------------+
-    ;----| systemcall write t0001_str to stdout |-----------------------
-    ;    +--------------------------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   systemcall write t0001_str to stdout
+;
+;
     mov    eax, 0x04                      ;systemcall write
     mov    ebx, 0x01                      ;to stdout
     mov    ecx, t0001_str                 ;src = t0001_ibeg
@@ -123,25 +136,30 @@ _start:
     int    0x80
 
 
-;+-----------+
-;| TEST 0002 |==========================================================
-;+-----------+
-;=======================================================================
+;
+;
+;   TEST 0002
+;
+;
 
-    ;    +--------------+
-    ;----| display info |-----------------------------------------------
-    ;    +--------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   display info
+;
+;
     mov    eax, 0x04                      ;systemcall write
     mov    ebx, 0x01                      ;to stdout
     mov    ecx, t0002_ibeg                ;src
     mov    edx, (t0002_iend - t0002_ibeg) ;strlen
     int    0x80
 
-    ;    +-------------------+
-    ;----| cvt_double2string |------------------------------------------
-    ;    +-------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   cvt_double2string
+;
+;
     sub    esp, 20                        ;reserve 20 bytes
     mov    eax, [t0002_doux    ]          ;get t0002_doux[0]
     mov    ebx, [t0002_doux + 4]          ;get t0002_doux[1]
@@ -156,10 +174,12 @@ _start:
     call   cvt_double2string
     add    esp, 20                        ;restore 20 bytes
 
-    ;    +-----------------------------+
-    ;----| append newline to t0002_str |--------------------------------
-    ;    +-----------------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   append newline to t0002_str
+;
+;
     sub    esp, 16                        ;reserve 16 bytes
     mov    eax, t0002_str                 ;get @t0002_str
     mov    ebx, t0002_len                 ;get @t0002_len
@@ -169,13 +189,15 @@ _start:
     mov    [esp +  4], ebx                ;arg2: @t0002_len
     mov    [esp +  8], ecx                ;arg3: @newline
     mov    [esp + 12], edx                ;arg4: append 1 char only
-    call   append_string
+    call   string_append
     add    esp, 16                        ;restore 16 bytes
 
-    ;    +--------------------------------------+
-    ;----| systemcall write t0002_str to stdout |-----------------------
-    ;    +--------------------------------------+
-    ;-------------------------------------------------------------------
+
+;
+;
+;   systemcall write t0002_str to stdout
+;
+;
     mov    eax, 0x04                      ;systemcall write
     mov    ebx, 0x01                      ;to stdout
     mov    ecx, t0002_str                 ;src
@@ -183,12 +205,7 @@ _start:
     int    0x80
 
 
-;///////////////////////////////////////////////////////////////////////
-;//                           TEST END                                //
-;///////////////////////////////////////////////////////////////////////
-
-
 .exit:
-    mov    eax, 0x01                ;systemcall exit
-    xor    ebx, ebx                 ;return 0
+    mov    eax, 0x01                      ;systemcall exit
+    xor    ebx, ebx                       ;return 0
     int    0x80
