@@ -4,11 +4,17 @@
 
                         IMPORTANT AND URGENT
 
+  * create cvt_string2dec()
+        Convert ASCII string to decimal number.
+
+  * create cvt_dec2hex()
+        Convert decimal number to hexadecimal number.
+
   * create cvt_string2int()
-        This function will convert string to integer number.
+        Convert ASCII string to integer number.
 
   * create cvt_string2double()
-        This function will convert string to double number.
+        Convert ASCII string to double number.
 
 ----------------------------------------------------------------------
 
