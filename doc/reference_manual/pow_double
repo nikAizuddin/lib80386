@@ -33,7 +33,7 @@ OUTPUT PARAMETERS:
 
 RETURNS:
 
-    Result of x^y calculations
+    Result of x^y calculations. (ST0)
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 

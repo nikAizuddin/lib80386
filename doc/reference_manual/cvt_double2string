@@ -37,12 +37,14 @@ OUTPUT PARAMETERS:
 
     addr_out_string
         The string will be filled with the double value in ASCII.
+
     addr_out_strlen
         The length of the string after filled.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 RETURNS:
+
     ---
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

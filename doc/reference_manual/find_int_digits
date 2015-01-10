@@ -34,7 +34,7 @@ OUTPUT PARAMETERS:
 
 RETURNS:
 
-    The number of digits from integer_x.
+    The number of digits from integer_x. (EAX)
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
