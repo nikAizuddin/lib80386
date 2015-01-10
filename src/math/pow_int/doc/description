@@ -1,0 +1,68 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: pow_int
+
+DESCRIPTION: Calculate integer power, for example 3^13
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  pow_int( x:32bit, y:32bit ) : 32bit
+
+  Input parameters
+      1) x = base value : 32bit
+      2) y = power value : 32bit
+
+  Output parameters
+      ---
+
+  Returns
+      result : 32bit
+
+  +-------------------------------------------------------------+
+  |                   STACK MEMORY INFORMATION                  |
+  +--------+----------------------------------------------------+
+  | Offset |  Data  |               Description                 |
+  +--------+--------+-------------------------------------------+
+  | +    0 | x      | The base value.                           |
+  |        |        |                                           |
+  +--------+--------+-------------------------------------------+
+  | +    4 | y      | The power value.                          |
+  |        |        |                                           |
+  +--------+--------+-------------------------------------------+
+  | +    8 | i      | General purpose counter. The initial      |
+  |        |        | value is equal to y.                      |
+  |        |        |                                           |
+  +--------+--------+-------------------------------------------+
+  | +   12 | result | Stores result from the power calculation. |
+  |        |        | The initial value is equal to 0x00000001. |
+  |        |        |                                           |
+  +--------+--------+-------------------------------------------+
+  | Total stack used for local variables = 16 bytes             |
+  +-------------------------------------------------------------+
+
+       begin
+
+       .loop_1:
+
+  001:     result = result * x;
+  002:     --i;
+  003:     if i !=0, then
+               goto .loop_1;
+
+       .endloop_1:
+
+  004: return result;
+
+  end.
+
+======================================================================

@@ -17,6 +17,7 @@
 ;       ARCHITECTURE: i386
 ;             KERNEL: Linux 32-bit
 ;             FORMAT: elf32
+
 ;      INCLUDE FILES: ---
 ;
 ;            VERSION: 0.1.2

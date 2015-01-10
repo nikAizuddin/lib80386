@@ -26,17 +26,17 @@ PROCESS DESCRIPTION:
                  src_strlen:32bit )
 
   Input parameters
-    1) addr_dst_str    = address of destination string
-    2) addr_dst_strlen = address of destination string length
-    3) addr_src_str    = address of source string
-    4) src_strlen      = value of source string length
+      1) addr_dst_str    = address of destination string
+      2) addr_dst_strlen = address of destination string length
+      3) addr_src_str    = address of source string
+      4) src_strlen      = value of source string length
 
   Output parameters
-    1) addr_dst_str    = new string is appended to the dst string
-    2) addr_dst_strlen = new value of strlen after append
+      1) addr_dst_str    = new string is appended to the dst string
+      2) addr_dst_strlen = new value of strlen after append
 
   Returns
-    ---
+      ---
 
   +-------------------------------------------------------------+
   |                     STACK STRUCTURE                         |
