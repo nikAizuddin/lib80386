@@ -27,7 +27,7 @@ PROCESS DESCRIPTION:
       ---
 
   Returns
-     the number of digits from integer_x.
+     the number of digits from integer_x (EAX)
 
   +-------------------------------------------------------------+
   |                     STACK STRUCTURE                         |

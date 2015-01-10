@@ -2,18 +2,12 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-                        IMPORTANT AND URGENT
-
-  * create cvt_string2int()
-        This function will convert string to integer number.
-
-  * create cvt_string2double()
-        This function will convert string to double number.
+                        BUGS / KNOWN ISSUES
 
 ----------------------------------------------------------------------
 
-                       IMPORTANT, BUT NOT URGENT
-
-  ---
+   ID# | Report Date |            Summary                  | Status
+ ------+-------------+-------------------------------------+--------
+       |             |                                     |
 
 ======================================================================

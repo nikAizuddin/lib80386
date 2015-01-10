@@ -17,6 +17,7 @@
 ;       ARCHITECTURE: i386
 ;             KERNEL: Linux 32-bit
 ;             FORMAT: elf32
+;
 ;     EXTERNAL FILES: ---
 ;
 ;            VERSION: 0.1.1
@@ -33,7 +34,9 @@ global cvt_hex2dec
 
 section .text
 
-cvt_hex2dec:  
+cvt_hex2dec:
+
+;parameter1 = hexadecimal_num:32bit
 
 .setup_stackframe:
     sub    esp, 4                   ;reserve 4 bytes to store ebp

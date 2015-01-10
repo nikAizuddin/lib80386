@@ -26,7 +26,7 @@ PROCESS DESCRIPTION:
       ---
 
   Returns
-      result : 32bit
+      result (EAX)
 
   +-------------------------------------------------------------+
   |                   STACK MEMORY INFORMATION                  |

@@ -1,32 +1,19 @@
-# ABOUT lib80386
+# About lib80386
 
-The functions that are properly documented:
+A library that contains a collections of various function that are
+written in x86 NASM Assembler. However, the functions are tested on
+Linux only, and not yet tested on Windows/Mac.
 
-    src/string/string_append
-    src/converter/cvt_hex2dec
-    src/converter/cvt_dec2string
-    src/converter/cvt_int2string
-    src/converter/cvt_double2string
-    src/math/find_int_digits
-    src/math/pow_int
+## HOW TO USE lib80386?
+    STEP 1: You need a NASM Assembler.
 
-Others are still in document process.
+    STEP 2: In this folder lib80386, PLEASE read the reference
+            manual in the folder doc/reference_manual.
 
-## ATTENTION
+            The reference manual explains how to use the function.
 
-Directory changes and most functions have been renamed!
+            But just reading the manual is not enough, you also need
+            to see the example how to use it. I have already include
+            a simple getting_started example for each functions.
 
-    -> src/io/append_string has been moved to
-       src/string/string_append.
-
-    -> src/io/print_int2string has been moved to
-       src/converter/cvt_int2string.
-
-    -> src/io/print_double2string has been moved to
-       src/converter/cvt_double2string.
-
-    -> src/math/formula_hex2dec has been moved to
-       src/converter/cvt_hex2dec.
-
-    -> src/math/calculate_integer_length has been renamed to
-       src/math/find_int_digits.
+    Goodluck !! :D

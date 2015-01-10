@@ -9,6 +9,8 @@
 ;              EMAIL: nickaizuddin93@gmail.com
 ;       DATE CREATED: 08-NOV-2014
 ;
+;       CONTRIBUTORS: ---
+;
 ;           LANGUAGE: x86 Assembly Language
 ;             SYNTAX: Intel
 ;          ASSEMBLER: NASM
@@ -26,7 +28,7 @@
 ;
 ;                 MIT Licensed. See /LICENSE file.
 ;
-;=======================================================================
+;=====================================================================
 
 global pow_int
 
@@ -107,7 +109,7 @@ pow_int:
 
 .clean_stackframe:
     sub    ebp, 8                   ;-8 offset due to arguments
-    mov    esp, ebp                 ;restore stack ptr to initial value
+    mov    esp, ebp                 ;restore stack ptr to initial val
     mov    ebp, [esp]               ;restore ebp to initial value
     add    esp, 4                   ;restore 4 bytes
 

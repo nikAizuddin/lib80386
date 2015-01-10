@@ -4,10 +4,10 @@
 ;
 ;       EXAMPLE 001: Getting Started
 ;   EXAMPLE PURPOSE: Demonstrates how to use the function
-;                    cvt_dec2string.
+;                    pow_double.
 ;
 ;            AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
-;      DATE CREATED: 05-JAN-2015
+;      DATE CREATED: 10-JAN-2015
 ;
 ;          LANGUAGE: x86 Assembly Language
 ;            SYNTAX: Intel
@@ -16,21 +16,21 @@
 ;            KERNEL: Linux 32-bit
 ;            FORMAT: elf32
 ;
-;    EXTERNAL FILES: cvt_dec2string.asm
+;    EXTERNAL FILES: pow_double.asm
 ;
 ;=====================================================================
 
-extern cvt_dec2string
+extern pow_double
 global _start
 
 section .bss
 
-    string: resd 2
-    strlen: resd 1
+    result: resq 1
 
 section .data
 
-    decimal_number: dd 0x00000256
+    base:  dq 9.12
+    power: dq 6.73
 
 section .text
 
@@ -39,28 +39,24 @@ _start:
 
 ;
 ;
-;   Convert decimal number to ASCII string.
-;
-;   cvt_dec2string( @decimal_number,
-;                   1,
-;                   @string,
-;                   @strlen )
+;   result = pow_double( base, power );
 ;
 ;
     sub    esp, 16                  ;reserve 16 bytes
-    mov    eax, decimal_number
-    mov    ebx, 1
-    mov    ecx, string
-    mov    edx, strlen
+    mov    eax, [base     ]
+    mov    ebx, [base  + 4]
+    mov    ecx, [power    ]
+    mov    edx, [power + 4]
     mov    [esp     ], eax
     mov    [esp +  4], ebx
     mov    [esp +  8], ecx
     mov    [esp + 12], edx
-    call   cvt_dec2string
+    call   pow_double
     add    esp, 16                  ;restore 16 bytes
+    fst    qword [result]           ;save return value
+
 
 .exit:
     mov    eax, 0x01                ;systemcall exit
-    mov    ebx, 0x00                ;return 0
-    int    0x80
-
+    xor    ebx, ebx                 ;return 0
+    int   0x80

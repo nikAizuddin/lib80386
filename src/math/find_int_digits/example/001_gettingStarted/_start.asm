@@ -15,6 +15,7 @@
 ;      ARCHITECTURE: i386
 ;            KERNEL: Linux 32-bit
 ;            FORMAT: elf32
+;
 ;    EXTERNAL FILES: find_int_digits.asm
 ;
 ;=====================================================================

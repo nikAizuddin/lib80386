@@ -4,13 +4,13 @@
 
                        IMPORTANT AND URGENT
 
-  ---
+  * create string_compare()
+      Compares 2 strings.
 
 ----------------------------------------------------------------------
 
                      IMPORTANT, BUT NOT URGENT
 
-  * create string_compare()
-      Compares 2 strings.
+  ---
 
 ======================================================================

@@ -23,13 +23,13 @@ PROCESS DESCRIPTION:
   cvt_hex2dec( hexadecimal_num:32bit ) : 32bit
 
   Input parameters
-    1) hexadecimal_num = the hexadecimal number
+      1) hexadecimal_num = the hexadecimal number
 
   Output parameters
-    ---
+      ---
 
   Returns
-    EAX = decimal number
+      decimal number (EAX)
 
   +-------------------------------------------------------------+
   |                     STACK STRUCTURE                         |

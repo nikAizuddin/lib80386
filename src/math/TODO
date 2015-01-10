@@ -4,13 +4,13 @@
 
                        IMPORTANT AND URGENT
 
-  * Update pow_double's standard convention.
+  * Create root_double()
+        For example, if given problem case sqrt( 3.25, 12.13 ).
 
 ----------------------------------------------------------------------
 
                      IMPORTANT, BUT NOT URGENT
 
-  * Create root_double()
-        For example, if given problem case sqrt( 3.25, 12.13 ).
+  ---
 
 ======================================================================
