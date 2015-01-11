@@ -1,0 +1,160 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: cvt_string2dec
+
+DESCRIPTION: Converts ASCII string to decimal number.
+             For example, given ASCII string = 0x00323638,
+             it will be converted to decimal number, becomes
+             0x00000862.
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  cvt_string2dec( addr_string:32bit,
+                  strlen:32bit,
+                  addr_decimal:32bit,
+                  addr_digits:32bit )
+
+  Input parameters
+      1) addr_string  = Address of the input string
+      2) strlen       = Address of the input strlen
+      3) addr_decimal = Address of the decimal number
+      4) addr_digits  = Address of the number of digits of the decimal
+
+  Output parameters
+      3) addr_decimal = The decimal numbers from the string.
+      4) addr_digits  = The number of digits of the decimal.
+
+  Returns
+      ---
+
+  +-------------------------------------------------------------+
+  |                     STACK STRUCTURE                         |
+  +--------+-----------------+----------------------------------+
+  | Offset |      Data       |          Descriptions            |
+  +--------+-----------------+----------------------------------+
+  | +    0 | addr_string     | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +    4 | strlen          | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +    8 | addr_decimal    | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   12 | addr_digits     | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   16 | in_ptr          | Pointer that points to           |
+  |        |                 | addr_string.                     |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   20 | in_buffer       | Stores temporary buffer from     |
+  |        |                 | addr_string location.            |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   24 | out_ptr         | Pointer that points to           |
+  |        |                 | addr_decimal.                    |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   28 | out_buffer      | Stores temporary buffer before   |
+  |        |                 | being saved to addr_decimal.     |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   32 | out_bitpos      | The bit position of the          |
+  |        |                 | out_buffer.                      |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   36 | decimal_number  | Contains a decimal_number        |
+  |        |                 | extracted from addr_string.      |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   40 | digits          | Stores the number of digits of   |
+  |        |                 | addr_decimal.                    |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   44 | i               | General purpose counter.         |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | Total stack used for local variables = 48 bytes             |
+  +-------------------------------------------------------------+
+
+       begin
+
+  001:     in_ptr     = addr_string;
+  002:     in_buffer  = in_ptr^;
+  003:     i          = strlen;
+
+  004:     if strlen > 8, then
+               goto .decimal_num_2_blocks;
+
+           .decimal_num_1_block:
+  005:         out_bitpos = (strlen - 1) * 4;
+  006:         out_ptr    = addr_decimal;
+  007:         goto .loop_get_decimal;
+
+           .decimal_num_2_blocks:
+  008:         out_bitpos = (strlen - 9) * 4;
+  009:         out_ptr    = addr_decimal + 4;
+
+           .loop_get_decimal:
+
+               ##
+               ## Check if in_buffer is empty
+               ##
+  010:         if in_buffer != 0, then
+                   goto .in_buffer_not_empty;
+               .in_buffer_empty:
+  011:             in_ptr    += 4;
+  012:             in_buffer  = in_ptr^;
+               .in_buffer_not_empty:
+
+               ##
+               ## Check if out_buffer is full
+               ##
+  013:         if out_bitpos == -4, then
+                   goto .out_buffer_not_full;
+               .out_buffer_full:
+  014:             out_ptr^    = out_buffer;
+  015:             out_ptr    -= 4;
+  016:             out_buffer  = 0;
+  017:             out_bitpos  = 28;
+               .out_buffer_not_full:
+
+               ##
+               ## Get a decimal number from the in_buffer
+               ##
+  018:         decimal_number   = in_buffer & 0x0000000f;
+  019:         in_buffer      >>= 8;
+
+               ##
+               ## Fill the decimal number into out_buffer
+               ##
+  020:         out_buffer |= decimal_number << out_bitpos;
+  021:         out_bitpos -= 4;
+  022:         ++digits;
+
+  023:         --i;
+  024:         if i != 0, then
+                   goto .loop_get_decimal;
+
+           .endloop_get_decimal:
+
+           ##
+           ## Make sure the out_buffer is saved to addr_decimal^
+           ##
+  025:     out_ptr^ = out_buffer;
+  026:     addr_digits^ = digits;
+
+       end.
+
+======================================================================

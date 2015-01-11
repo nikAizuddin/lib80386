@@ -1,0 +1,71 @@
+section .text
+
+global prc11
+prc11:
+
+; setup stack frame
+    sub    esp, 4     ; reserve 4 bytes for storing ebp
+    mov    [esp], ebp ; save value ebp to stack
+    mov    ebp, esp   ; save value esp to ebp, to restore esp at the end
+
+; get arguments
+    add    ebp, 8         ; offset to get arguments
+    mov    eax, [ebp    ] ; get decimal withdraw
+    mov    ebx, [ebp + 4] ; get address withdraw value
+
+; set local variables
+    sub    esp, 24
+    mov    [esp     ], eax ; decimal withdraw
+    mov    [esp +  4], ebx ; address withdraw value
+    mov    dword [esp +  8], 0x00000000 ; A
+    mov    dword [esp + 12], 0x00000000 ; B
+    mov    dword [esp + 16], 0x00000000 ; C
+    mov    dword [esp + 20], 0x00000000 ; D
+
+; A =  decimal withdraw >> 4
+    mov    eax, [esp     ] ; eax = decimal withdraw
+    shr    eax, 4          ; eax >>= 4
+    mov    [esp +  8], eax ; A = eax
+
+; B = (decimal withdraw >> 8)  * 0xa
+    mov    eax, [esp     ] ; eax = decimal withdraw
+    shr    eax, 8          ; eax >>= 8
+    mov    ebx, 0xa        ; ebx = 0xa
+    mul    ebx             ; eax = eax * ebx
+    mov    [esp + 12], eax ; B = eax
+
+; C = (decimal withdraw >> 12) * 0x64
+    mov    eax, [esp     ] ; eax = decimal withdraw
+    shr    eax, 12         ; eax >>= 12
+    mov    ebx, 0x64       ; ebx = 0x64
+    mul    ebx             ; eax *= ebx
+    mov    [esp + 16], eax ; C = eax
+
+; D = 0x6 * (A + B + C)
+    mov    ebx, [esp +  8] ; ebx = A
+    mov    ecx, [esp + 12] ; ecx = B
+    mov    edx, [esp + 16] ; edx = C
+    xor    eax, eax        ; eax = 0
+    add    eax, ebx        ; eax += A
+    add    eax, ecx        ; eax += B
+    add    eax, edx        ; eax += C
+    mov    ebx, 0x6        ; ebx = 0x6
+    mul    ebx             ; eax *= ebx
+    mov    [esp + 20], eax ; D = eax
+
+; withdraw value = decimal withdraw - D
+    mov    eax, [esp     ] ; eax = decimal withdraw
+    mov    ebx, [esp + 20] ; ebx = D
+    sub    eax, ebx        ; eax -= ebx
+    mov    ebx, [esp +  4] ; ebx = address to withdraw value
+    mov    [ebx], eax      ; withdraw value = eax
+
+; clean stack frame
+    sub    ebp, 8     ; remove argument offset
+    mov    esp, ebp   ; restore esp to its initial value
+    mov    ebp, [esp] ; restore ebp to its initial value
+    add    esp, 4     ; remove ebp from stack
+
+; return to the caller
+    ret
+
