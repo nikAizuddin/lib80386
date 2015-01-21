@@ -42,30 +42,34 @@ PROCESS DESCRIPTION:
   +--------+-----------------+----------------------------------+
   | Offset |      Data       |          Descriptions            |
   +--------+-----------------+----------------------------------+
-  | +    0 | integer_x       | The integer number, can be       |
-  |        |                 | signed or unsigned integer.      |
+  | +    0 | integer_x       | ---                              |
+  |        |                 |                                  |
   +--------+-----------------+----------------------------------+
-  | +    4 | addr_out_string | Stores address to the destination|
-  |        |                 | string.                          |
+  | +    4 | addr_out_string | ---                              |
+  |        |                 |                                  |
   +--------+-----------------+----------------------------------+
-  | +    8 | addr_out_strlen | Stores address to the destination|
-  |        |                 | string length.                   |
+  | +    8 | addr_out_strlen | ---                              |
+  |        |                 |                                  |
   +--------+-----------------+----------------------------------+
-  | +   12 | flag            | Will be used to specify whether  |
-  |        |                 | integer_x is signed or unsigned. |
+  | +   12 | flag            | ---                              |
+  |        |                 |                                  |
   +--------+-----------------+----------------------------------+
   | +   16 | integer_x_len   | Stores number of digits of       |
   |        |                 | integer_x.                       |
+  |        |                 |                                  |
   +--------+-----------------+----------------------------------+
   | +   20 | integer_x_quo   | Stores the quotient value of a   |
   |        |                 | division that involves integer_x.|
+  |        |                 |                                  |
   +--------+-----------------+----------------------------------+
   | +   24 | integer_x_rem   | Stores the remainder value of a  |
   |        |                 | division that involves integer_x.|
+  |        |                 |                                  |
   +--------+-----------------+----------------------------------+
   | +   28 | decimal_x[0]    | integer_x is hexadecimal number. |
   | +   32 | decimal_x[1]    | But, decimal_x stores the        |
   |        |                 | decimal number of integer_x.     |
+  |        |                 |                                  |
   +--------+-----------------+----------------------------------+
   | +   36 | ascii_x[0]      | Stores the ascii value of the    |
   | +   40 | ascii_x[1]      | decimal_x number.                |
@@ -77,6 +81,7 @@ PROCESS DESCRIPTION:
   +--------+-----------------+----------------------------------+
   | +   52 | is_negative     | Specify whether the integer_x is |
   |        |                 | a negative value or not.         |
+  |        |                 |                                  |
   +--------+-----------------+----------------------------------+
   | Total stack used for local variables = 56 bytes             |
   +-------------------------------------------------------------+
@@ -164,10 +169,10 @@ PROCESS DESCRIPTION:
 
            .is_negative_false:
 
-  018: string_append( addr_out_string,
-                      addr_out_strlen,
-                      @ascii_x[0],
-                      ascii_x_len );
+  018:     string_append( addr_out_string,
+                          addr_out_strlen,
+                          @ascii_x[0],
+                          ascii_x_len );
 
        End.
 

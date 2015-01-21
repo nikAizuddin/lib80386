@@ -7,7 +7,7 @@
 ;
 ;             AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
 ;              EMAIL: nickaizuddin93@gmail.com
-;       DATE CREATED: 07/NOV/2014
+;       DATE CREATED: 07-NOV-2014
 ;
 ;       CONTRIBUTORS: ---
 ;
@@ -20,7 +20,7 @@
 ;
 ;     EXTERNAL FILES: ---
 ;
-;            VERSION: 0.1.21
+;            VERSION: 0.1.22
 ;             STATUS: Alpha
 ;               BUGS: <See doc/bugs/index file>
 ;
@@ -40,6 +40,7 @@ string_append:
 ;parameter 2 = addr_dst_strlen:32bit
 ;parameter 3 = addr_src_str:32bit
 ;parameter 4 = src_strlen:32bit
+;returns = ---
 
 .setup_stackframe:
     sub    esp, 4                   ;reserve 4 bytes
@@ -71,7 +72,7 @@ string_append:
     mov    dword [esp + 52], 0      ;ascii_char
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Initialize source pointer and fetch data from source
 ;   string memory block 0.
@@ -92,33 +93,33 @@ string_append:
 ;
 ;          Diagram 1: Memory view of the source string
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Point src_ptr to address source string.
 ;
-;   001: src_ptr = addr_src_str;
+;   001:   src_ptr = addr_src_str;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp +  8]          ;eax = addr_src_str
     mov    [esp + 32], eax          ;src_ptr = addr_src_str
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Fetch 32 bits of data from source string memory block 0
 ;
-;   002: src_buffer = src_ptr^;
+;   002:   src_buffer = src_ptr^;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 32]          ;ebx = src_ptr
     mov    eax, [ebx]               ;eax = src_ptr^
     mov    [esp + 36], eax          ;src_buffer = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Get the value of destination string length.
 ;
@@ -126,15 +127,15 @@ string_append:
 ;   string, because later we have to find the memory address of the
 ;   end string of the destination string.
 ;
-;   003: dst_strlen = addr_dst_strlen^;
+;   003:   dst_strlen = addr_dst_strlen^;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp +  4]          ;ebx = addr_dst_strlen
     mov    eax, [ebx]               ;eax = addr_dst_strlen^
     mov    [esp + 16], eax          ;dst_strlen = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Find current destination string block and its offset.
 ;
@@ -160,16 +161,16 @@ string_append:
 ;   be 2, and the dst_ptr will point to address
 ;   mem block 2.
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Find current destination string memory block number.
 ;
-;   004: current_dst_block = dst_strlen / 4;
+;   004:   current_dst_block = dst_strlen / 4;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 16]          ;eax = dst_strlen
     mov    ebx, 4                   ;ebx = 4, to divide the eax
     xor    edx, edx                 ;prevent errors when division.
@@ -177,14 +178,14 @@ string_append:
     mov    [esp + 20], eax          ;current_dst_block = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Find the byte offset of the current destination string
 ;   memory block.
 ;
-;   005: block_byte_offset = current_dst_block * 4;
+;   005:   block_byte_offset = current_dst_block * 4;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 20]          ;eax = current_dst_block
     mov    ebx, 4
     xor    edx, edx
@@ -192,7 +193,7 @@ string_append:
     mov    [esp + 24], eax          ;block_byte_offset = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Find address of current destination string memory block,
 ;   so that later we can fetch data from the destination
@@ -212,34 +213,34 @@ string_append:
 ;
 ;   Then we have the address of the dst block 2.
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Find address of current destination string memory block.
 ;
-;   006: dst_ptr = addr_dst_str + block_byte_offset;
+;   006:   dst_ptr = addr_dst_str + block_byte_offset;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp     ]          ;eax = addr_dst_str
     mov    ebx, [esp + 24]          ;ebx = block_byte_offset
     add    eax, ebx
     mov    [esp + 28], eax          ;dst_ptr = eax
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Fetch data from destination string and store to buffer.
 ;
-;   007: dst_buffer = dst_ptr^;
+;   007:   dst_buffer = dst_ptr^;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 28]          ;ebx = dst_ptr
     mov    eax, [ebx]               ;eax = dst_ptr^
     mov    [esp + 40], eax          ;dst_buffer = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Find bit position of last character from the destination string
 ;
@@ -275,14 +276,14 @@ string_append:
 ;
 ;   This bit position will be the bit position of the dst buffer.
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
+;   008:   dst_buffer_bitpos = (dst_strlen-block_byte_offset)*8;
 ;
-;   008: dst_buffer_bitpos = (dst_strlen-block_byte_offset)*8;
-;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 16]          ;eax = dst_strlen
     mov    ebx, [esp + 24]          ;ebx = block_byte_offset
     sub    eax, ebx
@@ -292,7 +293,7 @@ string_append:
     mov    [esp + 44], eax          ;dst_buffer_bitpos = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Initializes counter for .loop_1
 ;
@@ -304,14 +305,14 @@ string_append:
 ;   When counter equals zero means that we have completely
 ;   append all characters from source string.
 ;
-;   009: i = src_strlen;
+;   009:   i = src_strlen;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 12]          ;eax = src_strlen
     mov    [esp + 48], eax          ;i = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   .LOOP 1: Append the source string to the destination string
 ;
@@ -319,11 +320,11 @@ string_append:
 ;   until all source string has been appended to the destination
 ;   string.
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 .loop_1:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Check if dst_buffer is full
 ;
@@ -337,65 +338,65 @@ string_append:
 ;           Also, reset the buffer and bit position of the
 ;           destination buffer to zero.
 ;
-;   010: if dst_buffer_bitpos != 32, then
-;            goto .endcond_1;
+;   010:   if dst_buffer_bitpos != 32, then
+;              goto .endcond_1;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 44]          ;eax = dst_buffer_bitpos
     cmp    eax, 32
     jne    .endcond_1
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   .COND_1: If the destination string buffer is full
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 .cond_1:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Save the buffer to the destination string.
 ;
-;   011: dst_ptr^ = dst_buffer;
+;   011:   dst_ptr^ = dst_buffer;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 40]          ;eax = dst_buffer
     mov    ebx, [esp + 28]          ;ebx = dst_ptr
     mov    [ebx], eax               ;dst_ptr^ = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Point the destination pointer to the next memory location.
 ;
-;   012: dst_ptr += 4;
+;   012:   dst_ptr += 4;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 28]          ;eax = dst_ptr
     add    eax, 4                   ;eax = eax + 4
     mov    [esp + 28], eax          ;dst_ptr = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Reset the destination string buffer to zero.
 ;
-;   013: dst_buffer = 0;
+;   013:   dst_buffer = 0;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     xor    eax, eax                 ;eax = 0
     mov    [esp + 40], eax          ;dst_buffer = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;    Reset the destination string buffer bit position to zero.
 ;
-;    014: dst_buffer_bitpos = 0;
+;    014:   dst_buffer_bitpos = 0;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     xor    eax, eax                 ;eax = 0
     mov    [esp + 44], eax          ;dst_buffer_bitpos = eax
 
@@ -403,7 +404,7 @@ string_append:
 .endcond_1:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Check if src_buffer is empty
 ;
@@ -415,42 +416,42 @@ string_append:
 ;           from next memory location of the source string, and
 ;           fill the source string buffer with the new data.
 ;
-;   015: if src_buffer != 0, then
-;            goto .endcond_2;
+;   015:   if src_buffer != 0, then
+;              goto .endcond_2;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 36]          ;eax = src_buffer
     cmp    eax, 0
     jne    .endcond_2
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   .COND_2: If the source string buffer is empty
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 .cond_2:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Point the source pointer to the next memory location.
 ;
-;   016: src_ptr += 4;
+;   016:   src_ptr += 4;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 32]          ;eax = src_ptr
     add    eax, 4                   ;eax = eax + 4
     mov    [esp + 32], eax          ;src_ptr = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Fetch the data from the next memory location.
 ;
-;   017: src_buffer = src_ptr^;
+;   017:   src_buffer = src_ptr^;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 32]          ;ebx = src_ptr
     mov    eax, [ebx]               ;eax = src_ptr^
     mov    [esp + 36], eax          ;src_buffer = eax
@@ -459,20 +460,20 @@ string_append:
 .endcond_2:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Append a source character to destination string
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Get source string character.
 ;
-;   018: ascii_char = (src_buffer&0xff) << dst_buffer_bitpos;
+;   018:   ascii_char = (src_buffer&0xff) << dst_buffer_bitpos;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ecx, [esp + 44]          ;ecx = dst_buffer_bitpos
     mov    eax, [esp + 36]          ;eax = src_buffer
     and    eax, 0xff
@@ -480,76 +481,76 @@ string_append:
     mov    [esp + 52], eax          ;ascii_char = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Append the source string character to the destination
 ;   character.
 ;
-;   019: dst_buffer |= ascii_char;
+;   019:   dst_buffer |= ascii_char;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 40]          ;eax = dst_buffer
     mov    ebx, [esp + 52]          ;ebx = ascii_char
     or     eax, ebx
     mov    [esp + 40], eax          ;dst_buffer = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Increment bit position of the destination string.
 ;
-;   020: dst_buffer_bitpos += 8;
+;   020:   dst_buffer_bitpos += 8;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 44]          ;eax = dst_buffer_bitpos
     add    eax, 8
     mov    [esp + 44], eax          ;dst_buffer_bitpos := eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Increase the length of destination string length by 1 byte.
 ;
-;   021: ++ dst_strlen;
+;   021:   ++ dst_strlen;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 16]          ;eax = dst_strlen
     add    eax, 1
     mov    [esp + 16], eax          ;dst_strlen = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Remove the source character that has been read.
 ;
-;   022: src_buffer >>= 8;
+;   022:   src_buffer >>= 8;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 36]          ;eax = src_buffer
     shr    eax, 8
     mov    [esp + 36], eax          ;src_buffer = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Decrement length of source string by 1 byte.
 ;
-;   023: -- i;
+;   023:   -- i;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 48]          ;eax = i
     sub    eax, 1
     mov    [esp + 48], eax          ;i = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Check loop_1 condition, loop if true
 ;
-;   024: if i != 0, then
-;            goto .loop_1;           
+;   024:   if i != 0, then
+;              goto .loop_1;           
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 48]          ;eax = i
     cmp    eax, 0
     jne    .loop_1
@@ -558,33 +559,33 @@ string_append:
 .endloop_1:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Save destination string and strlen to the argument out.
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Save the destination string buffer to the destination
 ;   string memory block.
 ;
-;   025: dst_ptr^ = dst_buffer;
+;   025:   dst_ptr^ = dst_buffer;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 28]          ;ebx = dst_ptr
     mov    eax, [esp + 40]          ;eax = dst_buffer
     mov    [ebx], eax               ;dst_ptr^ = eax
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Save the destination string length.
 ;
 ;   026: addr_dst_strlen^ = dst_strlen;
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp +  4]          ;ebx = addr_dst_strlen
     mov    eax, [esp + 16]          ;eax = dst_strlen
     mov    [ebx], eax               ;addr_dst_strlen^ = eax

@@ -1,0 +1,79 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+NAME:
+
+    read4096b_stdin -- Read with buffer from stdin.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+FUNCTION:
+
+    read4096b_stdin( addr_readbuffer:32bit,
+                     addr_cur_rb_ptr:32bit,
+                     addr_cur_byte:32bit,
+                     addr_outdata:32bit,
+                     addr_outdata_len:32bit,
+                     flag:32bit )
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+INPUT PARAMETERS:
+
+    addr_readbuffer
+        address to readbuffer
+
+    addr_cur_rb_ptr
+        address to current pointer to readbuffer
+
+    addr_cur_byte
+        address to current byte position of rb
+
+    addr_outdata
+        address to output data
+
+    addr_outdata_len
+        address to output data length
+
+    flag
+        choices for terminating characters
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+OUTPUT PARAMETERS:
+
+    addr_readbuffer
+        will be filled with stdin data
+
+    addr_cur_rb_ptr
+        will be pointed to previously value of ESI
+
+    addr_cur_byte
+        previous byte position of readbuffer
+
+    addr_outdata
+        the outdata will be filled with readbuffer
+
+    addr_outdata_len
+        the length of the filled outdata
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+RETURNS:
+
+    ---
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+PARAMETER DESCRIPTION:
+
+    ---
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+REQUIRES:
+
+    ---
+
+======================================================================

@@ -51,7 +51,8 @@ section .text
 
 _start:
 
-;
+
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   TEST 0001
 ;       Given,
@@ -64,7 +65,7 @@ _start:
 ;                   @t0001_decimal,
 ;                   @t0001_digits )
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                  ;reserve 16 bytes
     lea    eax, [t0001_string]
     mov    ebx, [t0001_strlen]
@@ -78,7 +79,7 @@ _start:
     add    esp, 16                  ;restore 16 bytes
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   TEST 0002
 ;       Given,
@@ -91,7 +92,7 @@ _start:
 ;                   @t0002_decimal,
 ;                   @t0002_digits )
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                  ;reserve 16 bytes
     lea    eax, [t0002_string]
     mov    ebx, [t0002_strlen]
@@ -105,7 +106,7 @@ _start:
     add    esp, 16                  ;restore 16 bytes
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   TEST 0003
 ;       Given,
@@ -119,7 +120,7 @@ _start:
 ;                   @t0003_decimal,
 ;                   @t0003_digits )
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                  ;reserve 16 bytes
     lea    eax, [t0003_string]
     mov    ebx, [t0003_strlen]
@@ -133,7 +134,7 @@ _start:
     add    esp, 16                  ;restore 16 bytes
 
 
-.exit:
+exit:
     mov    eax, 0x01                ;systemcall exit
     xor    ebx, ebx                 ;return 0
     int   0x80

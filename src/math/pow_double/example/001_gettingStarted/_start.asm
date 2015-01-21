@@ -37,11 +37,11 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   result = pow_double( base, power );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                  ;reserve 16 bytes
     mov    eax, [base     ]
     mov    ebx, [base  + 4]
@@ -56,7 +56,7 @@ _start:
     fst    qword [result]           ;save return value
 
 
-.exit:
+exit:
     mov    eax, 0x01                ;systemcall exit
     xor    ebx, ebx                 ;return 0
     int   0x80

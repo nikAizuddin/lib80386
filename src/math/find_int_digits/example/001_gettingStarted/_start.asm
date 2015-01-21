@@ -36,7 +36,7 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   TEST 0001
 ;       Given,
@@ -47,7 +47,7 @@ _start:
 ;
 ;   t0001_digits = find_int_digits( t0001_int, 0 )
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 8                   ;reserve 8 bytes
     mov    eax, [t0001_int]
     xor    ebx, ebx
@@ -58,7 +58,7 @@ _start:
     mov    [t0001_digits], eax      ;save return value
 
 
-.exit:
+exit:
     mov    eax, 0x01                ;systemcall exit
     xor    ebx, ebx                 ;return 0
     int   0x80

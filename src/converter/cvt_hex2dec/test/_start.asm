@@ -42,7 +42,7 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   TEST 0001
 ;       Given t0001_hex = 0x0000000a,
@@ -52,7 +52,7 @@ _start:
 ;
 ;   t0001_dec = cvt_hex2dec( t0001_hex );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 4                   ;reserve 4 bytes
     mov    eax, [t0001_hex]         ;get t0001_hex
     mov    [esp], eax               ;arg1: t0001_hex
@@ -61,7 +61,7 @@ _start:
     mov    [t0001_dec], eax         ;save return value
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   TEST 0002
 ;       Given t0002_hex = 0x00000003,
@@ -71,7 +71,7 @@ _start:
 ;
 ;   t0002_dec = cvt_hex2dec( t0002_hex );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 4                   ;reserve 4 bytes
     mov    eax, [t0002_hex]         ;get t0002_hex
     mov    [esp], eax               ;arg1: t0002_hex
@@ -80,7 +80,7 @@ _start:
     mov    [t0002_dec], eax         ;save return value
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   TEST 0003
 ;       Given t0003_hex = 0x05f5e0ff,
@@ -90,7 +90,7 @@ _start:
 ;
 ;   t0003_dec = cvt_hex2dec( t0003_hex );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 4                   ;reserve 4 bytes
     mov    eax, [t0003_hex]         ;get t0003_hex
     mov    [esp], eax               ;arg1: t0003_hex

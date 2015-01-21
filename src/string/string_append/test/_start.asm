@@ -98,14 +98,14 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   *** TEST 0001 begin ***
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   append t0001_s01_beg to t0001_outstr.
 ;
@@ -114,7 +114,7 @@ _start:
 ;                      @t0001_s01_beg,
 ;                      @t0001_s01_end - @t0001_s01_beg );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                              ;reserve 16 bytes
     mov    eax, t0001_outstr                    ;get addr dst string
     mov    ebx, t0001_outlen                    ;get addr dst strlen
@@ -128,7 +128,7 @@ _start:
     add    esp, 16                              ;restore 16 bytes
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   append t0001_s02_beg to t0001_outstr.
 ;
@@ -137,7 +137,7 @@ _start:
 ;                      @t0001_s02_beg,
 ;                      @t0001_s02_end - @t0001_s02_beg );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                              ;reserve 16 bytes
     mov    eax, t0001_outstr                    ;get addr dst string
     mov    ebx, t0001_outlen                    ;get addr dst strlen
@@ -151,7 +151,7 @@ _start:
     add    esp, 16                              ;restore 16 bytes
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   append t0001_s03_beg to t0001_outstr.
 ;
@@ -160,7 +160,7 @@ _start:
 ;                      @t0001_s03_beg,
 ;                      @t0001_s03_end - @t0001_s03_beg );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                              ;reserve 16 bytes
     mov    eax, t0001_outstr                    ;get addr dst string
     mov    ebx, t0001_outlen                    ;get addr dst strlen
@@ -174,7 +174,7 @@ _start:
     add    esp, 16                              ;restore 16 bytes
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   append t0001_s04_beg to t0001_outstr.
 ;
@@ -183,7 +183,7 @@ _start:
 ;                      @t0001_s04_beg,
 ;                      @t0001_s04_end - @t0001_s04_beg );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                              ;reserve 16 bytes
     mov    eax, t0001_outstr                    ;get addr dst string
     mov    ebx, t0001_outlen                    ;get addr dst strlen
@@ -197,13 +197,13 @@ _start:
     add    esp, 16                              ;restore 16 bytes
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   systemcall write t0001_outstr to stdout.
 ;
 ;       write( stdout, @t0001_outstr, t0001_outlen );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x04                            ;systemcall write
     mov    ebx, 0x01                            ;to stdout
     mov    ecx, t0001_outstr                    ;source string
@@ -211,11 +211,11 @@ _start:
     int    0x80
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   *** TEST 0001 end ***
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 .exit:

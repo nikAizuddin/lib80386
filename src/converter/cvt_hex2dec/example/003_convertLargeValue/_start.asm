@@ -40,14 +40,14 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Convert larger hexadecimal number to decimal number
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Given,
 ;       hexadecimal_number = 0xffffffd6,
@@ -57,7 +57,7 @@ _start:
 ;   quotient = hexadecimal_number / 100000000
 ;   remainder = the remainder from the division.
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [hexadecimal_number]
     mov    ebx, 100000000
     xor    edx, edx
@@ -66,7 +66,7 @@ _start:
     mov    [remainder], edx
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Given,
 ;       hexadecimal_number = 0xffffffd6,
@@ -90,7 +90,7 @@ _start:
 ;   decimal_number0 = cvt_hex2dec( remainder );
 ;   decimal_number1 = cvt_hex2dec( quotient );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 4                      ;reserve 4 bytes
     mov    eax, [remainder]
     mov    [esp], eax
@@ -104,7 +104,7 @@ _start:
     add    esp, 4                      ;restore 4 bytes
 
 
-.exit:
+exit:
     mov    eax, 0x01 ;systemcall exit
     mov    ebx, 0x00 ;return 0
     int    0x80

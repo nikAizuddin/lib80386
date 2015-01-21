@@ -1,0 +1,134 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: read4096b_stdin
+
+DESCRIPTION: Read with buffer from stdin.
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  read4096b_stdin( addr_readbuffer:32bit,
+                   addr_cur_rb_ptr:32bit,
+                   addr_cur_byte:32bit,
+                   addr_outdata:32bit,
+                   addr_outdata_len:32bit,
+                   flag:32bit )
+
+  Input parameters
+      1) addr_readbuffer  = address to readbuffer
+      2) addr_cur_rb_ptr  = address to current pointer to readbuffer
+      3) addr_cur_byte    = address to current byte position of rb
+      4) addr_outdata     = address to output data
+      5) addr_outdata_len = address to output data length
+      6) flag             = choices for terminating characters
+
+  Output parameters
+      1) addr_readbuffer  = will be filled with stdin data
+      2) addr_cur_rb_ptr  = will be pointed to previously value of ESI
+      3) addr_cur_byte    = previous byte position of readbuffer
+      4) addr_outdata     = the outdata will be filled with readbuffer
+      5) addr_outdata_len = the length of the filled outdata
+
+  Returns
+      ---
+
+  +----------------------------------------------------------------+
+  |                       STACK STRUCTURE                          |
+  +--------+---------------------+---------------------------------+
+  | Offset |      Data           |           Description           |
+  +--------+---------------------+---------------------------------+
+  | +    0 | addr_readbuffer     | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +    4 | addr_cur_rb_ptr     | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +    8 | addr_cur_byte       | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   12 | addr_outdata        | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   16 | addr_outdata_len    | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   20 | flag                | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   24 | term1               |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   28 | term2               |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   32 | byte_pos            |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   36 | outdata_len         |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | Total stack used for local variables = 40 bytes                |
+  +----------------------------------------------------------------+
+
+       begin
+
+  001:     if flag == 1, then goto .flag_1;
+           .flag_0:
+  002:         term1 = 0x0a;
+  003:         term2 = 0x20;
+  004:         goto .endflag_checks;
+           .flag_1:
+  005:         term1 = 0x0a;
+  006:         term2 = 0x0a;
+           .endflag_checks:
+
+  007:     byte_pos = addr_cur_byte^;
+
+  008:     EDI = addr_outdata;
+
+  009:     if addr_cur_rb_ptr^ == 0, goto .dont_init_ESI
+           .init_ESI:
+  010:         ESI = addr_cur_rb_ptr^;
+  011:         LODSB;
+  012:         -- esi;
+  013:         if al == 0, then goto .rb_empty;
+           .dont_init_ESI:
+
+  014:     if byte_pos == 0, then goto .rb_empty;
+  015:     if byte_pos != 4096, then goto .rb_not_empty;
+
+           .rb_empty:
+  016:         systemcall read( stdin, addr_readbuffer, 4096 );
+  017:         addr_cur_byte^   = 0;
+  018:         addr_cur_rb_ptr^ = addr_readbuffer;
+  019:         ESI              = addr_readbuffer;
+           .rb_not_empty:
+
+           .loop_getdata:
+  020:         LODSB;
+  021:         ++ byte_pos;
+  022:         if AL == term1, then goto .endloop_getdata;
+  023:         if AL == term2, then goto .endloop_getdata;
+  024:         EDI^ = AL;
+  025:         ++ EDI;
+  026:         ++ outdata_len;
+  027:         if byte_pos == 4096, then goto .rb_empty;
+  028:         goto .loop_getdata;
+           .endloop_getdata:
+
+  029:     addr_cur_rb_ptr^  = ESI;
+  030:     addr_cur_byte^    = byte_pos;
+  031:     addr_outdata_len^ = outdata_len;
+
+       end.
+
+======================================================================

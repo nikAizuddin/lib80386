@@ -37,7 +37,7 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Convert decimal number to ASCII string.
 ;
@@ -46,7 +46,7 @@ _start:
 ;                   @string,
 ;                   @strlen )
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                  ;reserve 16 bytes
     mov    eax, decimal_number
     mov    ebx, 1
@@ -59,7 +59,7 @@ _start:
     call   cvt_dec2string
     add    esp, 16                  ;restore 16 bytes
 
-.exit:
+exit:
     mov    eax, 0x01                ;systemcall exit
     mov    ebx, 0x00                ;return 0
     int    0x80

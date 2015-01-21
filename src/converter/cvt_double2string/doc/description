@@ -20,14 +20,14 @@ PROCESS DESCRIPTION:
 
   cvt_double2string( double_x:64bit,
                      decimal_places:32bit,
-                     addr_out_string^:32bit,
-                     addr_out_strlen^:32bit )
+                     addr_out_string:32bit,
+                     addr_out_strlen:32bit )
 
   Input parameters
-      1) double_x         = the double precision value
-      2) decimal_places   = number of decimal places for double_x
-      3) addr_out_string^ = address to the out string
-      4) addr_out_strlen^ = address to the out strlen
+      1) double_x        = the double precision value
+      2) decimal_places  = number of decimal places for double_x
+      3) addr_out_string = address to the out string
+      4) addr_out_strlen = address to the out strlen
 
   Output parameters
       ---
@@ -38,22 +38,19 @@ PROCESS DESCRIPTION:
   +-------------------------------------------------------------+
   |                     STACK STRUCTURE                         |
   +--------+-------------------------+--------------------------+
-  | Offset |          Date           |       Descriptions       |
+  | Offset |          Data           |       Descriptions       |
   +--------+-------------------------+--------------------------+
-  | +    0 | double_x[0]             | The double number that   |
-  | +    4 | double_x[1]             | we want to print.        |
+  | +    0 | double_x[0]             | ---                      |
+  | +    4 | double_x[1]             |                          |
   |        |                         |                          |
   +--------+-------------------------+--------------------------+
-  | +    8 | decimal_places          | Number of decimal places |
-  |        |                         | to print.                |
+  | +    8 | decimal_places          | ---                      |
   |        |                         |                          |
   +--------+-------------------------+--------------------------+
-  | +   12 | addr_out_string^        | Address to the out       |
-  |        |                         | string.                  |
+  | +   12 | addr_out_string^        | ---                      |
   |        |                         |                          |
   +--------+-------------------------+--------------------------+
-  | +   16 | addr_out_strlen^        | Address to the out       |
-  |        |                         | strlen.                  |
+  | +   16 | addr_out_strlen^        | ---                      |
   |        |                         |                          |
   +--------+-------------------------+--------------------------+
   | +   20 | integer_part            | Stores integer part      |

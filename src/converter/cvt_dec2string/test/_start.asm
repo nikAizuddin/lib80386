@@ -38,7 +38,7 @@ section .text
 
 _start:
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   TEST 0001
 ;       Given,
@@ -50,7 +50,7 @@ _start:
 ;                   @t0001_string,
 ;                   @t0001_strlen )
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                  ;reserve 16 bytes
     mov    eax, t0001_dec
     mov    ebx, 1
@@ -64,7 +64,7 @@ _start:
     add    esp, 16                  ;restore 16 bytes
 
 
-.exit:
+exit:
     mov    eax, 0x01                ;systemcall exit
     xor    ebx, ebx                 ;return 0
     int   0x80

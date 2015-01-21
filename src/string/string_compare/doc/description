@@ -1,0 +1,67 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: string_compare
+
+DESCRIPTION: Compare 2 strings. Returns 1 if equals. Otherwise, 0.
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  string_compare( addr_source:32bit,
+                  addr_destination:32bit
+                  bytes_to_compare:32bit ) : 32bit (EAX)
+
+  Input parameters
+      1) addr_source      = address of the source string
+      2) addr_destination = address of the destination string
+      3) bytes_to_compare = number of bytes to compare
+
+  Output parameters
+      ---
+
+  Returns
+      1 if equals. Otherwise, 0 if not equal.
+
+  +----------------------------------------------------------------+
+  |                       STACK STRUCTURE                          |
+  +--------+---------------------+---------------------------------+
+  | Offset |      Data           |           Description           |
+  +--------+---------------------+---------------------------------+
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | Total stack used for local variables =  0 bytes                |
+  +----------------------------------------------------------------+
+
+       begin
+
+  001:     ESI = addr_source;
+  002:     EDI = addr_destination;
+  003:     ECX = bytes_to_compare;
+
+           .loop_compare:
+  004:         CMPSB;
+  005:         if !=, goto .not_equal;
+  006:         -- ECX;
+  007:         if ECX != 0, goto .loop_compare;
+           .endloop_compare:
+
+           .equal:
+  008:         EAX = 1;
+  009:         return;
+
+           .not_equal:
+  010:         EAX = 0;
+  011:         return;
+
+       end.
+
+======================================================================

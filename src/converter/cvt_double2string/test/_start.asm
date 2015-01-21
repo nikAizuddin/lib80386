@@ -67,29 +67,29 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   TEST 0001
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   display info
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x04                      ;systemcall write
     mov    ebx, 0x01                      ;to stdout
     mov    ecx, t0001_ibeg                ;src = t0001_ibeg
     mov    edx, (t0001_iend - t0001_ibeg) ;strlen
     int    0x80
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   cvt_double2string
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 20                        ;reserve 20 bytes
     mov    eax, [t0001_doux    ]          ;get t0001_doux[0]
     mov    ebx, [t0001_doux + 4]          ;get t0001_doux[1]
@@ -105,12 +105,11 @@ _start:
     add    esp, 20                        ;restore 20 bytes
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   append newline to t0001_str
 ;
-;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                        ;reserve 16 bytes
     mov    eax, t0001_str                 ;get @t0001_str
     mov    ebx, t0001_len                 ;get @t0001_len
@@ -124,11 +123,11 @@ _start:
     add    esp, 16                        ;restore 16 bytes
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   systemcall write t0001_str to stdout
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x04                      ;systemcall write
     mov    ebx, 0x01                      ;to stdout
     mov    ecx, t0001_str                 ;src = t0001_ibeg
@@ -136,18 +135,18 @@ _start:
     int    0x80
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   TEST 0002
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   display info
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x04                      ;systemcall write
     mov    ebx, 0x01                      ;to stdout
     mov    ecx, t0002_ibeg                ;src
@@ -155,11 +154,11 @@ _start:
     int    0x80
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   cvt_double2string
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 20                        ;reserve 20 bytes
     mov    eax, [t0002_doux    ]          ;get t0002_doux[0]
     mov    ebx, [t0002_doux + 4]          ;get t0002_doux[1]
@@ -175,11 +174,11 @@ _start:
     add    esp, 20                        ;restore 20 bytes
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   append newline to t0002_str
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                        ;reserve 16 bytes
     mov    eax, t0002_str                 ;get @t0002_str
     mov    ebx, t0002_len                 ;get @t0002_len
@@ -193,11 +192,11 @@ _start:
     add    esp, 16                        ;restore 16 bytes
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   systemcall write t0002_str to stdout
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x04                      ;systemcall write
     mov    ebx, 0x01                      ;to stdout
     mov    ecx, t0002_str                 ;src
@@ -205,7 +204,7 @@ _start:
     int    0x80
 
 
-.exit:
+exit:
     mov    eax, 0x01                      ;systemcall exit
     xor    ebx, ebx                       ;return 0
     int    0x80

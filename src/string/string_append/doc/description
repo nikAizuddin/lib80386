@@ -43,20 +43,16 @@ PROCESS DESCRIPTION:
   +--------+-------------------+--------------------------------+
   | Offset |       Data        |          Descriptions          |
   +--------+-------------------+--------------------------------+
-  | +    0 | addr_dst_str      | Stores address to destination  |
-  |        |                   | string.                        |
+  | +    0 | addr_dst_str      | ---                            |
   |        |                   |                                |
   +--------+-------------------+--------------------------------+
-  | +    4 | addr_dst_strlen   | Stores address to destination  |
-  |        |                   | string length.                 |
+  | +    4 | addr_dst_strlen   | ---                            |
   |        |                   |                                |
   +--------+-------------------+--------------------------------+
-  | +    8 | addr_src_str      | Stores address to source       |
-  |        |                   | string.                        |
+  | +    8 | addr_src_str      | ---                            |
   |        |                   |                                |
   +--------+-------------------+--------------------------------+
-  | +   12 | src_strlen        | Stores length of source        |
-  |        |                   | string.                        |
+  | +   12 | src_strlen        | ---                            |
   |        |                   |                                |
   +--------+-------------------+--------------------------------+
   | +   16 | dst_strlen        | Stores length of destination   |

@@ -37,20 +37,20 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Append string2 to string1 and print string1 to stdout
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   append string2 to string1
 ;
 ;   string_append( @string1, @strlen1, @string2, strlen2 );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                  ;reserve 16 bytes
     mov    eax, string1             ;get @string1
     mov    ebx, strlen1             ;get @strlen1
@@ -64,13 +64,13 @@ _start:
     add    esp, 16                  ;restore 16 bytes
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   systemcall write string1 to stdout
 ;
 ;   write( stdout, @string1, strlen1 );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x04                ;systemcall write
     mov    ebx, 0x01                ;write to stdout
     mov    ecx, string1             ;src = @string1

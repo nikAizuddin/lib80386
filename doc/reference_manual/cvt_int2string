@@ -11,8 +11,8 @@ NAME:
 FUNCTION:
 
     cvt_int2string( integer_x:32bit,
-                    addr_out_string^:32bit,
-                    addr_out_strlen^:32bit,
+                    addr_out_string:32bit,
+                    addr_out_strlen:32bit,
                     flag:32bit )
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

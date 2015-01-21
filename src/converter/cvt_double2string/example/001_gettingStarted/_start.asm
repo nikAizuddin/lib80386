@@ -44,18 +44,18 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Convert double_value to ASCII value and print to stdout
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
+;   Convert double_value to ASCII
 ;
-;   convert double_value to ASCII
-;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 20                  ;reserve 20 bytes
     mov    eax, [double_value]      ;get double_value[0]
     mov    ebx, [double_value + 4]  ;get double_value[1]
@@ -71,11 +71,11 @@ _start:
     add    esp, 20                  ;restore 20 bytes
 
 
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
+;   Systemcall write out_string to stdout
 ;
-;   systemcall write out_string to stdout
-;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x04                ;systemcall write
     mov    ebx, 0x01                ;to stdout
     mov    ecx, out_string          ;src string
@@ -83,7 +83,7 @@ _start:
     int    0x80
 
 
-.exit:
+exit:
     mov    eax, 0x01                ;systemcall exit
     xor    ebx, ebx                 ;return 0
     int    0x80

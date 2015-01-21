@@ -1,0 +1,86 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: cvt_string2int
+
+DESCRIPTION: Convert ASCII string to integer number.
+
+REQUIRES: pow_int.asm
+          cvt_string2dec.asm
+          cvt_dec2hex.asm
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  cvt_string2int( addr_instring:32bit,
+                  instrlen:32bit,
+                  addr_integer_num:32bit )
+
+  Input parameters
+      1) addr_instring    = address to the input string
+      2) instrlen         = address to the input strlen
+      3) addr_integer_num = the integer value
+
+  Output parameters
+      3) addr_integer_num = the integer value
+
+  Returns
+      ---
+
+  +----------------------------------------------------------------+
+  |                       STACK STRUCTURE                          |
+  +--------+---------------------+---------------------------------+
+  | Offset |      Data           |           Description           |
+  +--------+---------------------+---------------------------------+
+  | +    0 | addr_instring       | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +    4 | instrlen            | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +    8 | addr_integer_num    | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   12 | decimal_num[0]      | Stores decimal number.          |
+  | +   16 | decimal_num[1]      |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   20 | decimal_digits      | Number of digits for the        |
+  |        |                     | decimal_num.                    |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   24 | hexadecimal_num[0]  | Stores hexadecimal number.      |
+  | +   28 | hexadecimal_num[1]  |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | Total stack used for local variables = 32 bytes                |
+  +----------------------------------------------------------------+
+
+       begin
+
+  001:     cvt_string2dec( addr_instring,
+                           instrlen,
+                           @decimal_num,
+                           @decimal_digits );
+
+  002:     hexadecimal_num[0] = cvt_dec2hex( decimal_num[0] );
+
+  003:     if decimal_digits <= 8, then goto .digits_le_8;
+           .digits_gt_8:
+  004:         hexadecimal_num[1] = cvt_dec2hex( decimal_num[1] );
+  005:         hexadecimal_num[0] = ( hexadecimal_num[1] *
+                                    pow_int(10, decimal_digits-2) ) +
+                                    hexadecimal_num[0];
+           .digits_le_8:
+
+  006:     addr_integer_num^ = hexadecimal_num[0];
+
+       end.
+
+======================================================================

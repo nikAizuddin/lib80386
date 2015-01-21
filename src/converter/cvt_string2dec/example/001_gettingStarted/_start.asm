@@ -38,14 +38,14 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   cvt_string2dec( @t0003_string,
 ;                   t0003_strlen,
 ;                   @t0003_decimal,
 ;                   @t0003_digits )
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                  ;reserve 16 bytes
     lea    eax, [string]
     mov    ebx, [strlen]
@@ -59,7 +59,7 @@ _start:
     add    esp, 16                  ;restore 16 bytes
 
 
-.exit:
+exit:
     mov    eax, 0x01                ;systemcall exit
     xor    ebx, ebx                 ;return 0
     int   0x80

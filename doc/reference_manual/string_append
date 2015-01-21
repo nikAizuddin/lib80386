@@ -15,9 +15,9 @@ NAME:
 
 FUNCTION:
 
-    string_append( dst_str^:32bit,
-                   dst_strlen^:32bit,
-                   src_str^:32bit,
+    string_append( dst_str:32bit,
+                   dst_strlen:32bit,
+                   src_str:32bit,
                    src_strlen:32bit )
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

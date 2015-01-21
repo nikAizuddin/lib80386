@@ -39,19 +39,16 @@ PROCESS DESCRIPTION:
   +--------+------------------+---------------------------------+
   | Offset |      Data        |           Description           |
   +--------+------------------+---------------------------------+
-  | +    0 | addr_decimal_x   | Decimal number from input       |
-  |        |                  | parameter.                      |
+  | +    0 | addr_decimal_x   | ---                             |
   |        |                  |                                 |
   +--------+------------------+---------------------------------+
-  | +    4 | num_of_blocks    | Number of decimal_x memory      |
-  |        |                  | blocks.                         |
+  | +    4 | num_of_blocks    | ---                             |
   |        |                  |                                 |
   +--------+------------------+---------------------------------+
-  | +    8 | addr_out_string  | Address to the output string.   |
+  | +    8 | addr_out_string  | ---                             |
   |        |                  |                                 |
   +--------+------------------+---------------------------------+
-  | +   12 | addr_out_strlen  | Address to the output string    |
-  |        |                  | length.                         |
+  | +   12 | addr_out_strlen  | ---                             |
   |        |                  |                                 |
   +--------+------------------+---------------------------------+
   | +   16 | out_strlen       | Output string length. This is   |

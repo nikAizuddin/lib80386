@@ -20,7 +20,7 @@
 ;
 ;      INCLUDE FILES: ---
 ;
-;            VERSION: 0.1.1
+;            VERSION: 0.1.11
 ;             STATUS: Alpha
 ;               BUGS: --- <See doc/bugs/index file>
 ;
@@ -38,6 +38,7 @@ pow_int:
 
 ;parameter 1: x:32bit
 ;parameter 2: y:32bit
+;returns = result (EAX)
 
 .setup_stackframe:
     sub    esp, 4                   ;reserve 4 bytes
@@ -60,11 +61,11 @@ pow_int:
 .loop_1:
 
 
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
+;   001:   result = result * x;
 ;
-;   001: result = result * x;
-;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 12]          ;eax = result
     mov    ebx, [esp     ]          ;ebx = x
     xor    edx, edx
@@ -72,22 +73,22 @@ pow_int:
     mov    [esp + 12], eax          ;result = eax
 
 
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
+;   002:   --i;
 ;
-;   002: --i;
-;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 8]           ;eax = i
     sub    eax, 1
     mov    [esp + 8], eax           ;i = eax
 
 
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
+;   003:   if i != 0, then
+;              goto .loop_1;
 ;
-;   003: if i != 0, then
-;            goto .loop_1;
-;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 8]           ;eax = i
     cmp    eax, 0
     jne    .loop_1
@@ -99,11 +100,11 @@ pow_int:
 .return:
 
 
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
+;   004:   return result;
 ;
-;   004: return result;
-;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 12]          ;eax = result
 
 

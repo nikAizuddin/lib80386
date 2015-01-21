@@ -1,0 +1,47 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+------------------+---------------------------------------------------
+REV#: 0.1.11      | SUMMARY:
+DATE: 21-JAN-2015 |     Minor updates to code's documentation.
+------------------+---------------------------------------------------
+DETAILS:
+
+  Change the code's documentation format for example from:
+;
+;
+;   001: A = (hexadecimal_num / 1000000000)
+;
+;
+    mov    eax, [esp     ]          ;eax = hexadecimal_num
+    mov    ebx, 1000000000
+    xor    edx, edx
+    div    ebx                      ;eax = eax / ebx
+    mov    [esp +  8], eax          ;A = eax
+
+  to a newer version:
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+;   001:   A = (hexadecimal_num / 1000000000)
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    mov    eax, [esp     ]          ;eax = hexadecimal_num
+    mov    ebx, 1000000000
+    xor    edx, edx
+    div    ebx                      ;eax = eax / ebx
+    mov    [esp +  8], eax          ;A = eax  
+
+  The doc/description also has some changes. The parameters
+  will no longer explained in stack structure because they are
+  already explained in Input parameters and Output parameters.
+  +-------------------------------------------------------------+
+  |                     STACK STRUCTURE                         |
+  +--------+-----------------+----------------------------------+
+  | Offset |      Data       |          Descriptions            |
+  +--------+-----------------+----------------------------------+
+  | +    0 | hexadecimal_num | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  |        |                 |                                  |
+
+======================================================================

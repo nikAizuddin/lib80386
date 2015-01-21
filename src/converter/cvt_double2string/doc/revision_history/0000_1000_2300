@@ -1,0 +1,56 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+------------------+---------------------------------------------------
+REV#: 0.1.23      | SUMMARY:
+DATE: 21-JAN-2015 |     Minor updates to code's documentation.
+------------------+---------------------------------------------------
+DETAILS:
+
+  Change the code's documentation format for example from:
+;
+;
+;   001: initialize FPU stacks;
+;
+;   Initializes the FPU to its default state. Flags all
+;   FPU registers as empty, clears the top stack pointer.
+;
+;
+    finit
+
+  to a newer version:
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+;   001:   initialize FPU stacks;
+;
+;   Initializes the FPU to its default state. Flags all
+;   FPU registers as empty, clears the top stack pointer.
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    finit
+
+
+  The doc/description also has some changes. The parameters
+  will no longer explained in stack structure because they are
+  already explained in Input parameters and Output parameters.
+  +-------------------------------------------------------------+
+  |                     STACK STRUCTURE                         |
+  +--------+-------------------------+--------------------------+
+  | Offset |          Data           |       Descriptions       |
+  +--------+-------------------------+--------------------------+
+  | +    0 | double_x[0]             | ---                      |
+  | +    4 | double_x[1]             |                          |
+  |        |                         |                          |
+  +--------+-------------------------+--------------------------+
+  | +    8 | decimal_places          | ---                      |
+  |        |                         |                          |
+  +--------+-------------------------+--------------------------+
+  | +   12 | addr_out_string^        | ---                      |
+  |        |                         |                          |
+  +--------+-------------------------+--------------------------+
+  | +   16 | addr_out_strlen^        | ---                      |
+  |        |                         |                          |
+  +--------+-------------------------+--------------------------+
+  |        |                         |                          |
+
+======================================================================

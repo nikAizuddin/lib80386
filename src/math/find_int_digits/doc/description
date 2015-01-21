@@ -34,11 +34,10 @@ PROCESS DESCRIPTION:
   +--------+---------------+------------------------------------+
   | Offset |     Data      |            Description             |
   +--------+---------------+------------------------------------+
-  | +    0 | integer_x     | The 32bit integer number.          |
+  | +    0 | integer_x     | ---                                |
   |        |               |                                    |
   +--------+---------------+------------------------------------+
-  | +    4 | flag          | Specify whether integer_x is signed|
-  |        |               | or unsigned.                       |
+  | +    4 | flag          | ---                                |
   |        |               |                                    |
   +--------+---------------+------------------------------------+
   | +    8 | num_of_digits | Number of digits of integer_x.     |

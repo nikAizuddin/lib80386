@@ -12,8 +12,8 @@ FUNCTION:
 
     cvt_double2string( double_x:64bit,
                        decimal_places:32bit,
-                       addr_out_string^:32bit,
-                       addr_out_strlen^:32bit )
+                       addr_out_string:32bit,
+                       addr_out_strlen:32bit )
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 

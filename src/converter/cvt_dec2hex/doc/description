@@ -1,0 +1,65 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: cvt_dec2hex
+
+DESCRIPTION: Convert the decimal number to hexadecimal number.
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  cvt_dec2hex( decimal_number:32bit ) : 32bit (EAX)
+
+  Input parameters
+      1) decimal_number = the decimal number
+
+  Output parameters
+      ---
+
+  Returns
+      the hexadecimal number (EAX)
+
+  +-------------------------------------------------------------+
+  |                     STACK STRUCTURE                         |
+  +--------+------------------+---------------------------------+
+  | Offset |      Data        |           Description           |
+  +--------+------------------+---------------------------------+
+  | +    0 | decimal_number   | ---                             |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +    4 | A                | Temporary variables used during |
+  | +    8 | B                | conversion.                     |
+  | +   12 | C                |                                 |
+  | +   16 | D                |                                 |
+  | +   20 | E                |                                 |
+  | +   24 | F                |                                 |
+  | +   28 | G                |                                 |
+  | +   32 | H                |                                 |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | Total stack used for local variables = 36 bytes             |
+  +-------------------------------------------------------------+
+
+       begin
+
+  001:     A =  decimal_number >>  4;
+  002:     B = (decimal_number >>  8) * 0xa;
+  003:     C = (decimal_number >> 12) * 0x64;
+  004:     D = (decimal_number >> 16) * 0x3e8;
+  005:     E = (decimal_number >> 20) * 0x2710;
+  006:     F = (decimal_number >> 24) * 0x186a0;
+  007:     G = (decimal_number >> 28) * 0xf4240;
+  008:     H = 0x6 * (A + B + C + D + E + F + G);
+  009:     EAX = decimal_number - H;
+
+       end.
+
+======================================================================

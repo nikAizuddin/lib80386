@@ -36,7 +36,7 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Convert hexadecimal_number to decimal_number.
 ;   Given,
@@ -45,7 +45,7 @@ _start:
 ;
 ;   decimal_number = cvt_hex2dec( hexadecimal_number );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 4                      ;reserve 4 bytes
     mov    eax, [hexadecimal_number]
     mov    [esp], eax
@@ -54,7 +54,7 @@ _start:
     mov    [decimal_number], eax       ;save return value
 
 
-.exit:
+exit:
     mov    eax, 0x01                   ;systemcall exit
     mov    ebx, 0x00                   ;return 0
     int    0x80

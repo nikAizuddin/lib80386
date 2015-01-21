@@ -39,7 +39,7 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   TEST 0001
 ;       Given,
@@ -49,7 +49,7 @@ _start:
 ;
 ;   t0001_result = pow_double( t0001_base, t0001_power );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                  ;reserve 16 bytes
     mov    eax, [t0001_base     ]
     mov    ebx, [t0001_base  + 4]
@@ -64,7 +64,7 @@ _start:
     fst    qword [t0001_result]     ;save return value
 
 
-.exit:
+exit:
     mov    eax, 0x01                ;systemcall exit
     xor    ebx, ebx                 ;return 0
     int   0x80

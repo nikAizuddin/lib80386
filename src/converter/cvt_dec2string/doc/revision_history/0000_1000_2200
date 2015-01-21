@@ -1,0 +1,53 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+------------------+---------------------------------------------------
+REV#: 0.1.22      | SUMMARY:
+DATE: 21-JAN-2015 |     Minor updates to code's documentation.
+------------------+---------------------------------------------------
+DETAILS:
+
+  Change the code's documentation format for example from:
+;
+;
+;   002: decimal_y[0] = addr_decimal_x^
+;
+;
+    mov    eax, [esp]               ;eax = addr_decimal_x
+    mov    eax, [eax]               ;eax = addr_decimal_x^
+    mov    [esp + 20], eax          ;decimal_y[0] = addr_decimal_x^
+
+  to a newer version:
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+;   002:   decimal_y[0] = addr_decimal_x^
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    mov    eax, [esp]               ;eax = addr_decimal_x
+    mov    eax, [eax]               ;eax = addr_decimal_x^
+    mov    [esp + 20], eax          ;decimal_y[0] = addr_decimal_x^
+
+
+  In doc/description, the descriptions for parameters in stack
+  structure has been removed, because they are already explained
+  in Input parameters and Output parameters.
+  +-------------------------------------------------------------+
+  |                     STACK STRUCTURE                         |
+  +--------+------------------+---------------------------------+
+  | Offset |      Data        |           Description           |
+  +--------+------------------+---------------------------------+
+  | +    0 | addr_decimal_x   | ---                             |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +    4 | num_of_blocks    | ---                             |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +    8 | addr_out_string  | ---                             |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  | +   12 | addr_out_strlen  | ---                             |
+  |        |                  |                                 |
+  +--------+------------------+---------------------------------+
+  |        |                  |                                 |
+
+======================================================================

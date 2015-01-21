@@ -1,0 +1,55 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+NAME:
+
+    string_compare -- Compare 2 strings. Returns 1 if equals.
+                      Otherwise, returns 0 if not equal.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+FUNCTION:
+
+    string_compare( addr_source:32bit,
+                    addr_destination:32bit
+                    bytes_to_compare:32bit ) : 32bit (EAX)
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+INPUT PARAMETERS:
+
+    addr_source
+        address of the source string
+
+    addr_destination
+        address of the destination string
+
+    bytes_to_compare
+        number of bytes to compare
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+OUTPUT PARAMETERS:
+
+    ---
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+RETURNS:
+
+    1 if equals. Otherwise, 0 if not equal.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+PARAMETER DESCRIPTION:
+
+    ---
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+REQUIRES:
+
+    ---
+
+======================================================================

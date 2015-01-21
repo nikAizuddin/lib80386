@@ -1,0 +1,57 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+NAME:
+
+    cvt_string2int -- Convert ASCII string to integer number.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+FUNCTION:
+
+    cvt_string2int( addr_instring:32bit,
+                    instrlen:32bit,
+                    addr_integer_num:32bit )
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+INPUT PARAMETERS:
+
+    addr_instring
+        address to the input string
+
+    instrlen
+        address to the input strlen
+
+    addr_integer_num
+        the integer value
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+OUTPUT PARAMETERS:
+
+    addr_integer_num
+        the integer value
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+RETURNS:
+
+    ---
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+PARAMETER DESCRIPTION:
+
+    ---
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+REQUIRES:
+
+    math/pow_int.asm
+    converter/cvt_string2dec.asm
+    converter/cvt_dec2hex.asm
+
+======================================================================

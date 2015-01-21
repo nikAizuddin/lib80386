@@ -37,11 +37,11 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   result = pow_int( base, power );
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 8                   ;reserve 8 bytes
     mov    eax, [base]
     xor    ebx, [power]
@@ -52,7 +52,7 @@ _start:
     mov    [result], eax            ;save return value
 
 
-.exit:
+exit:
     mov    eax, 0x01                ;systemcall exit
     xor    ebx, ebx                 ;return 0
     int   0x80

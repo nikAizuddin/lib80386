@@ -36,7 +36,7 @@ PROCESS DESCRIPTION:
   +--------+-----------------+----------------------------------+
   | Offset |      Data       |          Descriptions            |
   +--------+-----------------+----------------------------------+
-  | +    0 | hexadecimal_num | Stores hexadecimal number.       |
+  | +    0 | hexadecimal_num | ---                              |
   |        |                 |                                  |
   +--------+-----------------+----------------------------------+
   | +    4 | decimal_num     | Stores decimal number.           |

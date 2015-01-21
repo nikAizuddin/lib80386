@@ -4,12 +4,6 @@
 
                         IMPORTANT AND URGENT
 
-  * create cvt_dec2hex()
-        Convert decimal number to hexadecimal number.
-
-  * create cvt_string2int()
-        Convert ASCII string to integer number.
-
   * create cvt_string2double()
         Convert ASCII string to double number.
 

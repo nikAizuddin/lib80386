@@ -1,0 +1,85 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+------------------+---------------------------------------------------
+REV#: 0.1.31      | SUMMARY:
+DATE: 21-JAN-2015 |     Minor updates to code's documentation.
+------------------+---------------------------------------------------
+DETAILS:
+
+  Change the code's documentation format for example from:
+;
+;
+;   001: integer_x_len = find_int_digits( integer_x, flag );
+;
+;
+    sub    esp, 8                   ;reserve 8 bytes
+    mov    eax, [esp + 8     ]      ;get integer_x
+    mov    ebx, [esp + 8 + 12]      ;get flag
+    mov    [esp    ], eax           ;arg1: integer_x
+    mov    [esp + 4], ebx           ;arg2: flag
+    call   find_int_digits
+    add    esp, 8                   ;restore 8 bytes
+    mov    [esp + 16], eax          ;save return value
+
+  to a newer version:
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+;   001:   integer_x_len = find_int_digits( integer_x, flag );
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    sub    esp, 8                   ;reserve 8 bytes
+    mov    eax, [esp + 8     ]      ;get integer_x
+    mov    ebx, [esp + 8 + 12]      ;get flag
+    mov    [esp    ], eax           ;arg1: integer_x
+    mov    [esp + 4], ebx           ;arg2: flag
+    call   find_int_digits
+    add    esp, 8                   ;restore 8 bytes
+    mov    [esp + 16], eax          ;save return value
+
+
+  The doc/description also has some changes. The parameters
+  will no longer explained in stack structure because they are
+  already explained in Input parameters and Output parameters.
+  +-------------------------------------------------------------+
+  |                     STACK STRUCTURE                         |
+  +--------+-----------------+----------------------------------+
+  | Offset |      Data       |          Descriptions            |
+  +--------+-----------------+----------------------------------+
+  | +    0 | integer_x       | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +    4 | addr_out_string | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +    8 | addr_out_strlen | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   12 | flag            | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  |        |                 |                                  |
+
+
+  Each data in the doc/description will now have an empty space
+  before the next data:
+
+  Before update:
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   24 | integer_x_rem   | Stores the remainder value of a  |
+  |        |                 | division that involves integer_x.|
+  +--------+-----------------+----------------------------------+
+  |        |                 |                                  |
+
+  After update:
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   24 | integer_x_rem   | Stores the remainder value of a  |
+  |        |                 | division that involves integer_x.|
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  |        |                 |                                  |
+
+
+======================================================================

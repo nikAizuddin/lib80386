@@ -41,7 +41,7 @@ section .text
 _start:
 
 
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   Convert integer_number to string
 ;
@@ -59,7 +59,7 @@ _start:
 ;                   @strlen,
 ;                   1 )
 ;
-;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 16                  ;reserve 16 bytes
     mov    eax, [integer_number]
     mov    ebx, string
@@ -73,7 +73,7 @@ _start:
     add    esp, 16                  ;restore 16 bytes
 
 
-.exit:
+exit:
     mov    eax, 0x01                ;systemcall exit
     xor    ebx, ebx                 ;return 0
     int    0x80
