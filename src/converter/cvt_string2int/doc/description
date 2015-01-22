@@ -19,19 +19,17 @@ FUTURE IMPROVEMENTS: ---
 PROCESS DESCRIPTION:
 
   cvt_string2int( addr_instring:32bit,
-                  instrlen:32bit,
-                  addr_integer_num:32bit )
+                  instrlen:32bit ) : 32bit (EAX)
 
   Input parameters
       1) addr_instring    = address to the input string
       2) instrlen         = address to the input strlen
-      3) addr_integer_num = the integer value
 
   Output parameters
-      3) addr_integer_num = the integer value
+      ---
 
   Returns
-      ---
+      the integer value
 
   +----------------------------------------------------------------+
   |                       STACK STRUCTURE                          |
@@ -44,22 +42,19 @@ PROCESS DESCRIPTION:
   | +    4 | instrlen            | ---                             |
   |        |                     |                                 |
   +--------+---------------------+---------------------------------+
-  | +    8 | addr_integer_num    | ---                             |
+  | +    8 | decimal_num[0]      | Stores decimal number.          |
+  | +   12 | decimal_num[1]      |                                 |
   |        |                     |                                 |
   +--------+---------------------+---------------------------------+
-  | +   12 | decimal_num[0]      | Stores decimal number.          |
-  | +   16 | decimal_num[1]      |                                 |
-  |        |                     |                                 |
-  +--------+---------------------+---------------------------------+
-  | +   20 | decimal_digits      | Number of digits for the        |
+  | +   16 | decimal_digits      | Number of digits for the        |
   |        |                     | decimal_num.                    |
   |        |                     |                                 |
   +--------+---------------------+---------------------------------+
-  | +   24 | hexadecimal_num[0]  | Stores hexadecimal number.      |
-  | +   28 | hexadecimal_num[1]  |                                 |
+  | +   20 | hexadecimal_num[0]  | Stores hexadecimal number.      |
+  | +   24 | hexadecimal_num[1]  |                                 |
   |        |                     |                                 |
   +--------+---------------------+---------------------------------+
-  | Total stack used for local variables = 32 bytes                |
+  | Total stack used for local variables = 28 bytes                |
   +----------------------------------------------------------------+
 
        begin
@@ -79,7 +74,7 @@ PROCESS DESCRIPTION:
                                     hexadecimal_num[0];
            .digits_le_8:
 
-  006:     addr_integer_num^ = hexadecimal_num[0];
+  006:     EAX = hexadecimal_num[0];
 
        end.
 

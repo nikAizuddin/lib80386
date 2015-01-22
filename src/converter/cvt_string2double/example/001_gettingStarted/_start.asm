@@ -4,10 +4,10 @@
 ;
 ;       EXAMPLE 001: Getting Started
 ;   EXAMPLE PURPOSE: Demonstrates how to use the function
-;                    cvt_string2int.
+;                    cvt_string2double.
 ;
 ;            AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
-;      DATE CREATED: 20-JAN-2015
+;      DATE CREATED: 23-JAN-2015
 ;
 ;          LANGUAGE: x86 Assembly Language
 ;            SYNTAX: Intel
@@ -19,21 +19,22 @@
 ;   EXTERNAL FILES: cvt_string2int.asm
 ;                   cvt_string2dec.asm (required by cvt_string2int)
 ;                   cvt_dec2hex.asm    (required by cvt_string2int)
-;                   pow_int.asm        (required by cvt_string2int)
+;                   pow_int.asm
+;                   find_int_digits.asm
 ;
 ;=====================================================================
 
-extern cvt_string2int
+extern cvt_string2double
 global _start
 
 section .bss
 
-    integer: resd 1
+    double: resq 1
 
 section .rodata
 
-    string: db "1234"
-    strlen: dd 4
+    string: db "1234.00567", 0x00
+    strlen: dd 10
 
 section .text
 
@@ -42,17 +43,17 @@ _start:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   integer = cvt_string2int( @string, strlen );
+;   double = cvt_string2double ( @string, strlen );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    sub    esp, 8                  ;reserve 8 bytes
+    sub    esp, 8                   ;reserve 8 bytes
     lea    eax, [string]
     mov    ebx, [strlen]
     mov    [esp    ], eax
     mov    [esp + 4], ebx
-    call   cvt_string2int
+    call   cvt_string2double
     add    esp, 8                   ;restore 8 bytes
-    mov    [integer], eax
+    fst    qword [double]
 
 
 exit:

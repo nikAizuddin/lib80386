@@ -1,0 +1,139 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: cvt_string2double
+
+DESCRIPTION: Convert ASCII string to double precision.
+
+REQUIRES: pow_int.asm,
+          find_int_digits.asm,
+          cvt_string2int.asm,
+          cvt_string2dec.asm,
+          cvt_dec2hex.asm
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: Convert negative value
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  cvt_string2double( addr_instring:32bit,
+                     instrlen:32bit ) : 64bit (ST0)
+
+  Input parameters
+      1) addr_instring = address to the input string
+      2) instrlen      = input strlen
+
+  Output parameters
+
+  Returns
+      double precision value (ST0)
+
+  +----------------------------------------------------------------+
+  |                       STACK STRUCTURE                          |
+  +--------+---------------------+---------------------------------+
+  | Offset |      Data           |           Description           |
+  +--------+---------------------+---------------------------------+
+  | +    0 | addr_instring       | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +    4 | instrlen            | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +    8 | intpt_str[0]        | ASCII integer part              |
+  | +   12 | intpt_str[1]        |                                 |
+  | +   16 | intpt_str[2]        |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   20 | intpt_strlen        | String length for the ASCII     |
+  |        |                     | integer part.                   |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   24 | intpt_int           | Integer value for ASCII integer |
+  |        |                     | part.                           |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   28 | decpt_str[0]        | ASCII decimal part              |
+  | +   32 | decpt_str[1]        |                                 |
+  | +   36 | decpt_str[2]        |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   40 | decpt_strlen        | String length for the ASCII     |
+  |        |                     | integer part.                   |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   44 | decpt_int           | Integer value for ASCII decimal |
+  |        |                     | part.                           |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   48 | decs                | Decimal places.                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   52 | heading_zeroes      | The heading zeroes of the       |
+  |        |                     | decimal part.                   |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | Total stack used for local variables = 56 bytes                |
+  +----------------------------------------------------------------+
+
+       begin
+
+           ##
+           ## Separate string into ASCII integer part and
+           ## ASCII decimal part.
+           ##
+
+  001:     ESI = addr_string;
+
+  002:     EDI = @intpt_str;
+           .loop_get_intpt:
+  003:         LODSB;
+  004:         if AL == 0x2e, goto .endloop_get_intpt;
+  005:         EDI^ = AL;
+  006:         ++ EDI;
+  007:         ++ intpt_strlen;
+  008:         goto .loop_get_intpt;
+           .endloop_get_intpt:
+
+  009:     EDI = @decpt_str;
+           .loop_get_decpt:
+  010:         LODSB;
+  011:         if AL == 0x00, goto .endloop_get_decpt;
+  012:         if AL != 0x30, goto .AL_not_zero;
+               .AL_is_zero:
+  013:             ++ heading_zeroes;
+               .AL_not_zero:
+  014:         EDI^ = AL;
+  015:         ++ EDI;
+  016:         ++ decpt_strlen;
+  017:         goto .loop_get_decpt;
+           .endloop_get_decpt:
+
+           ##
+           ## Convert intpt_str into intpt_int, and
+           ## decpt_str into decpt_int.
+           ##
+
+  018:     intpt_int = cvt_string2int( @intpt_str, intpt_strlen );
+  019:     decpt_int = cvt_string2int( @decpt_str, decpt_strlen );
+
+  020:     decs = pow_int( 10,
+                  heading_zeroes + find_int_digits(decpt_int,0) );
+  021:     push decs to FPU;
+  022:     push decpt_int to FPU;
+  023:     FDIV ST1;
+
+           ##
+           ## Merge intpt_int and decpt_int into
+           ## IEEE double precision format.
+           ##
+
+  024:     push intpt_int;
+  025:     FADD ST1;
+
+       end.
+
+======================================================================

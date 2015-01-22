@@ -4,7 +4,8 @@
 
                        IMPORTANT AND URGENT
 
-  ---
+  * Reduce string_append() code complexity
+        by using string instructions. See it's future improvements.
 
 ----------------------------------------------------------------------
 

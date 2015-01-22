@@ -57,18 +57,17 @@ _start:
 ;           t0001_string = "1234", after conversion
 ;           the t0001_integer should be 0x000004d2
 ;
-;   cvt_string2int( @t0001_string, t0001_strlen, @t0001_integer );
+;   t0001_integer = cvt_string2int( @t0001_string, t0001_strlen );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    sub    esp, 12                  ;reserve 12 bytes
+    sub    esp, 8                   ;reserve 8 bytes
     lea    eax, [t0001_string]
     mov    ebx, [t0001_strlen]
-    lea    ecx, [t0001_integer]
     mov    [esp    ], eax
     mov    [esp + 4], ebx
-    mov    [esp + 8], ecx
     call   cvt_string2int
-    add    esp, 12                  ;restore 12 bytes
+    add    esp, 8                   ;restore 8 bytes
+    mov    [t0001_integer], eax
 
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -78,18 +77,17 @@ _start:
 ;           t0002_string = "4294967295", after conversion
 ;           the t0002_integer should be 0xffffffff
 ;
-;   cvt_string2int( @t0002_string, t0002_strlen, @t0002_integer );
+;   t0002_integer = cvt_string2int( @t0002_string, t0002_strlen );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    sub    esp, 12                  ;reserve 12 bytes
+    sub    esp, 8                   ;reserve 8 bytes
     lea    eax, [t0002_string]
     mov    ebx, [t0002_strlen]
-    lea    ecx, [t0002_integer]
     mov    [esp    ], eax
     mov    [esp + 4], ebx
-    mov    [esp + 8], ecx
     call   cvt_string2int
-    add    esp, 12                  ;restore 12 bytes
+    add    esp, 8                   ;restore 8 bytes
+    mov    [t0002_integer], eax
 
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -99,18 +97,17 @@ _start:
 ;           t0003_string = "2314125", after conversion
 ;           the t0003_integer should be 0x00234f8d
 ;
-;   cvt_string2int( @t0003_string, t0003_strlen, @t0003_integer );
+;   t0003_integer = cvt_string2int( @t0003_string, t0003_strlen );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    sub    esp, 12                  ;reserve 12 bytes
+    sub    esp, 8                   ;reserve 8 bytes
     lea    eax, [t0003_string]
     mov    ebx, [t0003_strlen]
-    lea    ecx, [t0003_integer]
     mov    [esp    ], eax
     mov    [esp + 4], ebx
-    mov    [esp + 8], ecx
     call   cvt_string2int
-    add    esp, 12                  ;restore 12 bytes
+    add    esp, 8                   ;restore 8 bytes
+    mov    [t0003_integer], eax
 
 
 exit:

@@ -11,8 +11,7 @@ NAME:
 FUNCTION:
 
     cvt_string2int( addr_instring:32bit,
-                    instrlen:32bit,
-                    addr_integer_num:32bit )
+                    instrlen:32bit ) : 32bit (EAX)
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -24,21 +23,17 @@ INPUT PARAMETERS:
     instrlen
         address to the input strlen
 
-    addr_integer_num
-        the integer value
-
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 OUTPUT PARAMETERS:
 
-    addr_integer_num
-        the integer value
+    ---
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 RETURNS:
 
-    ---
+    the integer value
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
