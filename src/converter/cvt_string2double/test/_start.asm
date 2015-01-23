@@ -32,11 +32,15 @@ global _start
 section .bss
 
     t0001_double: resq 1
+    t0002_double: resq 1
 
 section .rodata
 
     t0001_string: db "1234.00567", 0x00
     t0001_strlen: dd 10
+
+    t0002_string: db "-1234.00567", 0x00
+    t0002_strlen: dd 11
 
 section .text
 
@@ -61,6 +65,26 @@ _start:
     call   cvt_string2double
     add    esp, 8                   ;restore 8 bytes
     fst    qword [t0001_double]
+
+
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+;   TEST 0002
+;       Given,
+;           t0002_string = "-1234.00567", after conversion
+;           the t0002_double should be -1234.00567
+;
+;   t0002_double = cvt_string2double ( @t0002_string, t0002_strlen );
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    sub    esp, 8                   ;reserve 8 bytes
+    lea    eax, [t0002_string]
+    mov    ebx, [t0002_strlen]
+    mov    [esp    ], eax
+    mov    [esp + 4], ebx
+    call   cvt_string2double
+    add    esp, 8                   ;restore 8 bytes
+    fst    qword [t0002_double]
 
 
 exit:

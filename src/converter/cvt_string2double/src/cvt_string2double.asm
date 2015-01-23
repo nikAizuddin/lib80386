@@ -88,10 +88,36 @@ cvt_string2double:
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   001:   ESI = addr_string;
-;   002:   EDI = @intpt_str;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    esi, [esp]               ;esi = addr_string
+
+
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+;   002:   AL = ESI;
+;   003:   if AL != 0x2d, goto .positive;
+;          .negative:
+;   004:       is_negative = 1;
+;   005:       ++ ESI;
+;          .positive:
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    mov    al, [esi]
+    cmp    al, 0x2d
+    jne    .positive
+.negative:
+    mov    eax, 1
+    mov    [esp + 56], eax          ;is_negative = eax
+    add    esi, 1
+.positive:
+
+
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+;   006:   EDI = @intpt_str;
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     lea    edi, [esp + 8]           ;edi = @intpt_str
 
 
@@ -100,8 +126,8 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   003:   LODSB;
-;   004:   if AL == 0x2e, goto .endloop_get_intpt;
+;   007:   LODSB;
+;   008:   if AL == 0x2e, goto .endloop_get_intpt;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     lodsb
@@ -111,8 +137,8 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   005:   EDI^ = AL;
-;   006:   ++ EDI;
+;   009:   EDI^ = AL;
+;   010:   ++ EDI;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    [edi], al
@@ -121,7 +147,7 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   007:   ++ intpt_strlen;
+;   011:   ++ intpt_strlen;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 20]          ;eax = intpt_strlen
@@ -131,7 +157,7 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   008:   goto .loop_get_intpt;
+;   012:   goto .loop_get_intpt;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     jmp    .loop_get_intpt
@@ -142,7 +168,7 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   009:   EDI = @decpt_str;
+;   013:   EDI = @decpt_str;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     lea    edi, [esp + 28]
@@ -153,9 +179,9 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   010:   LODSB;
-;   011:   if AL == 0x00, goto .endloop_get_decpt;
-;   012:   if AL != 0x30, goto .AL_not_zero;
+;   014:   LODSB;
+;   015:   if AL == 0x00, goto .endloop_get_decpt;
+;   016:   if AL != 0x30, goto .AL_not_zero;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     lodsb
@@ -170,7 +196,7 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   013:   ++ heading_zeroes;
+;   017:   ++ heading_zeroes;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 52]          ;ebx = heading_zeroes
@@ -183,8 +209,8 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   014:   EDI^ = AL;
-;   015:   ++ EDI;
+;   018:   EDI^ = AL;
+;   019:   ++ EDI;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    [edi], al
@@ -193,7 +219,7 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   016:   ++ decpt_strlen;
+;   020:   ++ decpt_strlen;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 40]          ;eax = decpt_strlen
@@ -203,7 +229,7 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   017:   goto .loop_get_decpt;
+;   021:   goto .loop_get_decpt;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     jmp    .loop_get_decpt
@@ -222,7 +248,7 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   018:   intpt_int = cvt_string2int( @intpt_str, intpt_strlen );
+;   022:   intpt_int = cvt_string2int( @intpt_str, intpt_strlen );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 8                   ;reserve 8 bytes
@@ -237,7 +263,7 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   019:   decpt_int = cvt_string2int( @decpt_str, decpt_strlen );
+;   023:   decpt_int = cvt_string2int( @decpt_str, decpt_strlen );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 8                   ;reserve 8 bytes
@@ -252,7 +278,7 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   020:   decs = pow_int( 10,
+;   024:   decs = pow_int( 10,
 ;                 heading_zeroes + find_int_digits(decpt_int,0) );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -281,9 +307,9 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   021:   push decs to FPU;
-;   022:   push decpt_int to FPU;
-;   023:   FDIV ST1;
+;   025:   push decs to FPU;
+;   026:   push decpt_int to FPU;
+;   027:   FDIV ST1;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     fild   dword [esp + 48]         ;push decs to fpu
@@ -301,12 +327,28 @@ cvt_string2double:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   024:   push intpt_int;
-;   025:   FADD ST1;
+;   028:   push intpt_int;
+;   029:   FADD ST1;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     fild   dword [esp + 24]         ;push intpt_int to fpu
     fadd   st1
+
+
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+;   030:   if is_negative == 0, goto .is_positive;
+;          .is_negative:
+;   031:       FCHS
+;          .is_positive:
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    mov    eax, [esp + 56]          ;eax = is_negative
+    cmp    eax, 0
+    je     .is_positive
+.is_negative:
+    fchs                            ;fpu change sign
+.is_positive:
 
 
 .return:
