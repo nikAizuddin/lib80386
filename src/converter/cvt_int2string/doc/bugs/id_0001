@@ -1,0 +1,51 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+---------------------------+------------------------------------------
+           ID: 0001        | SUMMARY:
+       STATUS: Fixed       |     Short jump out of range.
+REPORTED DATE: 24-JAN-2015 |
+   FIXED DATE:             |
+---------------------------+------------------------------------------
+
+REPORT:
+
+  Short jump out of range occured
+  at line 209: jbe .integer_x_len_lessequal_8
+
+ANALYSIS OF THE PROBLEM:
+
+  The conditional jump cannot jump further than 128 bytes.
+
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+;
+;   006: if integer_x_len <= 8, goto .integer_x_len_lessequal_8;
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    mov    eax, [esp + 16]          ;eax = integer_x_len
+    cmp    eax, 8
+    jbe    .integer_x_len_lessequal_8
+
+
+SOLUTIONS:
+
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+;
+;   006:   if integer_x_len > 8, goto .skip_int_x_len_le_8;
+;          .goto_int_x_len_le_8:
+;   007:       goto .integer_x_len_lessequal_8;
+;          .skip_int_x_len_le_8:
+;
+;   Means, the number of digits in integer_x_len is
+;   less than or equal 8.
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    mov    eax, [esp + 16]          ;eax = integer_x_len
+    cmp    eax, 8
+    jg     .skip_int_x_len_le_8
+.goto_int_x_len_le_8:
+    jmp    .integer_x_len_lessequal_8
+.skip_int_x_len_le_8:
+
+
+======================================================================

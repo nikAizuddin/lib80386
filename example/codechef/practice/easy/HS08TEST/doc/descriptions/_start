@@ -1,0 +1,146 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+           FUNCTION: _start
+
+        DESCRIPTION: Program's main function
+
+           REQUIRES: read4096b_stdin.asm,
+                     string_append.asm,
+                     cvt_string2double.asm,
+                     cvt_string2int.asm,
+                     cvt_string2dec.asm,
+                     cvt_dec2hex.asm,
+                     cvt_hex2dec.asm,
+                     cvt_dec2string.asm,
+                     cvt_int2string.asm,
+                     cvt_double2string.asm,
+                     find_int_digits.asm,
+                     pow_int.asm
+
+               BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  +----------------------------------------------------------------+
+  |                   BSS SEGMENT INFORMATION                      |
+  +-----------------+----------------------------------------------+
+  |     Data        |                 Value                        |
+  +-----------------+----------------------------------------------+
+  | rb              |                 resd 1025                    |
+  | rb_ptr          |                 resd 1                       |
+  | rb_byte_pos     |                 resd 1                       |
+  +-----------------+----------------------------------------------+
+  | withdraw_str    |                 resd 2                       |
+  | withdraw_strlen |                 resd 1                       |
+  | withdraw_int    |                 resd 1                       |
+  +-----------------+----------------------------------------------+
+  | balance_str     |                 resd 2                       |
+  | balance_strlen  |                 resd 1                       |
+  | balance_double  |                 resq 1                       |
+  +-----------------+----------------------------------------------+
+
+  +----------------------------------------------------------------+
+  |                 RODATA SEGMENT INFORMATION                     |
+  +---------+--------+---------------------------------------------+
+  |  Data   |  Size  |                   Value                     |
+  +---------+--------+---------------------------------------------+
+  | newline | 32-bit |                0x0000000a                   |
+  +---------+--------+---------------------------------------------+
+  | charge  | 64-bit |                   0.50                      |
+  +---------+--------+---------------------------------------------+
+
+       begin
+
+           ##
+           ## Get withdraw value
+           ##
+
+  001:     withdraw_str = 0;
+  002:     read4096b_stdin( @rb,
+                            @rb_ptr,
+                            @rb_byte_pos,
+                            @withdraw_str,
+                            @withdraw_strlen,
+                            0 );
+  003:     withdraw_int = cvt_string2int( @withdraw_str,
+                                          withdraw_strlen );
+
+           ##
+           ## Get balance value
+           ##
+
+  004:     balance_str = 0;
+  005:     read4096b_stdin( @rb,
+                            @rb_ptr,
+                            @rb_byte_pos,
+                            @balance_str,
+                            @balance_strlen,
+                            0 );
+  006:     balance_double = cvt_string2double( @balance_str,
+                                               balance_strlen );
+
+           ##
+           ## Is withdraw_int a multiple of 5 ?
+           ##
+
+  007:     withdraw_int / 5;
+  008:     if EDX == 0, goto .withdraw_is_mult_5;
+           .withdraw_is_not_mult_5:
+  009:         goto .exit;
+           .withdraw_is_mult_5:
+
+           ##
+           ## Is balance_double sufficient ?
+           ##
+
+  010:     FINIT;
+  011:     FLD balance_double;
+  012:     FSUB charge;
+  013:     FILD withdraw_int;
+  014:     FCOMI ST0, ST1;
+  015:     if withdraw_int <= balance_double, goto .bal_sufficient;
+           .bal_not_sufficient:
+  016:         goto .exit;
+           .bal_sufficient:
+
+           ##
+           ## Perform withdraw transaction
+           ##
+
+  017:     FXCH ST0, ST1;
+  018:     FSUB ST1;
+  019:     FST balance_double;
+
+           ##
+           ## Convert balance_double to balance_str
+           ##
+
+  020:     balance_str = 0;
+  021:     balance_strlen = 0;
+  022:     cvt_double2string( balance_double,
+                              100,
+                              @balance_str,
+                              @balance_strlen );
+
+           .exit:
+
+               ##
+               ## Append newline character to balance_str,
+               ## and print the balance_str to stdout.
+               ##
+
+  023:         string_append( @balance_str,
+                              @balance_strlen,
+                              @newline,
+                              1 );
+  024:         write( stdout, @balance_str, balance_strlen );
+
+       end.
+
+======================================================================

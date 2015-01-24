@@ -1,0 +1,50 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+---------------------------+------------------------------------------
+           ID: 0001        | SUMMARY:
+       STATUS: Fixed       |     Short jump out of range.
+REPORTED DATE: 24-JAN-2015 |
+   FIXED DATE:             |
+---------------------------+------------------------------------------
+
+REPORT:
+
+  Short jump out of range occured at line 88: jne .decimal_x_1_block
+
+ANALYSIS OF THE PROBLEM:
+
+  Conditional jump cannot jump more than 128 bytes.
+
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+;   001:   if num_of_blocks != 2, then
+;              goto .decimal_x_1_block
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    mov    eax, [esp + 4]           ;eax = num_of_blocks
+    cmp    eax, 2
+    jne    .decimal_x_1_block       ;SHORT JUMP OUT OF RANGE
+
+
+SOLUTIONS:
+
+    Use jmp to jump far.
+
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+;
+;   001:   if num_of_blocks == 2, goto .skip_decimal_x_1_block;
+;          .goto_decimal_x_1_block:
+;   002:       goto .decimal_x_1_block;
+;          .skip_decimal_x_1_block:
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    mov    eax, [esp + 4]           ;eax = num_of_blocks
+    cmp    eax, 2
+    je     .skip_decimal_x_1_block
+.goto_decimal_x_1_block:
+    jmp    .decimal_x_1_block
+.skip_decimal_x_1_block:
+
+
+======================================================================

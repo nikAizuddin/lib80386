@@ -20,7 +20,7 @@
 ;
 ;      EXTERNAL FILES: ---
 ;
-;             VERSION: 0.1.22
+;             VERSION: 0.1.30
 ;              STATUS: Alpha
 ;                BUGS: --- <See doc/bugs/index file>
 ;
@@ -79,13 +79,18 @@ cvt_dec2string:
 ;   an integer value that more than 8 digits, such as 9 or 10
 ;   digits.
 ;
-;   001:   if num_of_blocks != 2, then
-;              goto .decimal_x_1_block
+;   001:   if num_of_blocks == 2, goto .skip_decimal_x_1_block;
+;          .goto_decimal_x_1_block:
+;   002:       goto .decimal_x_1_block;
+;          .skip_decimal_x_1_block:
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 4]           ;eax = num_of_blocks
     cmp    eax, 2
-    jne    .decimal_x_1_block
+    je     .skip_decimal_x_1_block
+.goto_decimal_x_1_block:
+    jmp    .decimal_x_1_block
+.skip_decimal_x_1_block:
 
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -98,7 +103,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   002:   decimal_y[0] = addr_decimal_x^
+;   003:   decimal_y[0] = addr_decimal_x^
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp]               ;eax = addr_decimal_x
@@ -108,7 +113,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   003:   decimal_y[1] = (addr_decimal_x+4)^
+;   004:   decimal_y[1] = (addr_decimal_x+4)^
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp]               ;eax = addr_decimal_x
@@ -119,7 +124,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   004:   decimal_y[0]_len = 8
+;   005:   decimal_y[0]_len = 8
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 8
@@ -139,7 +144,7 @@ cvt_dec2string:
 ;
 ;   Initialize counter for .loop_1
 ;
-;   005:   temp = decimal_y[1]
+;   006:   temp = decimal_y[1]
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 24]          ;eax = decimal_y[1]
@@ -151,7 +156,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   006:   temp >>= 4
+;   007:   temp >>= 4
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 36]          ;eax = temp
@@ -161,7 +166,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   007:   ++ decimal_y[1]_len
+;   008:   ++ decimal_y[1]_len
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 32]          ;eax = decimal_y[1]_len
@@ -171,7 +176,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   008:   if temp != 0, then
+;   009:   if temp != 0, then
 ;              goto .loop_1
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -195,7 +200,7 @@ cvt_dec2string:
 ;
 ;   Initialize counter for .loop_2
 ;
-;   009:   i = decimal_y[1]_len
+;   010:   i = decimal_y[1]_len
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 32]          ;eax = decimal_y[1]_len
@@ -207,7 +212,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   010:   ascii_char = ((decimal_y[1] >> ( (i-1)*4 )) & 0x0f) | 0x30;
+;   011:   ascii_char = ((decimal_y[1] >> ( (i-1)*4 )) & 0x0f) | 0x30;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 40]          ;eax = i
@@ -225,7 +230,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   011:   addr_out_string^ |= ( ascii_char << (byte_pos*8) );
+;   012:   addr_out_string^ |= ( ascii_char << (byte_pos*8) );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 48]          ;eax = byte_pos
@@ -243,7 +248,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   012:   ++ out_strlen
+;   013:   ++ out_strlen
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 16]          ;eax = out_strlen
@@ -253,7 +258,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   013:   ++ byte_pos
+;   014:   ++ byte_pos
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 48]          ;eax = byte_pos
@@ -263,7 +268,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   014:   -- i 
+;   015:   -- i 
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 40]          ;eax = i
@@ -273,7 +278,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   015:   if i != 0, then
+;   016:   if i != 0, then
 ;              goto .loop_2;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -297,7 +302,7 @@ cvt_dec2string:
 ;
 ;   Initialize counter for .loop_3
 ;
-;   016:   i = decimal_y[0]_len
+;   017:   i = decimal_y[0]_len
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 28]          ;eax = decimal_y[0]_len
@@ -309,7 +314,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   017:   ascii_char = ((decimal_y[0] >> ( (i-1)*4) ) & 0x0f) | 0x30;
+;   018:   ascii_char = ((decimal_y[0] >> ( (i-1)*4) ) & 0x0f) | 0x30;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 40]          ;eax = i
@@ -327,7 +332,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   018:   addr_out_string^ |= ( ascii_char << (byte_pos*8) );
+;   019:   addr_out_string^ |= ( ascii_char << (byte_pos*8) );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 48]          ;eax = byte_pos
@@ -345,7 +350,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   019:   ++ out_strlen;
+;   020:   ++ out_strlen;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 16]          ;eax = out_strlen 
@@ -355,7 +360,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   020:   ++ byte_pos
+;   021:   ++ byte_pos
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 48]          ;eax = byte_pos
@@ -374,7 +379,7 @@ cvt_dec2string:
 ;   addr_out_string to the next memory block of output string,
 ;   and reset the byte position to 0.
 ;
-;   021:   if byte_pos != 4, then
+;   022:   if byte_pos != 4, then
 ;              goto .cond1_out_string_not_full;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -388,7 +393,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   022:   addr_out_string += 4;
+;   023:   addr_out_string += 4;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 8]           ;eax = addr_out_string
@@ -398,7 +403,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   023:   byte_pos = 0;
+;   024:   byte_pos = 0;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     xor    eax, eax
@@ -410,7 +415,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   024:   -- i;
+;   025:   -- i;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 40]          ;eax = i
@@ -420,7 +425,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   025:   if i != 0, then
+;   026:   if i != 0, then
 ;             goto .loop_3;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -436,7 +441,7 @@ cvt_dec2string:
 ;
 ;   Skip .decimal_x_1_block.
 ;
-;   026:   goto .save_out_strlen;
+;   027:   goto .save_out_strlen;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     jmp    .save_out_strlen
@@ -453,7 +458,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   027:   decimal_y[0] = addr_out_string^;
+;   028:   decimal_y[0] = addr_out_string^;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp     ]          ;eax = addr_out_string
@@ -474,7 +479,7 @@ cvt_dec2string:
 ;
 ;   Initialize counter for .loop_4
 ;
-;   028:   temp = decimal_y[0];
+;   029:   temp = decimal_y[0];
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 20]          ;eax = decimal_y[0]
@@ -486,7 +491,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   029:   temp >>= 4;
+;   030:   temp >>= 4;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 36]          ;eax = temp
@@ -496,7 +501,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   030:   ++ decimal_y[0]_len;
+;   031:   ++ decimal_y[0]_len;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 28]          ;eax = decimal_y[0]_len
@@ -506,7 +511,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   031:   if temp != 0, then
+;   032:   if temp != 0, then
 ;              goto .loop_4;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -530,7 +535,7 @@ cvt_dec2string:
 ;
 ;   Initialize counter for .loop_5
 ;
-;   032:   i = decimal_y[0]_len;
+;   033:   i = decimal_y[0]_len;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 28]          ;eax = decimal_y[0]_len
@@ -542,7 +547,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   033:   ascii_char = ((decimal_y[0] >> ((i-1)*4)) & 0x0f) | 0x30;
+;   034:   ascii_char = ((decimal_y[0] >> ((i-1)*4)) & 0x0f) | 0x30;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 40]          ;eax = i
@@ -560,7 +565,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   034:   addr_out_string^ |= ( ascii_char << (byte_pos*8) );
+;   035:   addr_out_string^ |= ( ascii_char << (byte_pos*8) );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 48]          ;eax = byte_pos
@@ -578,7 +583,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   035:   ++ out_strlen;
+;   036:   ++ out_strlen;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 16]          ;eax = out_strlen
@@ -588,7 +593,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   036:   ++ byte_pos;
+;   037:   ++ byte_pos;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 48]          ;eax = byte_pos
@@ -607,7 +612,7 @@ cvt_dec2string:
 ;   addr_out_string to the next memory block of output string,
 ;   and reset the byte position to 0.
 ;
-;   037:   if byte_pos != 4 then
+;   038:   if byte_pos != 4 then
 ;              goto .cond2_out_string_not_full;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -621,7 +626,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   038:   addr_out_string += 4;
+;   039:   addr_out_string += 4;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 8]           ;eax = addr_out_string
@@ -631,7 +636,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   039:   byte_pos = 0;
+;   040:   byte_pos = 0;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     xor    eax, eax
@@ -643,7 +648,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   040:   -- i;
+;   041:   -- i;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 40]          ;eax = i
@@ -653,7 +658,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   041:   if i != 0, then
+;   042:   if i != 0, then
 ;              goto .loop_5;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -675,7 +680,7 @@ cvt_dec2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   042:   addr_out_strlen^ = out_strlen;
+;   043:   addr_out_strlen^ = out_strlen;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 16]          ;eax = out_strlen

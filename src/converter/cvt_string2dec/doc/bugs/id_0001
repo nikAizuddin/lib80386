@@ -1,0 +1,51 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+---------------------------+------------------------------------------
+           ID: 0001        | SUMMARY:
+       STATUS: Fixed       |     Segment Fault if string,strlen zero
+REPORTED DATE: 24-JAN-2015 |
+   FIXED DATE: 24-JAN-2015 |
+---------------------------+------------------------------------------
+
+REPORT:
+
+  If given string = 0, and strlen = 0, the program receives
+  segmentation fault.
+
+
+ANALYSIS OF THE PROBLEM:
+
+  The bugs occured in .loop_get_decimal:
+
+     : ...
+  003: i = strlen;
+     : ...
+       .loop_get_decimal:
+     :     ...
+  023:     --i;
+  024:     if i != 0, goto .loop_get_decimal;
+       .endloop_get_decimal:
+
+  Before the program enters the loop, the value of i is initialized
+  with value strlen. If strlen=0, then i=0.
+
+  When arrived at 023: --i, the value of i becomes negative and the
+  program loops 4294967295 times.
+
+  However, the program loops until 834 times before received segfault.
+
+
+SOLUTION:
+
+  After i is initialized, checks whether i or strlen is equal zero
+  or not. If equals zero, return. Here the solution:
+
+  003:     i = strlen;
+  004:     if strlen != 0, goto .strlen_not_zero;
+           .strlen_zero:
+  005:         goto .return;
+           .strlen_not_zero:
+
+
+======================================================================

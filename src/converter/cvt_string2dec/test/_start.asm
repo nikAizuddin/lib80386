@@ -36,6 +36,9 @@ section .bss
     t0003_decimal: resd 2
     t0003_digits:  resd 1
 
+    t0004_decimal: resd 2
+    t0004_digits:  resd 1
+
 section .data
 
     t0001_string: dd "23"
@@ -46,6 +49,9 @@ section .data
 
     t0003_string: dd "4294", "9672", "95"
     t0003_strlen: dd 10
+
+    t0004_string: dd 0
+    t0004_strlen: dd 0
 
 section .text
 
@@ -133,6 +139,32 @@ _start:
     call   cvt_string2dec
     add    esp, 16                  ;restore 16 bytes
 
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+;   TEST 0004
+;       Given,
+;           t0004_string = 0x00000000, after conversion
+;           the t0004_decimal[0] should be 0x00000000,
+;           the t0004_decimal[1] should be 0x00000000,
+;           and the t0004_digits should be 0
+;
+;   cvt_string2dec( @t0004_string,
+;                   t0004_strlen,
+;                   @t0004_decimal,
+;                   @t0004_digits )
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    sub    esp, 16                  ;reserve 16 bytes
+    lea    eax, [t0004_string]
+    mov    ebx, [t0004_strlen]
+    lea    ecx, [t0004_decimal]
+    lea    edx, [t0004_digits]
+    mov    [esp     ], eax
+    mov    [esp +  4], ebx
+    mov    [esp +  8], ecx
+    mov    [esp + 12], edx
+    call   cvt_string2dec
+    add    esp, 16                  ;restore 16 bytes
 
 exit:
     mov    eax, 0x01                ;systemcall exit

@@ -109,17 +109,22 @@ PROCESS DESCRIPTION:
            .endloop_get_intpt:
 
   013:     EDI = @decpt_str;
-           .loop_get_decpt:
+
+           .loop_count_heading_zeroes:
   014:         LODSB;
-  015:         if AL == 0x00, goto .endloop_get_decpt;
-  016:         if AL != 0x30, goto .AL_not_zero;
-               .AL_is_zero:
-  017:             ++ heading_zeroes;
-               .AL_not_zero:
-  018:         EDI^ = AL;
-  019:         ++ EDI;
-  020:         ++ decpt_strlen;
-  021:         goto .loop_get_decpt;
+  015:         if AL != 0x30, goto .endloop_count_heading_zeroes;
+  016:         ++ heading_zeroes;
+  017:         goto .loop_count_heading_zeroes;
+           .endloop_count_heading_zeroes:
+  018:     -- ESI;
+
+           .loop_get_decpt:
+  019:         LODSB;
+  020:         if AL == 0x00, goto .endloop_get_decpt;
+  021:         EDI^ = AL;
+  022:         ++ EDI;
+  023:         ++ decpt_strlen;
+  024:         goto .loop_get_decpt;
            .endloop_get_decpt:
 
            ##
@@ -127,25 +132,25 @@ PROCESS DESCRIPTION:
            ## decpt_str into decpt_int.
            ##
 
-  022:     intpt_int = cvt_string2int( @intpt_str, intpt_strlen );
-  023:     decpt_int = cvt_string2int( @decpt_str, decpt_strlen );
+  025:     intpt_int = cvt_string2int( @intpt_str, intpt_strlen );
+  026:     decpt_int = cvt_string2int( @decpt_str, decpt_strlen );
 
-  024:     decs = pow_int( 10,
+  027:     decs = pow_int( 10,
                   heading_zeroes + find_int_digits(decpt_int,0) );
-  025:     push decs to FPU;
-  026:     push decpt_int to FPU;
-  027:     FDIV ST1;
+  028:     push decs to FPU;
+  029:     push decpt_int to FPU;
+  030:     FDIV ST1;
 
            ##
            ## Merge intpt_int and decpt_int into
            ## IEEE double precision format.
            ##
 
-  028:     push intpt_int;
-  029:     FADD ST1;
-  030:     if is_negative == 0, goto .is_positive;
+  031:     push intpt_int;
+  032:     FADD ST1;
+  033:     if is_negative == 0, goto .is_positive;
            .is_negative:
-  031:         FCHS
+  034:         FCHS
            .is_positive:
 
        end.

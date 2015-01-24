@@ -1,0 +1,59 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+---------------------------+------------------------------------------
+           ID: 0001        | SUMMARY:
+       STATUS: Fixed       |     Value "120.50" becomes 120.05
+REPORTED DATE: 23-JAN-2015 |
+   FIXED DATE: 24-JAN-2015 |
+---------------------------+------------------------------------------
+
+REPORT:
+
+  Given string = "120.50", and strlen = 6, however when converted
+  to double, it becomes 120.05.
+
+
+ANALYSIS OF THE PROBLEM:
+
+  The source of the bugs is inside this loop:
+
+  013:     EDI = @decpt_str;
+           .loop_get_decpt:
+  014:         LODSB;
+  015:         if AL == 0x00, goto .endloop_get_decpt;
+  016:         if AL != 0x30, goto .AL_not_zero;
+               .AL_is_zero:
+  017:             ++ heading_zeroes;
+               .AL_not_zero:
+  018:         EDI^ = AL; 
+  019:         ++ EDI;
+  020:         ++ decpt_strlen;
+  021:         goto .loop_get_decpt;
+           .endloop_get_decpt:
+
+  The bugs is at 016 and 017. The loop does not only counts the
+  heading zeroes, but also counts the entire zeroes.
+
+
+SOLUTIONS:
+
+  The solution to the problem is to create another loop for
+  counting the heading zeroes, instead of counting inside
+  .loop_get_decpt.
+
+  013:     EDI = @decpt_str;
+           .loop_count_heading_zeroes:
+  014:         LODSB;
+  015:         if AL != 0x30, goto .endloop_count_heading_zeroes;
+  016:         ++ heading_zeroes;
+  017:         goto .loop_count_heading_zeroes;
+           .endloop_count_heading_zeroes:
+  018:     -- ESI;
+
+           .loop_get_decpt:
+     :         ...
+           .endloop_get_decpt:
+
+
+======================================================================

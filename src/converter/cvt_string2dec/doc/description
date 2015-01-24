@@ -94,66 +94,70 @@ PROCESS DESCRIPTION:
   002:     in_buffer  = in_ptr^;
   003:     i          = strlen;
 
-  004:     if strlen > 8, then
+  004:     if strlen != 0, goto .strlen_not_zero;
+           .strlen_zero:
+  005:         goto .return;
+           .strlen_not_zero:
+
+  006:     if strlen > 8, then
                goto .decimal_num_2_blocks;
 
            .decimal_num_1_block:
-  005:         out_bitpos = (strlen - 1) * 4;
-  006:         out_ptr    = addr_decimal;
-  007:         goto .loop_get_decimal;
+  007:         out_bitpos = (strlen - 1) * 4;
+  008:         out_ptr    = addr_decimal;
+  009:         goto .loop_get_decimal;
 
            .decimal_num_2_blocks:
-  008:         out_bitpos = (strlen - 9) * 4;
-  009:         out_ptr    = addr_decimal + 4;
+  010:         out_bitpos = (strlen - 9) * 4;
+  011:         out_ptr    = addr_decimal + 4;
 
            .loop_get_decimal:
 
                ##
                ## Check if in_buffer is empty
                ##
-  010:         if in_buffer != 0, then
+  012:         if in_buffer != 0, then
                    goto .in_buffer_not_empty;
                .in_buffer_empty:
-  011:             in_ptr    += 4;
-  012:             in_buffer  = in_ptr^;
+  013:             in_ptr    += 4;
+  014:             in_buffer  = in_ptr^;
                .in_buffer_not_empty:
 
                ##
                ## Check if out_buffer is full
                ##
-  013:         if out_bitpos == -4, then
+  015:         if out_bitpos == -4, then
                    goto .out_buffer_not_full;
                .out_buffer_full:
-  014:             out_ptr^    = out_buffer;
-  015:             out_ptr    -= 4;
-  016:             out_buffer  = 0;
-  017:             out_bitpos  = 28;
+  016:             out_ptr^    = out_buffer;
+  017:             out_ptr    -= 4;
+  018:             out_buffer  = 0;
+  019:             out_bitpos  = 28;
                .out_buffer_not_full:
 
                ##
                ## Get a decimal number from the in_buffer
                ##
-  018:         decimal_number   = in_buffer & 0x0000000f;
-  019:         in_buffer      >>= 8;
+  020:         decimal_number   = in_buffer & 0x0000000f;
+  021:         in_buffer      >>= 8;
 
                ##
                ## Fill the decimal number into out_buffer
                ##
-  020:         out_buffer |= decimal_number << out_bitpos;
-  021:         out_bitpos -= 4;
-  022:         ++digits;
+  022:         out_buffer |= decimal_number << out_bitpos;
+  023:         out_bitpos -= 4;
+  024:         ++digits;
 
-  023:         --i;
-  024:         if i != 0, then
-                   goto .loop_get_decimal;
+  025:         --i;
+  026:         if i != 0, goto .loop_get_decimal;
 
            .endloop_get_decimal:
 
            ##
            ## Make sure the out_buffer is saved to addr_decimal^
            ##
-  025:     out_ptr^ = out_buffer;
-  026:     addr_digits^ = digits;
+  027:     out_ptr^ = out_buffer;
+  028:     addr_digits^ = digits;
 
        end.
 
