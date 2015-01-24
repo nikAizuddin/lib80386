@@ -4,7 +4,7 @@
 
 ;Documentations are removed to reduce source code size.
 ;View the full version of this code here:
-;https://github.com/nikAizuddin/lib80386/tree/master/example/codechef/practice/easy//home/nlck/Documents/_dataProject/_dataASM/IBM_PC/lib80386/example/codechef/practice/easy/HS08TEST/submit/submit.asm
+;https://github.com/nikAizuddin/lib80386/tree/master/example/codechef/practice/easy/HS08TEST/submit/submit.asm
 
 
 
