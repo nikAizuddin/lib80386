@@ -43,4 +43,11 @@ REQUIRES:
 
     ---
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+USED BY:
+
+    converter/cvt_string2double.asm
+    converter/cvt_string2int.asm
+
 ======================================================================
