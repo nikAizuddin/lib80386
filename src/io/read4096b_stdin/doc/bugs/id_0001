@@ -1,0 +1,62 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+---------------------------+------------------------------------------
+           ID: 0001        | SUMMARY:
+       STATUS: Fixed       |     SIGSEGV when there are lots of input
+REPORTED DATE: 25-JAN-2015 |
+   FIXED DATE: 25-JAN-2015 |
+---------------------------+------------------------------------------
+
+REPORT:
+
+  Received SIGSEGV at line 298: mov [edi], al. This occurs when
+  there are 10^7 inputs.
+
+
+ANALYSIS OF THE PROBLEM:
+
+           .rb_empty:
+  016:         systemcall read( stdin, addr_readbuffer, 4096 );
+  017:         addr_cur_byte^   = 0;
+  018:         addr_cur_rb_ptr^ = addr_readbuffer;
+  019:         ESI              = addr_readbuffer;
+           ## byte_pos MUST RESET TO ZERO!
+           .rb_not_empty:
+
+           .loop_getdata:
+  020:         LODSB;
+  021:         ++ byte_pos;
+  022:         if AL == term1, then goto .endloop_getdata;
+  023:         if AL == term2, then goto .endloop_getdata;
+  024:         EDI^ = AL;   ### SIGSEGV HERE
+  025:         ++ EDI;
+  026:         ++ outdata_len;
+  027:         if byte_pos == 4096, then goto .rb_empty;
+  028:         goto .loop_getdata;
+           .endloop_getdata: 
+
+
+SOLUTIONS:
+
+           .rb_empty:
+  016:         systemcall read( stdin, addr_readbuffer, 4096 );
+  017:         addr_cur_byte^   = 0;
+  018:         addr_cur_rb_ptr^ = addr_readbuffer;
+  +++:         byte_pos         = 0;   ### BUGS FIXED!
+  019:         ESI              = addr_readbuffer;
+           .rb_not_empty:
+
+           .loop_getdata:
+  020:         LODSB;
+  021:         ++ byte_pos;
+  022:         if AL == term1, then goto .endloop_getdata;
+  023:         if AL == term2, then goto .endloop_getdata;
+  024:         EDI^ = AL;   ### NO MORE SIGSEGV
+  025:         ++ EDI;
+  026:         ++ outdata_len;
+  027:         if byte_pos == 4096, then goto .rb_empty;
+  028:         goto .loop_getdata;
+           .endloop_getdata:
+
+======================================================================

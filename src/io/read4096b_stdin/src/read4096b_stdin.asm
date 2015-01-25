@@ -20,7 +20,7 @@
 ;
 ;      EXTERNAL FILES: ---
 ;
-;             VERSION: 0.1.0
+;             VERSION: 0.1.10
 ;              STATUS: Alpha
 ;                BUGS: --- <See doc/bugs/index file>
 ;
@@ -74,7 +74,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   001:     if flag == 1, then goto .flag_1;
+;   001:   if flag == 1, then goto .flag_1;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 20]          ;eax = flag
@@ -87,7 +87,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   002:         term1 = 0x0a;
+;   002:   term1 = 0x0a;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x0a                ;eax = newline character
@@ -96,7 +96,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   003:         term2 = 0x20;
+;   003:   term2 = 0x20;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x20                ;eax = space character
@@ -105,7 +105,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   004:         goto .endflag_checks;
+;   004:   goto .endflag_checks;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     jmp    .endflag_checks
@@ -116,7 +116,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   005:         term1 = 0x0a;
+;   005:   term1 = 0x0a;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x0a                ;eax = newline character
@@ -125,7 +125,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   006:         term2 = 0x0a;
+;   006:   term2 = 0x0a;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x0a                ;eax = newline character
@@ -137,7 +137,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   007:     byte_pos = addr_cur_byte^;
+;   007:   byte_pos = addr_cur_byte^;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp +  8]          ;ebx = addr_cur_byte
@@ -147,7 +147,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   008:     EDI = addr_outdata;
+;   008:   EDI = addr_outdata;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    edi, [esp + 12]          ;edi = addr_outdata
@@ -155,11 +155,11 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   009:     if addr_cur_rb_ptr^ == 0, goto .dont_init_ESI
-;            .init_ESI:
-;   010:         ESI = addr_cur_rb_ptr^;
-;                ...
-;            .dont_init_ESI:
+;   009:   if addr_cur_rb_ptr^ == 0, goto .dont_init_ESI
+;          .init_ESI:
+;   010:       ESI = addr_cur_rb_ptr^;
+;              ...
+;          .dont_init_ESI:
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp +  4]          ;ebx = addr_cur_rb_ptr
@@ -170,9 +170,9 @@ read4096b_stdin:
     mov    esi, eax
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   011:         LODSB;
-;   012:         -- esi;
-;   013:         if al == 0, then goto .rb_empty;
+;   011:   LODSB;
+;   012:   -- esi;
+;   013:   if al == 0, then goto .rb_empty;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     lodsb
@@ -184,7 +184,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   014:     if byte_pos == 0, then goto .rb_empty;
+;   014:   if byte_pos == 0, then goto .rb_empty;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 32]          ;eax = byte_pos
@@ -194,7 +194,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   015:     if byte_pos != 4096, then goto .rb_not_empty;
+;   015:   if byte_pos != 4096, then goto .rb_not_empty;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 32]          ;eax = byte_pos
@@ -207,7 +207,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   016:         systemcall read( stdin, addr_readbuffer, 4096 );
+;   016:   systemcall read( stdin, addr_readbuffer, 4096 );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x03                ;systemcall read
@@ -219,7 +219,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   017:         addr_cur_byte^   = 0;
+;   017:   addr_cur_byte^ = 0;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 8]           ;ebx = addr_cur_byte
@@ -229,17 +229,25 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   018:         addr_cur_rb_ptr^ = addr_readbuffer;
+;   018:   addr_cur_rb_ptr^ = addr_readbuffer;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp    ]           ;eax = addr_readbuffer
     mov    ebx, [esp + 4]           ;ebx = addr_cur_rb_ptr
     mov    [ebx], eax               ;ebx^ = eax
 
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+;   019:   byte_pos = 0;
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    xor    eax, eax
+    mov    [esp + 32], eax          ;byte_pos = eax
+
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   019:         ESI              = addr_readbuffer;
+;   020:   ESI = addr_readbuffer;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    esi, [esp]               ;esi = addr_readbuffer
@@ -253,7 +261,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   020:         LODSB;
+;   021:   LODSB;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     lodsb
@@ -261,7 +269,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   021:         ++ byte_pos;
+;   022:   ++ byte_pos;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 32]          ;ebx = byte_pos
@@ -271,7 +279,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   022:         if AL == term1, then goto .endloop_getdata;
+;   023:   if AL == term1, then goto .endloop_getdata;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 24]          ;ebx = term1
@@ -281,7 +289,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   023:         if AL == term2, then goto .endloop_getdata;
+;   024:   if AL == term2, then goto .endloop_getdata;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 28]          ;ebx = term2
@@ -291,8 +299,8 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   024:         EDI^ = AL; 
-;   025:         ++ EDI;
+;   025:   EDI^ = AL; 
+;   026:   ++ EDI;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    [edi], al
@@ -301,7 +309,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   026:         ++ outdata_len;
+;   027:   ++ outdata_len;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 36]          ;eax = outdata_len
@@ -311,7 +319,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   027:         if byte_pos == 4096, then goto .rb_empty;
+;   028:   if byte_pos == 4096, then goto .rb_empty;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 32]          ;eax = byte_pos
@@ -321,7 +329,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   028:         goto .loop_getdata;
+;   029:   goto .loop_getdata;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     jmp    .loop_getdata
@@ -331,7 +339,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   029:     addr_cur_rb_ptr^  = ESI;
+;   030:   addr_cur_rb_ptr^ = ESI;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 4]           ;ebx = addr_cur_rb_ptr
@@ -340,7 +348,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   030:     addr_cur_byte^    = byte_pos;
+;   031:   addr_cur_byte^ = byte_pos;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 32]          ;eax = byte_pos
@@ -350,7 +358,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   031:     addr_outdata_len^ = outdata_len;
+;   032:   addr_outdata_len^ = outdata_len;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 36] ;eax = outdata_len

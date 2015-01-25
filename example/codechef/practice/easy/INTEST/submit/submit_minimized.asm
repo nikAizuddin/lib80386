@@ -2585,6 +2585,14 @@ read4096b_stdin:
 
 
 
+ xor eax, eax
+ mov [esp + 32], eax
+
+
+
+
+
+
 
  mov esi, [esp]
  cld

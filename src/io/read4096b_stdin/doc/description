@@ -64,16 +64,16 @@ PROCESS DESCRIPTION:
   | +   20 | flag                | ---                             |
   |        |                     |                                 |
   +--------+---------------------+---------------------------------+
-  | +   24 | term1               |                                 |
+  | +   24 | term1               | Terminator character 1.         |
   |        |                     |                                 |
   +--------+---------------------+---------------------------------+
-  | +   28 | term2               |                                 |
+  | +   28 | term2               | Terminator character 2.         |
   |        |                     |                                 |
   +--------+---------------------+---------------------------------+
-  | +   32 | byte_pos            |                                 |
+  | +   32 | byte_pos            | Readbuffer byte position.       |
   |        |                     |                                 |
   +--------+---------------------+---------------------------------+
-  | +   36 | outdata_len         |                                 |
+  | +   36 | outdata_len         | Length of output data.          |
   |        |                     |                                 |
   +--------+---------------------+---------------------------------+
   | Total stack used for local variables = 40 bytes                |
@@ -110,24 +110,25 @@ PROCESS DESCRIPTION:
   016:         systemcall read( stdin, addr_readbuffer, 4096 );
   017:         addr_cur_byte^   = 0;
   018:         addr_cur_rb_ptr^ = addr_readbuffer;
-  019:         ESI              = addr_readbuffer;
+  019:         byte_pos         = 0;
+  020:         ESI              = addr_readbuffer;
            .rb_not_empty:
 
            .loop_getdata:
-  020:         LODSB;
-  021:         ++ byte_pos;
-  022:         if AL == term1, then goto .endloop_getdata;
-  023:         if AL == term2, then goto .endloop_getdata;
-  024:         EDI^ = AL;
-  025:         ++ EDI;
-  026:         ++ outdata_len;
-  027:         if byte_pos == 4096, then goto .rb_empty;
-  028:         goto .loop_getdata;
+  021:         LODSB;
+  022:         ++ byte_pos;
+  023:         if AL == term1, then goto .endloop_getdata;
+  024:         if AL == term2, then goto .endloop_getdata;
+  025:         EDI^ = AL;
+  026:         ++ EDI;
+  027:         ++ outdata_len;
+  028:         if byte_pos == 4096, then goto .rb_empty;
+  029:         goto .loop_getdata;
            .endloop_getdata:
 
-  029:     addr_cur_rb_ptr^  = ESI;
-  030:     addr_cur_byte^    = byte_pos;
-  031:     addr_outdata_len^ = outdata_len;
+  030:     addr_cur_rb_ptr^  = ESI;
+  031:     addr_cur_byte^    = byte_pos;
+  032:     addr_outdata_len^ = outdata_len;
 
        end.
 
