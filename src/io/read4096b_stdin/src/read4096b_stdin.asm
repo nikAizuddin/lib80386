@@ -184,22 +184,20 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   014:   if byte_pos == 0, then goto .rb_empty;
+;   014:   if byte_pos == 0, goto .rb_empty;
+;   015:   if byte_pos == 128, goto .rb_empty;
+;   ???:   goto .rb_not_empty;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 32]          ;eax = byte_pos
     cmp    eax, 0
     je     .rb_empty
 
-
-;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-;
-;   015:   if byte_pos != 4096, then goto .rb_not_empty;
-;
-;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 32]          ;eax = byte_pos
-    cmp    eax, 4096
-    jne    .rb_not_empty
+    cmp    eax, 128
+    je     .rb_empty
+
+    jmp    .rb_not_empty
 
 
 .rb_empty:
@@ -207,13 +205,55 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   016:   systemcall read( stdin, addr_readbuffer, 4096 );
+;   ???:   reinitialized readbuffer to zero;
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    xor    eax, eax
+    mov    ebx, [esp]               ;ebx = addr_readbuffer
+    mov    [ebx       ], eax
+    mov    [ebx +    4], eax
+    mov    [ebx +    8], eax
+    mov    [ebx +   12], eax
+    mov    [ebx +   16], eax
+    mov    [ebx +   20], eax
+    mov    [ebx +   24], eax
+    mov    [ebx +   28], eax
+    mov    [ebx +   32], eax
+    mov    [ebx +   36], eax
+    mov    [ebx +   40], eax
+    mov    [ebx +   44], eax
+    mov    [ebx +   48], eax
+    mov    [ebx +   52], eax
+    mov    [ebx +   56], eax
+    mov    [ebx +   60], eax
+    mov    [ebx +   64], eax
+    mov    [ebx +   68], eax
+    mov    [ebx +   72], eax
+    mov    [ebx +   76], eax
+    mov    [ebx +   80], eax
+    mov    [ebx +   84], eax
+    mov    [ebx +   88], eax
+    mov    [ebx +   92], eax
+    mov    [ebx +   96], eax
+    mov    [ebx +  100], eax
+    mov    [ebx +  104], eax
+    mov    [ebx +  108], eax
+    mov    [ebx +  112], eax
+    mov    [ebx +  116], eax
+    mov    [ebx +  120], eax
+    mov    [ebx +  124], eax
+    mov    [ebx +  128], eax
+
+
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
+;   016:   systemcall read( stdin, addr_readbuffer, 128 );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x03                ;systemcall read
     xor    ebx, ebx                 ;fd  = stdin
     mov    ecx, [esp]               ;dst = addr_readbuffer
-    mov    edx, 4096                ;len = 4096
+    mov    edx, 128                 ;len = 128
     int    0x80
 
 
@@ -319,20 +359,20 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   028:   if byte_pos == 4096, then goto .rb_empty;
+;   028:   if byte_pos == 128, goto .fill_rb;
+;   029:   goto .loop_getdata;
+;          .fill_rb:
+;   ???:       goto .rb_empty;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 32]          ;eax = byte_pos
-    cmp    eax, 4096
+    cmp    eax, 128
     je     .rb_empty
 
-
-;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-;
-;   029:   goto .loop_getdata;
-;
-;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     jmp    .loop_getdata
+.fill_rb:
+    jmp    .rb_empty
+
 
 .endloop_getdata:
 

@@ -88,18 +88,20 @@ PROCESS DESCRIPTION:
 
        Begin
 
+  001:     addr_out_strlen^ = 0;
+
            ##
            ## Find the number of digits in integer_x
            ##
 
-  001:     integer_x_len = find_int_digits( integer_x,
+  002:     integer_x_len = find_int_digits( integer_x,
                                             flag );
 
            ##
            ## Checks whether integer_x is signed or unsigned
            ##
 
-  002:     if flag != 1, then
+  003:     if flag != 1, then
                goto .flag_notequal_1;
 
            ##
@@ -108,7 +110,7 @@ PROCESS DESCRIPTION:
 
            .flag_equal_1:
 
-  003:         if (integer_x & 0x80000000) != 0x80000000, then
+  004:         if (integer_x & 0x80000000) != 0x80000000, then
                    goto .sign_false;
 
 
@@ -118,8 +120,8 @@ PROCESS DESCRIPTION:
 
                .sign_true:
 
-  004:             integer_x = (!integer_x) + 1;
-  005:             is_negative = 1;
+  005:             integer_x = (!integer_x) + 1;
+  006:             is_negative = 1;
 
 
                ##
@@ -134,44 +136,44 @@ PROCESS DESCRIPTION:
 
            .flag_notequal_1:
 
-  006:     if integer_x_len > 8, goto .skip_int_x_len_le_8;
+  007:     if integer_x_len > 8, goto .skip_int_x_len_le_8;
            .goto_int_x_len_le_8:
-  007:         goto .integer_x_len_lessequal_8;
+  008:         goto .integer_x_len_lessequal_8;
            .skip_int_x_len_le_8:
 
            .integer_x_len_morethan_8:
 
-  008:         integer_x_quo = integer_x / 100000000;
-  009:         integer_x_rem = remainder from the division;
-  010:         decimal_x[0] = cvt_hex2dec( integer_x_rem );
-  011:         decimal_x[1] = cvt_hex2dec( integer_x_quo );
-  012:         cvt_dec2string( @decimal_x[0],
+  009:         integer_x_quo = integer_x / 100000000;
+  010:         integer_x_rem = remainder from the division;
+  011:         decimal_x[0] = cvt_hex2dec( integer_x_rem );
+  012:         decimal_x[1] = cvt_hex2dec( integer_x_quo );
+  013:         cvt_dec2string( @decimal_x[0],
                                2,
                                @ascii_x[0],
                                @ascii_x_len );
-  013:         goto .skip_integer_x_len_equalmore_8;
+  014:         goto .skip_integer_x_len_equalmore_8;
 
            .integer_x_len_lessequal_8:
 
-  014:         decimal_x[0] = cvt_hex2dec( integer_x );
-  015:         cvt_dec2string( @decimal_x[0],
+  015:         decimal_x[0] = cvt_hex2dec( integer_x );
+  016:         cvt_dec2string( @decimal_x[0],
                                1,
                                @ascii_x[0],
                                @ascii_x_len );
 
            .skip_integer_x_len_equalmore_8:
  
-  016:     if is_negative != 1, then
+  017:     if is_negative != 1, then
                goto .is_negative_false;
 
            .is_negative_true:
 
-  017:         addr_out_string^ = 0x2d;
-  018:         ++ addr_out_strlen^;
+  018:         addr_out_string^ = 0x2d;
+  019:         ++ addr_out_strlen^;
 
            .is_negative_false:
 
-  019:     string_append( addr_out_string,
+  020:     string_append( addr_out_string,
                           addr_out_strlen,
                           @ascii_x[0],
                           ascii_x_len );

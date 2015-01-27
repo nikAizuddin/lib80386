@@ -23,7 +23,7 @@
 ;                     cvt_dec2string.asm,
 ;                     string_append.asm
 ;
-;            VERSION: 0.1.40
+;            VERSION: 0.1.50
 ;             STATUS: Alpha
 ;               BUGS: --- <See doc/bugs/index file>
 ;
@@ -81,6 +81,16 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
+;   001:   addr_out_strlen^ = 0;
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    mov    ebx, [esp + 8]           ;ebx = addr_out_strlen
+    xor    eax, eax
+    mov    [ebx], eax               ;addr_out_strlen = 0
+
+
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
 ;   Find the number of digits in integer_x
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -88,7 +98,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   001:   integer_x_len = find_int_digits( integer_x, flag );
+;   002:   integer_x_len = find_int_digits( integer_x, flag );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 8                   ;reserve 8 bytes
@@ -110,7 +120,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   002:   if flag != 1, then
+;   003:   if flag != 1, then
 ;              goto .flag_notequal_1.
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -131,7 +141,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   003: if (integer_x & 0x80000000) != 0x80000000, then
+;   004: if (integer_x & 0x80000000) != 0x80000000, then
 ;            goto .sign_false.
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -155,7 +165,7 @@ cvt_int2string:
 ;
 ;   The integer_x is negative, and need Two's complement.
 ;
-;   004: integer_x = (!integer_x) + 1;
+;   005: integer_x = (!integer_x) + 1;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp]               ;eax = integer_x
@@ -168,7 +178,7 @@ cvt_int2string:
 ;
 ;   Memorize the program that the integer_x is negative.
 ;
-;   005: is_negative = 1;
+;   006: is_negative = 1;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 1
@@ -197,9 +207,9 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   006:   if integer_x_len > 8, goto .skip_int_x_len_le_8;
+;   007:   if integer_x_len > 8, goto .skip_int_x_len_le_8;
 ;          .goto_int_x_len_le_8:
-;   007:       goto .integer_x_len_lessequal_8;
+;   008:       goto .integer_x_len_lessequal_8;
 ;          .skip_int_x_len_le_8:
 ;
 ;   Means, the number of digits in integer_x_len is
@@ -219,7 +229,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   008: integer_x_quo = integer_x / 100000000;
+;   009: integer_x_quo = integer_x / 100000000;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp     ]          ;eax = integer_x
@@ -231,7 +241,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   009: integer_x_rem = remainder from the division;
+;   010: integer_x_rem = remainder from the division;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    [esp + 24], edx          ;integer_x_rem = edx
@@ -239,7 +249,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   010: decimal_x[0] = cvt_hex2dec( integer_x_rem );
+;   011: decimal_x[0] = cvt_hex2dec( integer_x_rem );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 4                   ;reserve 4 bytes
@@ -252,7 +262,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   011: decimal_x[1] = cvt_hex2dec( integer_x_quo );
+;   012: decimal_x[1] = cvt_hex2dec( integer_x_quo );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 4                   ;reserve 4 bytes
@@ -265,7 +275,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   012: cvt_dec2string( @decimal_x[0],
+;   013: cvt_dec2string( @decimal_x[0],
 ;                        2,
 ;                        @ascii_x[0],
 ;                        @ascii_x_len );
@@ -289,7 +299,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   013: goto .skip_integer_x_len_equalmore_8;
+;   014: goto .skip_integer_x_len_equalmore_8;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     jmp    .skip_integer_x_len_equalmore_8
@@ -300,7 +310,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   014: decimal_x[0] = cvt_hex2dec(integer_x);
+;   015: decimal_x[0] = cvt_hex2dec(integer_x);
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 4                   ;reserve 4 bytes
@@ -313,7 +323,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   015: cvt_dec2string( @decimal_x[0],
+;   016: cvt_dec2string( @decimal_x[0],
 ;                        1,
 ;                        @ascii_x[0],
 ;                        @ascii_x_len );
@@ -340,7 +350,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   016: if is_negative != 1, then
+;   017: if is_negative != 1, then
 ;            goto .is_negative_false
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -354,7 +364,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   017: addr_out_string^ = 0x2d;
+;   018: addr_out_string^ = 0x2d;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 4]           ;eax = addr_ascii_str
@@ -364,7 +374,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   018: ++ addr_out_strlen^;
+;   019: ++ addr_out_strlen^;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 8]           ;ebx = addr_out_strlen
@@ -377,7 +387,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   019: string_append( addr_out_string,
+;   020: string_append( addr_out_string,
 ;                       addr_out_strlen,
 ;                       @ascii_x[0],   
 ;                       ascii_x_len );

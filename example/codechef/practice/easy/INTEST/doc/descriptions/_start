@@ -93,7 +93,7 @@ PROCESS DESCRIPTION:
            ## Mainloop begin
            ##
 
-  007:     if n != 0, goto .dont_exit_program;
+  007:     if n == 0, goto .dont_exit_program;
            .exit_program:
   008:         goto .exit;
            .dont_exit_program:
@@ -110,6 +110,7 @@ PROCESS DESCRIPTION:
                                 0 );
   012:         t = cvt_string2int( @t_str, t_strlen );
 
+  ???:         if k == 0, goto .not_divisible;
   013:         t / k;
   014:         if EDX != 0, goto .not_divisible;
                .divisible:

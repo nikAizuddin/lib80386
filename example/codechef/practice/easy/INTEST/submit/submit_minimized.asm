@@ -1,10 +1,5 @@
 %line 1+1 submit.asm
 
-;Assembled with "$ nasm -E submit.asm -o submit_minimized.asm"
-
-;Documentations are removed to reduce source code size.
-;View the full version of this code here:
-;https://github.com/nikAizuddin/lib80386/tree/master/example/codechef/practice/easy/INTEST/submit/submit.asm
 
 
 
@@ -35,7 +30,10 @@
 
 
 
-[global _start]
+
+
+
+
 
 [global _start]
 
@@ -273,6 +271,11 @@ _start:
 
 
 
+
+
+ mov ecx, [k]
+ cmp ecx, 0
+ je .not_divisible
 
  mov eax, [t]
  mov ebx, [k]
@@ -2531,19 +2534,17 @@ read4096b_stdin:
 
 
 
+
+
  mov eax, [esp + 32]
  cmp eax, 0
  je .rb_empty
 
-
-
-
-
-
-
  mov eax, [esp + 32]
- cmp eax, 4096
- jne .rb_not_empty
+ cmp eax, 128
+ je .rb_empty
+
+ jmp .rb_not_empty
 
 
 .rb_empty:
@@ -2554,10 +2555,52 @@ read4096b_stdin:
 
 
 
+ xor eax, eax
+ mov ebx, [esp]
+ mov [ebx ], eax
+ mov [ebx + 4], eax
+ mov [ebx + 8], eax
+ mov [ebx + 12], eax
+ mov [ebx + 16], eax
+ mov [ebx + 20], eax
+ mov [ebx + 24], eax
+ mov [ebx + 28], eax
+ mov [ebx + 32], eax
+ mov [ebx + 36], eax
+ mov [ebx + 40], eax
+ mov [ebx + 44], eax
+ mov [ebx + 48], eax
+ mov [ebx + 52], eax
+ mov [ebx + 56], eax
+ mov [ebx + 60], eax
+ mov [ebx + 64], eax
+ mov [ebx + 68], eax
+ mov [ebx + 72], eax
+ mov [ebx + 76], eax
+ mov [ebx + 80], eax
+ mov [ebx + 84], eax
+ mov [ebx + 88], eax
+ mov [ebx + 92], eax
+ mov [ebx + 96], eax
+ mov [ebx + 100], eax
+ mov [ebx + 104], eax
+ mov [ebx + 108], eax
+ mov [ebx + 112], eax
+ mov [ebx + 116], eax
+ mov [ebx + 120], eax
+ mov [ebx + 124], eax
+ mov [ebx + 128], eax
+
+
+
+
+
+
+
  mov eax, 0x03
  xor ebx, ebx
  mov ecx, [esp]
- mov edx, 4096
+ mov edx, 128
  int 0x80
 
 
@@ -2666,17 +2709,17 @@ read4096b_stdin:
 
 
 
+
+
+
  mov eax, [esp + 32]
- cmp eax, 4096
+ cmp eax, 128
  je .rb_empty
 
-
-
-
-
-
-
  jmp .loop_getdata
+.fill_rb:
+ jmp .rb_empty
+
 
 .endloop_getdata:
 

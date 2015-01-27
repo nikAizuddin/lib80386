@@ -270,6 +270,7 @@ _start:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
+;   ???:   if k == 0, goto .not_divisible;
 ;   013:   t / k;
 ;   014:   if EDX != 0, goto .not_divisible;
 ;          .divisible:
@@ -277,6 +278,10 @@ _start:
 ;          .not_divisible:
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    mov    ecx, [k]
+    cmp    ecx, 0
+    je     .not_divisible
+
     mov    eax, [t]
     mov    ebx, [k]
     xor    edx, edx
@@ -365,4 +370,4 @@ _start:
 
     mov    eax, 0x01                ;systemcall exit
     xor    ebx, ebx                 ;return 0
-    int   0x80
+    int    0x80

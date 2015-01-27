@@ -10,7 +10,7 @@ REQUIRES: ---
 
 BUGS: ---
 
-FUTURE IMPROVEMENTS: ---
+FUTURE IMPROVEMENTS: Currently can filled 4 bytes at once, not 4096.
 
 ----------------------------------------------------------------------
 
@@ -103,11 +103,13 @@ PROCESS DESCRIPTION:
   013:         if al == 0, then goto .rb_empty;
            .dont_init_ESI:
 
-  014:     if byte_pos == 0, then goto .rb_empty;
-  015:     if byte_pos != 4096, then goto .rb_not_empty;
+  014:     if byte_pos == 0, goto .rb_empty;
+  015:     if byte_pos == 128, goto .rb_empty;
+  ???:     goto .rb_not_empty;
 
            .rb_empty:
-  016:         systemcall read( stdin, addr_readbuffer, 4096 );
+  ???:         reinitialized readbuffer to zero;
+  016:         systemcall read( stdin, addr_readbuffer, 128 );
   017:         addr_cur_byte^   = 0;
   018:         addr_cur_rb_ptr^ = addr_readbuffer;
   019:         byte_pos         = 0;
@@ -122,8 +124,10 @@ PROCESS DESCRIPTION:
   025:         EDI^ = AL;
   026:         ++ EDI;
   027:         ++ outdata_len;
-  028:         if byte_pos == 4096, then goto .rb_empty;
+  028:         if byte_pos == 128, goto .fill_rb;
   029:         goto .loop_getdata;
+               .fill_rb:
+  ???:             goto .rb_empty;
            .endloop_getdata:
 
   030:     addr_cur_rb_ptr^  = ESI;
