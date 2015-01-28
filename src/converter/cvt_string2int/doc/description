@@ -70,7 +70,7 @@ PROCESS DESCRIPTION:
            .digits_gt_8:
   004:         hexadecimal_num[1] = cvt_dec2hex( decimal_num[1] );
   005:         hexadecimal_num[0] = ( hexadecimal_num[1] *
-                                    pow_int(10, decimal_digits-2) ) +
+                                    pow_int(10, 8) ) +
                                     hexadecimal_num[0];
            .digits_le_8:
 

@@ -22,7 +22,7 @@
 ;                      cvt_string2dec.asm
 ;                      cvt_dec2hex.asm
 ;
-;             VERSION: 0.1.10
+;             VERSION: 0.1.20
 ;              STATUS: Alpha
 ;                BUGS: --- <See doc/bugs/index file>
 ;
@@ -85,6 +85,7 @@ cvt_string2int:
     mov    [esp + 12], edx          ;parameter 4
     call   cvt_string2dec
     add    esp, 16                  ;restore 16 bytes
+.b1:
 
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -129,14 +130,13 @@ cvt_string2int:
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   005:   hexadecimal_num[0] = (hexadecimal_num[1] *
-;                               pow_int(10, decimal_digits-2)) + 
+;                               pow_int(10, 8) ) + 
 ;                               hexadecimal_num[0];
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 8                   ;reserve 8 bytes
     mov    eax, 10                  ;parameter1 = 10
-    mov    ebx, [esp + (8 + 16)]    ;get (decimal_digits - 2)
-    sub    ebx, 2
+    mov    ebx, 8
     mov    [esp    ], eax           ;parameter 1
     mov    [esp + 4], ebx           ;parameter 2
     call   pow_int

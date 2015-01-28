@@ -266,7 +266,7 @@ _start:
     call   cvt_string2int
     add    esp, 8
     mov    [t], eax
-
+.break:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;

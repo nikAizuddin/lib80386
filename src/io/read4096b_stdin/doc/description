@@ -10,7 +10,7 @@ REQUIRES: ---
 
 BUGS: ---
 
-FUTURE IMPROVEMENTS: Currently can filled 4 bytes at once, not 4096.
+FUTURE IMPROVEMENTS: ---
 
 ----------------------------------------------------------------------
 
@@ -104,35 +104,34 @@ PROCESS DESCRIPTION:
            .dont_init_ESI:
 
   014:     if byte_pos == 0, goto .rb_empty;
-  015:     if byte_pos == 128, goto .rb_empty;
-  ???:     goto .rb_not_empty;
+  015:     if byte_pos == 4096, goto .rb_empty;
+  016:     goto .rb_not_empty;
 
            .rb_empty:
-  ???:         reinitialized readbuffer to zero;
-  016:         systemcall read( stdin, addr_readbuffer, 128 );
-  017:         addr_cur_byte^   = 0;
-  018:         addr_cur_rb_ptr^ = addr_readbuffer;
-  019:         byte_pos         = 0;
-  020:         ESI              = addr_readbuffer;
+  017:         systemcall read( stdin, addr_readbuffer, 4096 );
+  018:         addr_cur_byte^   = 0;
+  019:         addr_cur_rb_ptr^ = addr_readbuffer;
+  020:         byte_pos         = 0;
+  021:         ESI              = addr_readbuffer;
            .rb_not_empty:
 
            .loop_getdata:
-  021:         LODSB;
-  022:         ++ byte_pos;
-  023:         if AL == term1, then goto .endloop_getdata;
-  024:         if AL == term2, then goto .endloop_getdata;
-  025:         EDI^ = AL;
-  026:         ++ EDI;
-  027:         ++ outdata_len;
-  028:         if byte_pos == 128, goto .fill_rb;
-  029:         goto .loop_getdata;
+  022:         LODSB;
+  023:         ++ byte_pos;
+  024:         if AL == term1, then goto .endloop_getdata;
+  025:         if AL == term2, then goto .endloop_getdata;
+  026:         EDI^ = AL;
+  027:         ++ EDI;
+  028:         ++ outdata_len;
+  029:         if byte_pos == 4096, goto .fill_rb;
+  030:         goto .loop_getdata;
                .fill_rb:
-  ???:             goto .rb_empty;
+  031:             goto .rb_empty;
            .endloop_getdata:
 
-  030:     addr_cur_rb_ptr^  = ESI;
-  031:     addr_cur_byte^    = byte_pos;
-  032:     addr_outdata_len^ = outdata_len;
+  032:     addr_cur_rb_ptr^  = ESI;
+  033:     addr_cur_byte^    = byte_pos;
+  034:     addr_outdata_len^ = outdata_len;
 
        end.
 

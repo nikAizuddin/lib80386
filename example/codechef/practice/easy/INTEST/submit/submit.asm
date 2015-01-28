@@ -260,7 +260,7 @@ _start:
     call   cvt_string2int
     add    esp, 8
     mov    [t], eax
-
+.break:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
@@ -1543,6 +1543,16 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
+;   001:   addr_out_strlen^ = 0;
+;
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    mov    ebx, [esp + 8]           ;ebx = addr_out_strlen
+    xor    eax, eax
+    mov    [ebx], eax               ;addr_out_strlen = 0
+
+
+;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;
 ;   Find the number of digits in integer_x
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1550,7 +1560,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   001:   integer_x_len = find_int_digits( integer_x, flag );
+;   002:   integer_x_len = find_int_digits( integer_x, flag );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 8                   ;reserve 8 bytes
@@ -1572,7 +1582,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   002:   if flag != 1, then
+;   003:   if flag != 1, then
 ;              goto .flag_notequal_1.
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1593,7 +1603,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   003: if (integer_x & 0x80000000) != 0x80000000, then
+;   004: if (integer_x & 0x80000000) != 0x80000000, then
 ;            goto .sign_false.
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1617,7 +1627,7 @@ cvt_int2string:
 ;
 ;   The integer_x is negative, and need Two's complement.
 ;
-;   004: integer_x = (!integer_x) + 1;
+;   005: integer_x = (!integer_x) + 1;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp]               ;eax = integer_x
@@ -1630,7 +1640,7 @@ cvt_int2string:
 ;
 ;   Memorize the program that the integer_x is negative.
 ;
-;   005: is_negative = 1;
+;   006: is_negative = 1;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 1
@@ -1659,9 +1669,9 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   006:   if integer_x_len > 8, goto .skip_int_x_len_le_8;
+;   007:   if integer_x_len > 8, goto .skip_int_x_len_le_8;
 ;          .goto_int_x_len_le_8:
-;   007:       goto .integer_x_len_lessequal_8;
+;   008:       goto .integer_x_len_lessequal_8;
 ;          .skip_int_x_len_le_8:
 ;
 ;   Means, the number of digits in integer_x_len is
@@ -1681,7 +1691,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   008: integer_x_quo = integer_x / 100000000;
+;   009: integer_x_quo = integer_x / 100000000;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp     ]          ;eax = integer_x
@@ -1693,7 +1703,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   009: integer_x_rem = remainder from the division;
+;   010: integer_x_rem = remainder from the division;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    [esp + 24], edx          ;integer_x_rem = edx
@@ -1701,7 +1711,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   010: decimal_x[0] = cvt_hex2dec( integer_x_rem );
+;   011: decimal_x[0] = cvt_hex2dec( integer_x_rem );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 4                   ;reserve 4 bytes
@@ -1714,7 +1724,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   011: decimal_x[1] = cvt_hex2dec( integer_x_quo );
+;   012: decimal_x[1] = cvt_hex2dec( integer_x_quo );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 4                   ;reserve 4 bytes
@@ -1727,7 +1737,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   012: cvt_dec2string( @decimal_x[0],
+;   013: cvt_dec2string( @decimal_x[0],
 ;                        2,
 ;                        @ascii_x[0],
 ;                        @ascii_x_len );
@@ -1751,7 +1761,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   013: goto .skip_integer_x_len_equalmore_8;
+;   014: goto .skip_integer_x_len_equalmore_8;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     jmp    .skip_integer_x_len_equalmore_8
@@ -1762,7 +1772,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   014: decimal_x[0] = cvt_hex2dec(integer_x);
+;   015: decimal_x[0] = cvt_hex2dec(integer_x);
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 4                   ;reserve 4 bytes
@@ -1775,7 +1785,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   015: cvt_dec2string( @decimal_x[0],
+;   016: cvt_dec2string( @decimal_x[0],
 ;                        1,
 ;                        @ascii_x[0],
 ;                        @ascii_x_len );
@@ -1802,7 +1812,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   016: if is_negative != 1, then
+;   017: if is_negative != 1, then
 ;            goto .is_negative_false
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1816,7 +1826,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   017: addr_out_string^ = 0x2d;
+;   018: addr_out_string^ = 0x2d;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 4]           ;eax = addr_ascii_str
@@ -1826,7 +1836,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   018: ++ addr_out_strlen^;
+;   019: ++ addr_out_strlen^;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 8]           ;ebx = addr_out_strlen
@@ -1839,7 +1849,7 @@ cvt_int2string:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   019: string_append( addr_out_string,
+;   020: string_append( addr_out_string,
 ;                       addr_out_strlen,
 ;                       @ascii_x[0],   
 ;                       ascii_x_len );
@@ -2287,6 +2297,7 @@ cvt_string2int:
     mov    [esp + 12], edx          ;parameter 4
     call   cvt_string2dec
     add    esp, 16                  ;restore 16 bytes
+.b1:
 
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2331,14 +2342,13 @@ cvt_string2int:
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   005:   hexadecimal_num[0] = (hexadecimal_num[1] *
-;                               pow_int(10, decimal_digits-2)) + 
+;                               pow_int(10, 8) ) + 
 ;                               hexadecimal_num[0];
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     sub    esp, 8                   ;reserve 8 bytes
     mov    eax, 10                  ;parameter1 = 10
-    mov    ebx, [esp + (8 + 16)]    ;get (decimal_digits - 2)
-    sub    ebx, 2
+    mov    ebx, 8
     mov    [esp    ], eax           ;parameter 1
     mov    [esp + 4], ebx           ;parameter 2
     call   pow_int
@@ -2531,8 +2541,8 @@ read4096b_stdin:
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 ;   014:   if byte_pos == 0, goto .rb_empty;
-;   015:   if byte_pos == 128, goto .rb_empty;
-;   ???:   goto .rb_not_empty;
+;   015:   if byte_pos == 4096, goto .rb_empty;
+;   016:   goto .rb_not_empty;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 32]          ;eax = byte_pos
@@ -2540,7 +2550,7 @@ read4096b_stdin:
     je     .rb_empty
 
     mov    eax, [esp + 32]          ;eax = byte_pos
-    cmp    eax, 128
+    cmp    eax, 4096
     je     .rb_empty
 
     jmp    .rb_not_empty
@@ -2551,61 +2561,19 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   ???:   reinitialized readbuffer to zero;
-;
-;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    xor    eax, eax
-    mov    ebx, [esp]               ;ebx = addr_readbuffer
-    mov    [ebx       ], eax
-    mov    [ebx +    4], eax
-    mov    [ebx +    8], eax
-    mov    [ebx +   12], eax
-    mov    [ebx +   16], eax
-    mov    [ebx +   20], eax
-    mov    [ebx +   24], eax
-    mov    [ebx +   28], eax
-    mov    [ebx +   32], eax
-    mov    [ebx +   36], eax
-    mov    [ebx +   40], eax
-    mov    [ebx +   44], eax
-    mov    [ebx +   48], eax
-    mov    [ebx +   52], eax
-    mov    [ebx +   56], eax
-    mov    [ebx +   60], eax
-    mov    [ebx +   64], eax
-    mov    [ebx +   68], eax
-    mov    [ebx +   72], eax
-    mov    [ebx +   76], eax
-    mov    [ebx +   80], eax
-    mov    [ebx +   84], eax
-    mov    [ebx +   88], eax
-    mov    [ebx +   92], eax
-    mov    [ebx +   96], eax
-    mov    [ebx +  100], eax
-    mov    [ebx +  104], eax
-    mov    [ebx +  108], eax
-    mov    [ebx +  112], eax
-    mov    [ebx +  116], eax
-    mov    [ebx +  120], eax
-    mov    [ebx +  124], eax
-    mov    [ebx +  128], eax
-
-
-;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-;
-;   016:   systemcall read( stdin, addr_readbuffer, 128 );
+;   017:   systemcall read( stdin, addr_readbuffer, 4096 );
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, 0x03                ;systemcall read
     xor    ebx, ebx                 ;fd  = stdin
     mov    ecx, [esp]               ;dst = addr_readbuffer
-    mov    edx, 128                 ;len = 128
+    mov    edx, 4096                ;len = 4096
     int    0x80
 
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   017:   addr_cur_byte^ = 0;
+;   018:   addr_cur_byte^ = 0;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 8]           ;ebx = addr_cur_byte
@@ -2615,7 +2583,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   018:   addr_cur_rb_ptr^ = addr_readbuffer;
+;   019:   addr_cur_rb_ptr^ = addr_readbuffer;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp    ]           ;eax = addr_readbuffer
@@ -2624,7 +2592,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   019:   byte_pos = 0;
+;   020:   byte_pos = 0;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     xor    eax, eax
@@ -2633,7 +2601,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   020:   ESI = addr_readbuffer;
+;   021:   ESI = addr_readbuffer;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    esi, [esp]               ;esi = addr_readbuffer
@@ -2647,7 +2615,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   021:   LODSB;
+;   022:   LODSB;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     lodsb
@@ -2655,7 +2623,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   022:   ++ byte_pos;
+;   023:   ++ byte_pos;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 32]          ;ebx = byte_pos
@@ -2665,7 +2633,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   023:   if AL == term1, then goto .endloop_getdata;
+;   024:   if AL == term1, then goto .endloop_getdata;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 24]          ;ebx = term1
@@ -2675,7 +2643,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   024:   if AL == term2, then goto .endloop_getdata;
+;   025:   if AL == term2, then goto .endloop_getdata;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 28]          ;ebx = term2
@@ -2685,8 +2653,8 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   025:   EDI^ = AL; 
-;   026:   ++ EDI;
+;   026:   EDI^ = AL; 
+;   027:   ++ EDI;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    [edi], al
@@ -2695,7 +2663,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   027:   ++ outdata_len;
+;   028:   ++ outdata_len;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 36]          ;eax = outdata_len
@@ -2705,14 +2673,14 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   028:   if byte_pos == 128, goto .fill_rb;
-;   029:   goto .loop_getdata;
+;   029:   if byte_pos == 4096, goto .fill_rb;
+;   030:   goto .loop_getdata;
 ;          .fill_rb:
-;   ???:       goto .rb_empty;
+;   031:       goto .rb_empty;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 32]          ;eax = byte_pos
-    cmp    eax, 128
+    cmp    eax, 4096
     je     .rb_empty
 
     jmp    .loop_getdata
@@ -2725,7 +2693,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   030:   addr_cur_rb_ptr^ = ESI;
+;   032:   addr_cur_rb_ptr^ = ESI;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    ebx, [esp + 4]           ;ebx = addr_cur_rb_ptr
@@ -2734,7 +2702,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   031:   addr_cur_byte^ = byte_pos;
+;   033:   addr_cur_byte^ = byte_pos;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 32]          ;eax = byte_pos
@@ -2744,7 +2712,7 @@ read4096b_stdin:
 
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
-;   032:   addr_outdata_len^ = outdata_len;
+;   034:   addr_outdata_len^ = outdata_len;
 ;
 ;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     mov    eax, [esp + 36] ;eax = outdata_len

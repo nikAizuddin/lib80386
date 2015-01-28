@@ -1,0 +1,40 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+---------------------------+------------------------------------------
+           ID: 0001        | SUMMARY:
+       STATUS: Fixed       |     9 digits integer problem.
+REPORTED DATE: 28-JAN-2015 |
+   FIXED DATE:             |
+---------------------------+------------------------------------------
+
+REPORT:
+
+  The converter doesn't convert properly when given 9 digits integer,
+  for example "520093696".
+
+  The value "520093696" should be converted to 520093696, but however
+  the value is converted to 70093696.
+
+
+ANALYSIS OF THE PROBLEM:
+
+  The actual problem is comes from a false calculations. The converter
+  gives 70093696 instead of 520093696. Here the reasons:
+
+    70093696  = 20093696 + 5 pow(10, 7); //WRONG
+    520093696 = 20093696 + 5 pow(10, 8); //CORRECT
+
+SOLUTIONS:
+
+  005:         hexadecimal_num[0] = ( hexadecimal_num[1] *
+                                    pow_int(10, decimal_digits-2) ) + 
+                                    hexadecimal_num[0];
+
+  is changed to
+
+  005:         hexadecimal_num[0] = ( hexadecimal_num[1] *
+                                    pow_int(10, 8) ) + 
+                                    hexadecimal_num[0];
+
+======================================================================

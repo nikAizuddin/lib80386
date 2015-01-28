@@ -42,8 +42,8 @@ section .rodata
     t0002_string: db "4294967295"
     t0002_strlen: dd 10
 
-    t0003_string: db "2314125"
-    t0003_strlen: dd 7
+    t0003_string: db "520093696"
+    t0003_strlen: dd 9
 
 section .text
 
@@ -94,8 +94,8 @@ _start:
 ;
 ;   TEST 0003
 ;       Given,
-;           t0003_string = "2314125", after conversion
-;           the t0003_integer should be 0x00234f8d
+;           t0003_string = "520093696", after conversion
+;           the t0003_integer should be 0x1f000000
 ;
 ;   t0003_integer = cvt_string2int( @t0003_string, t0003_strlen );
 ;
