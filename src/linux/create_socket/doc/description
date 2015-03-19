@@ -1,0 +1,62 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: create_socket
+
+DESCRIPTION: Create a socket
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  create_socket( protocol_family:EAX,
+                 socket_type:EBX,
+                 protocol_used:ECX ) socket_descriptor:EAX
+
+  Input parameters
+      1) Protocol Family
+      2) Socket Type
+      3) Protocol Used
+
+  Output parameters
+      ---
+
+  Returns
+      Socket descriptor (EAX)
+
+  +----------------------------------------------------------------+
+  |                       STACK STRUCTURE                          |
+  +--------+---------------------+---------------------------------+
+  | Offset |      Data           |           Description           |
+  +--------+---------------------+---------------------------------+
+  | +    0 | socket_args[0]      | Parameters used for socketcall  |
+  | +    4 | socket_args[1]      |                                 |
+  | +    8 | socket_args[2]      |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | Total stack used for local variables = 12 bytes                |
+  +----------------------------------------------------------------+
+
+  begin
+
+      socket_args[0] = EAX;
+      socket_args[1] = EBX;
+      socket_args[2] = ECX;
+      EAX = SOCKETCALL( CALL_SOCKET, @socket_args );
+
+      if EAX is negative, then
+          EXIT( -1 );
+      endif
+
+      return EAX;
+
+  end.
+
+======================================================================
