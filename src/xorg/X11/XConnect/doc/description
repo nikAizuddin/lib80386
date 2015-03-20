@@ -1,0 +1,70 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: XConnect
+
+DESCRIPTION: Connect to X Server.
+
+   Using "/tmp/.X11-unix/X0" file to contact the X Server. 
+   Without this file, we will unable to contact and connect with
+   X Server.
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  XConnect( socket_descriptor:EAX )
+
+  Input parameters
+      1) Socket Descriptor
+
+  Output parameters
+      ---
+
+  Returns
+      ---
+
+  +----------------------------------------------------------------+
+  |                       STACK STRUCTURE                          |
+  +--------+---------------------+---------------------------------+
+  | Offset |      Data           |           Description           |
+  +--------+---------------------+---------------------------------+
+  | +    0 | contact             | AF_LOCAL                        |
+  | +    2 |                     | "/tmp/.X11-unix/X0",0           |
+  | +    6 |                     |                                 |
+  | +   10 |                     |                                 |
+  | +   14 |                     |                                 |
+  | +   18 |                     |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   24 | socket_args[0]      | Parameters used for socketcall  |
+  | +   28 | socket_args[1]      |                                 |
+  | +   32 | socket_args[2]      |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | Total stack used for local variables = 36 bytes                |
+  +----------------------------------------------------------------+
+
+  begin
+
+      socket_args[0] = EAX;
+      socket_args[1] = @contact;
+      socket_args[2] = 20; #length of contact
+      EAX = SOCKETCALL( CALL_CONNECT, @socket_args );
+
+      if EAX is negative, then
+          EXIT( -1 );
+      endif
+
+      return EAX;
+
+  end.
+
+======================================================================
