@@ -1,0 +1,98 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: XAuthenticate
+
+DESCRIPTION: Authenticate the connection to X Server
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  XAuthenticate( socket_descriptor:EAX,
+                 addr_additionalData:EBX ) status:EAX
+
+  Input parameters
+      1) X Server socket descriptor
+      2) Address to additional data
+
+  Output parameters
+      ---
+
+  Returns
+      Status (EAX), -1 if fail
+
+  +----------------------------------------------------------------+
+  |                       STACK STRUCTURE                          |
+  +--------+---------------------+---------------------------------+
+  | Offset |      Data           |           Description           |
+  +--------+---------------------+---------------------------------+
+  | +    0 | socket_descriptor   | X Server socket                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +    4 | addr_additionalData | Address to additional data      |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  |        | poll                |                                 |
+  | +    8 | .fd                 | Socket descriptor.              |
+  | +   12 | .events             | Event to wait.                  |
+  | +   14 | .revents            | Returned event.                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  |        | authenticateRequest |                                 |
+  | +   16 | .byteOrder          | dw 0x6c                         |
+  | +   18 | .majorVersion       | dw 11                           |
+  | +   20 | .minorVersion       | dw 0                            |
+  | +   22 | .nbytesAuthProto    | dw 0                            |
+  | +   24 | .nbytesAuthStr      | dw 0                            |
+  | +   26 | .unused             | dw 0                            |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   28 | authenticateStatus  |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  |        | header              | 6 bytes header of additional    |
+  | +   32 | .majorVersion       | data                            |
+  | +   34 | .minorVersion       |                                 |
+  | +   36 | .lengthAddData      |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | Total stack used for local variables = 40 bytes                |
+  +----------------------------------------------------------------+
+
+  begin
+
+      ## Make sure X Server is ready to receive requests
+      POLL( {socket_descriptor, POLLOUT}, 1, INFINITE_TIMEOUT );
+
+      ## Request connection authentication with X Server;
+      WRITE( socket_descriptor, @authenticateRequest, requestLength );
+
+      ## Wait for X Server to process the requests;
+      POLL( {socket_descriptor, POLLIN}, 1, INFINITE_TIMEOUT );
+
+      Receive the first 2 bytes of data, to check success/fail;
+      READ( socket_descriptor, @authenticateStatus, 2 );
+
+      ## If authentication fail, return -1
+      ## Else, receive another 6 bytes of header for additional data
+      if authenticateStatus != 1, return -1;
+      else, READ( socket_descriptor, @header, 6 );
+
+      ## Receive the additional data
+      READ( socket_descriptor,
+            addr_additionalData,
+            header.lengthAddData * 4 );
+
+      Return 0;      
+
+  end.
+
+======================================================================

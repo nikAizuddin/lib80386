@@ -20,7 +20,7 @@
 ;
 ;      EXTERNAL FILES: ---
 ;
-;             VERSION: 0.1.0
+;             VERSION: 0.1.1
 ;              STATUS: Alpha
 ;                BUGS: --- <See doc/bugs/index file>
 ;
@@ -66,7 +66,7 @@ XConnect:
 
     mov    eax, 102                 ;SOCKETCALL
     mov    ebx, 3                   ;CALL_CONNECT
-    lea    ecx, [esp + 24]
+    lea    ecx, [esp + 24]          ;ecx = @socket_args
     int    0x80
 
 
