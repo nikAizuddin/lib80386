@@ -1,6 +1,5 @@
 XORG
 ----
-
 ++ XExtractAdditionalData()
 ++ XCreateWindow()
 ++ XInternAtom()
@@ -10,6 +9,10 @@ XORG
 
 ImageProcessing
 ---------------
-++ loadpgm()
 ++ savepgm()
 ++ savearray_pgm()
+
+Mathematics
+-----------
+++ qr_decomposition()
+++ eigen_qr()

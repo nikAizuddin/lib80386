@@ -1,0 +1,56 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: euclidean_norm
+
+DESCRIPTION: Calculate Euclidean Norm of a vector.
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  euclidean_norm(addr_srcVector:EAX,
+                 elementSize:EBX,
+                 numOfElements:ECX) result:XMM0
+
+  Input parameters
+      1) addr_srcVector = Address to the source vector
+      2) elementSize    = Size of an element in the source vector
+      3) numOfElements  = Number of elements in the source vector
+
+  Output parameters
+      ---
+
+  Returns
+      result
+
+  +-------------------------------------------------------------+
+  |                   STACK MEMORY INFORMATION                  |
+  +--------+----------------------------------------------------+
+  | Offset |      Data       |           Description            |
+  +--------+-----------------+----------------------------------+
+  | +    0 | addr_srcVector  | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +    4 | elementSize     | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +    8 | numOfElements   | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   12 | signRemover     |0b01111111111111111111111111111111|
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | Total stack used for local variables = 16 bytes             |
+  +-------------------------------------------------------------+
+
+  Algorithm/Pseudocode is in "scilab/euclidean_norm.sce"
+
+======================================================================

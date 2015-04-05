@@ -2,14 +2,15 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-                       IMPORTANT AND URGENT
+                             savepgm
 
-  ---
+           Use this function if you want to save pgm image
 
 ----------------------------------------------------------------------
 
-                     IMPORTANT, BUT NOT URGENT
+ DIRECTORY INFORMATION
 
-  ---
+     doc: Contains documentations about the function.
+     src: Contains source code.
 
 ======================================================================

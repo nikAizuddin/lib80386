@@ -1,0 +1,83 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: loadpgm
+
+DESCRIPTION: Load pgm image
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: Currently support P5.
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  loadpgm( addr_filename:EAX,
+           width:EBX,
+           height:ECX,
+           addr_data:EDX ) status:EAX
+
+  Input parameters
+      1) addr_filename = Address to NULL terminated string of filename
+      2) width         = Width of input image
+      3) height        = Height of input image
+      4) addr_data     = Address to pixel data that will be stored
+
+  Output parameters
+      4) addr_data     = Loaded pixel data from the image
+
+  Returns
+      EAX = 0 if success. Otherwise, -1
+
+  +----------------------------------------------------------------+
+  |                       STACK STRUCTURE                          |
+  +--------+---------------------+---------------------------------+
+  | Offset |      Data           |           Description           |
+  +--------+---------------------+---------------------------------+
+  | +    0 | addr_filename       | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +    4 | width               | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +    8 | height              | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   12 | addr_data           | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   16 | fd                  | File descriptor                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   20 | c                   | Used to check 0x0a              |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | Total stack used for local variables = 24 bytes                |
+  +----------------------------------------------------------------+
+
+  begin
+
+      ## Open the file
+      fd = OPEN(addr_filename, O_RDONLY);
+      If(fd == -1) Return -1;
+
+      ## Skip 0x0A 3 times, to get the pixel data
+      While(c != 0x0A) READ(fd, @c, 1);
+      While(c != 0x0A) READ(fd, @c, 1);
+      While(c != 0x0A) READ(fd, @c, 1);
+
+      ## Read the pixel data
+      READ(fd, addr_data, width*height);
+
+      ## Close the file
+      CLOSE(fd);
+
+      Return 0;
+
+  end.
+
+======================================================================

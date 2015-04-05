@@ -1,0 +1,115 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: savepgm
+
+DESCRIPTION: Save pgm image
+
+REQUIRES: cvt_int2string.asm
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: Currently support P5.
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  savepgm( addr_filename:EAX,
+           width:EBX,
+           height:ECX,
+           addr_data:EDX ) status:EAX
+
+  Input parameters
+      1) addr_filename = Address to NULL terminated string of filename
+      2) width         = Width of output image
+      3) height        = Height of output image
+      4) addr_data     = Address to pixel data that will be writed
+
+  Output parameters
+      ---
+
+  Returns
+      EAX = 0 if success. Otherwise, -1
+
+  +----------------------------------------------------------------+
+  |                       STACK STRUCTURE                          |
+  +--------+---------------------+---------------------------------+
+  | Offset |      Data           |           Description           |
+  +--------+---------------------+---------------------------------+
+  | +    0 | addr_filename       | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +    4 | width               | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +    8 | height              | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   12 | addr_data           | ---                             |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   16 | fd                  | File descriptor                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   20 | magicnumber         | "P5\n"                          |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   24 | width_string        |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   28 | width_strlen        |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   32 | height_string       |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   36 | height_strlen       |                                 |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   40 | maxvalue            | "255\n"                         |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   44 | blankspace          | 0x20                            |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | +   48 | newline             | 0x0a                            |
+  |        |                     |                                 |
+  +--------+---------------------+---------------------------------+
+  | Total stack used for local variables = 52 bytes                |
+  +----------------------------------------------------------------+
+
+  begin
+
+      ## Create the file
+      fd = OPEN(addr_filename, O_WRONLY, PERMISSION);
+      If(fd == -1) Return -1;
+
+      ## Convert width and height to ascii
+      cvt_int2string(width, @width_string, @width_strlen, 1);
+      cvt_int2string(height, @height_string, @height_strlen, 1);
+
+      ## Write magic number
+      WRITE(fd, @magicnumber, 3);
+
+      ## Write ascii width and height
+      WRITE(fd, @width_string, width_strlen);
+      WRITE(fd, @blankspace, 1);
+      WRITE(fd, @height_string, height_strlen);
+      WRITE(fd, @newline, 1);
+
+      ## Write maximum value
+      WRITE(fd, @maxvalue, 4);
+
+      ## Write the pixel data
+      WRITE(fd, addr_data, width*height);
+
+      ## Close the file
+      CLOSE(fd);
+
+      Return 0;
+
+  end.
+
+======================================================================
