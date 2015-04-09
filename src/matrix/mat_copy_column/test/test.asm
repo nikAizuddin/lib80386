@@ -8,9 +8,9 @@
 ;
 ;           AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
 ;            EMAIL: nickaizuddin93@gmail.com
-;     DATE CREATED: 05-APR-2015
+;     DATE CREATED: 09-APR-2015
 ;
-;     TEST PURPOSE: Make sure the euclidean_norm have no errors.
+;     TEST PURPOSE: Make sure the mat_copy_column have no errors. 
 ;
 ;         LANGUAGE: x86 Assembly Language
 ;        ASSEMBLER: NASM
@@ -24,29 +24,29 @@
 ;=====================================================================
 
 ;Include constant symbols and global variables
-%include "constants.inc"
-%include "data.inc"
+%include "include/constants.inc"
+%include "include/data.inc"
 
-extern euclidean_norm
+extern mat_copy_column
 global _start
 
 section .text
 
 _start:
 
+;B[:,3] = A[:,7]
+    lea    eax, [A + (7*COLUMNSIZE)]
+    lea    ebx, [B + (3*COLUMNSIZE)]
+    mov    ecx, NUM_OF_ROWS
+    mov    edx, ROWSIZE
+    call   mat_copy_column
 
-;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-;
-;   Y_T001 = euclidean_norm(@X, ELEMENTSIZE, ELEMENTS)
-;
-;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    lea    eax, [X_T001]
-    mov    ebx, ELEMENTSIZE_T001
-    mov    ecx, ELEMENTS_T001
-    call   euclidean_norm
-    movss  [Y_T001], xmm0
-
+;B[:,6] = A[:,2]
+    lea    eax, [A + (2*COLUMNSIZE)]
+    lea    ebx, [B + (6*COLUMNSIZE)]
+    mov    ecx, NUM_OF_ROWS
+    mov    edx, ROWSIZE
+    call   mat_copy_column
 
 exit:
     mov    eax, SYSCALL_EXIT

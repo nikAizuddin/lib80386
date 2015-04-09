@@ -1,0 +1,49 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: mat_copy_column
+
+DESCRIPTION: Copy a column of a matrix
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  mat_copy_column(addr_srcMat:EAX,
+                  addr_dstMat:EBX,
+                  numOfRows:ECX,
+                  rowSize:EDX)
+
+  Input parameters
+      1) addr_srcMat = Address to the source matrix
+      2) addr_dstMat = Address to the destination matrix
+      3) numOfRows   = Number of rows for both matrix
+      4) rowSize     = Size of a row for both matrix
+
+  Output parameters
+      2) addr_dstMat = Filled with data from source matrix column
+
+  Returns
+      ---
+
+  +-------------------------------------------------------------+
+  |                   STACK MEMORY INFORMATION                  |
+  +--------+----------------------------------------------------+
+  | Offset |      Data       |           Description            |
+  +--------+-----------------+----------------------------------+
+  | +    0 | ---             | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | Total stack used for local variables =  0 bytes             |
+  +-------------------------------------------------------------+
+
+  Algorithm/Pseudocode is in "scilab/mat_copy_column.sce"
+
+======================================================================

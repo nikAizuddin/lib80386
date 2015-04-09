@@ -12,6 +12,11 @@ ImageProcessing
 ++ savepgm()
 ++ savearray_pgm()
 
+Matrix
+------
+++ vec_multiply_atb()
+++ mat_multiply_elements()
+
 Mathematics
 -----------
 ++ qr_decomposition()
