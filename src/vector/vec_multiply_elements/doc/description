@@ -2,10 +2,9 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-FUNCTION: vec_copy
+FUNCTION: vec_multiply_elements
 
-DESCRIPTION: Copy a vector (either row vector or column vector)
-             from a matrix.
+DESCRIPTION: Multiply source vector with a scalar factor.
 
 REQUIRES: ---
 
@@ -17,21 +16,21 @@ FUTURE IMPROVEMENTS: ---
 
 PROCESS DESCRIPTION:
 
-  vec_copy(addr_srcVec:ESI,
-           src_jumpSize:EBX,
-           addr_dstVec:EDI,
-           dst_jumpSize:EDX,
-           numOfElements:ECX)
+  vec_dotproduct(addr_srcVec:ESI,
+                 addr_dstVec:EDI,
+                 factor:XMM0[scalar_single-precision],
+                 vec_jumpSize:EBX,
+                 numOfElements:ECX)
 
   Input parameters
-      1) addr_srcVec   = Address to the source vector
-      2) src_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
-      3) addr_dstVec   = Address to the destination vector
-      4) dst_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
-      5) numOfElements = Number of elements to copy
+      1) addr_srcVec   = Address to source vector
+      2) addr_dstVec   = Address to destination vector
+      3) factor        = Factor to multiply source vector
+      4) vec_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
+      5) numOfElements = Number of elements to multiply
 
   Output parameters
-      3) addr_dstVec = Filled with data from source vector
+      2) addr_dstVec   = Filled with multiplied srcVec
 
   Returns
       ---
@@ -47,6 +46,6 @@ PROCESS DESCRIPTION:
   | Total stack used for local variables =  0 bytes             |
   +-------------------------------------------------------------+
 
-  Algorithm/Pseudocode is in "scilab/vec_copy.sce"
+  Algorithm/Pseudocode is in "scilab/vec_multiply_elements.sce"
 
 ======================================================================

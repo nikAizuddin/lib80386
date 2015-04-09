@@ -12,10 +12,8 @@ ImageProcessing
 ++ savepgm()
 ++ savearray_pgm()
 
-Matrix
+Vector
 ------
-++ vec_dotproduct()
-++ vec_multiply_elements()
 
 Mathematics
 -----------

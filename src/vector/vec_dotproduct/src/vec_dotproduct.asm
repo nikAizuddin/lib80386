@@ -2,7 +2,7 @@
 ;234567890123456789012345678901234567890123456789012345678901234567890
 ;=====================================================================
 ;
-;      FUNCTION NAME: vec_copy
+;      FUNCTION NAME: vec_dotproduct
 ;   FUNCTION PURPOSE: <See doc/description file>
 ;
 ;             AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
@@ -30,30 +30,35 @@
 ;
 ;=====================================================================
 
-global vec_copy
+global vec_dotproduct
 
 section .text
 
-vec_copy:
+vec_dotproduct:
 
-;parameter 1) addr_srcVec:ESI
-;parameter 2) src_jumpSize:EBX
-;parameter 3) addr_dstVec:EDI
-;parameter 4) dst_jumpSize:EDX
+;parameter 1) addr_vec1:ESI
+;parameter 2) vec1_jumpSize:EBX
+;parameter 3) addr_vec2:EDI
+;parameter 4) vec2_jumpSize:EDX
 ;parameter 5) numOfElements:ECX
-;returns ---
+;returns result:XMM0
 
-.loop_vec_copy:
+    pxor   xmm0, xmm0
 
-    movss  xmm0, [esi]         ;XMM0 = A[?]
-    movss  [edi], xmm0         ;B[?] = XMM0
+.loop_dotproduct:
 
-    add    esi, ebx            ;point ESI to next element
-    add    edi, edx            ;point EDI to next element
+    movss  xmm1, [esi]
+    movss  xmm2, [edi]
+
+    mulss  xmm1, xmm2
+    addss  xmm0, xmm1
+
+    add    esi, ebx
+    add    edi, edx
 
     sub    ecx, 1
-    jnz    .loop_vec_copy
+    jnz    .loop_dotproduct
 
-.endloop_vec_copy:
+.endloop_dotproduct:
 
     ret
