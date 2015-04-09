@@ -2,7 +2,7 @@
 ;234567890123456789012345678901234567890123456789012345678901234567890
 ;=====================================================================
 ;
-;      FUNCTION NAME: mat_copy_column
+;      FUNCTION NAME: vec_copy
 ;   FUNCTION PURPOSE: <See doc/description file>
 ;
 ;             AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
@@ -30,32 +30,30 @@
 ;
 ;=====================================================================
 
-global mat_copy_column
+global vec_copy
 
 section .text
 
-mat_copy_column:
+vec_copy:
 
-;parameter 1) addr_srcMat:EAX
-;parameter 2) addr_dstMat:EBX
-;parameter 3) numOfRows:ECX
-;parameter 4) rowSize:EDX
+;parameter 1) addr_srcMat:ESI
+;parameter 2) src_jumpSize:EBX
+;parameter 3) addr_dstMat:EDI
+;parameter 4) dst_jumpSize:EDX
+;parameter 5) numOfElements:ECX
 ;returns ---
 
-    mov    esi, eax
-    mov    edi, ebx
+.loop_vec_copy:
 
-.loop_copy_column:
+    movss  xmm0, [esi]         ;XMM0 = A[?]
+    movss  [edi], xmm0         ;B[?] = XMM0
 
-    movss  xmm0, [esi]         ;XMM0 = A[:,2]
-    movss  [edi], xmm0         ;B[:,1] = XMM0
-
-    add    esi, edx            ;point ESI to next row
-    add    edi, edx            ;point EDI to next row
+    add    esi, ebx            ;point ESI to next element
+    add    edi, edx            ;point EDI to next element
 
     sub    ecx, 1
-    jnz    .loop_copy_column
+    jnz    .loop_vec_copy
 
-.endloop_copy_column:
+.endloop_vec_copy:
 
     ret

@@ -14,8 +14,8 @@ ImageProcessing
 
 Matrix
 ------
-++ vec_multiply_atb()
-++ mat_multiply_elements()
+++ vec_dotproduct()
+++ vec_multiply_elements()
 
 Mathematics
 -----------

@@ -2,9 +2,10 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-FUNCTION: mat_copy_column
+FUNCTION: vec_copy
 
-DESCRIPTION: Copy a column of a matrix
+DESCRIPTION: Copy a vector (either row vector or column vector)
+             from a matrix.
 
 REQUIRES: ---
 
@@ -16,19 +17,21 @@ FUTURE IMPROVEMENTS: ---
 
 PROCESS DESCRIPTION:
 
-  mat_copy_column(addr_srcMat:EAX,
-                  addr_dstMat:EBX,
-                  numOfRows:ECX,
-                  rowSize:EDX)
+  mat_copy_column(addr_srcMat:ESI,
+                  src_jumpSize:EBX,
+                  addr_dstMat:EDI,
+                  dst_jumpSize:EDX,
+                  numOfElements:ECX)
 
   Input parameters
-      1) addr_srcMat = Address to the source matrix
-      2) addr_dstMat = Address to the destination matrix
-      3) numOfRows   = Number of rows for both matrix
-      4) rowSize     = Size of a row for both matrix
+      1) addr_srcMat   = Address to the source vector
+      2) src_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
+      3) addr_dstMat   = Address to the destination vector
+      4) dst_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
+      5) numOfElements = Number of elements to copy
 
   Output parameters
-      2) addr_dstMat = Filled with data from source matrix column
+      3) addr_dstMat = Filled with data from source vector
 
   Returns
       ---
@@ -44,6 +47,6 @@ PROCESS DESCRIPTION:
   | Total stack used for local variables =  0 bytes             |
   +-------------------------------------------------------------+
 
-  Algorithm/Pseudocode is in "scilab/mat_copy_column.sce"
+  Algorithm/Pseudocode is in "scilab/vec_copy.sce"
 
 ======================================================================

@@ -2,18 +2,19 @@
 //34567890123456789012345678901234567890123456789012345678901234567890
 //////////////////////////////////////////////////////////////////////
 //
-// Title: Copy a column of a matrix
+// Title: Copy a vector (either row vector or column vector)
+//        from a matrix.
 //
 //--------------------------------------------------------------------
 //       Author: Nik Mohamad Aizuddin bin Nik Azmi
-// Date Created: 06-APR-2015
+// Date Created: 09-APR-2015
 //--------------------------------------------------------------------
 //
 //                  MIT Licensed. See LICENSE file
 //
 //////////////////////////////////////////////////////////////////////
 
-function[] = mat_copy_column()
+function[] = vec_copy()
 
     // Source matrix
     A = [1 2 3

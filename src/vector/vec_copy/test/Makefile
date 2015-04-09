@@ -5,10 +5,10 @@ MACHINE   = elf_i386
 _START    = test.asm
 BIN       =  exe
 OBJ       = test.o \
-            mat_copy_column.o
+            vec_copy.o
 
-MAT_COPY_COLUMN = \
-  "../src/mat_copy_column.asm"
+VEC_COPY = \
+  "../src/vec_copy.asm"
 
 .PHONY: all clean
 
@@ -20,8 +20,8 @@ all:
 		-g -Fstabs
 
 	@${ASSEMBLER} \
-		${MAT_COPY_COLUMN} \
-		-o mat_copy_column.o \
+		${VEC_COPY} \
+		-o vec_copy.o \
 		-f ${FORMAT} \
 		-g -Fstabs
 
