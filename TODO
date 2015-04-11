@@ -15,7 +15,12 @@ ImageProcessing
 Vector
 ------
 
+Matrix
+------
+++ qr_decomposition()
+++ mat_multiplication()
+++ mat_diagonal()
+++ eigen_qr()
+
 Mathematics
 -----------
-++ qr_decomposition()
-++ eigen_qr()

@@ -1,0 +1,18 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+                       vec_divide_elements
+
+            Use this function if you want to divide the
+             elements of a vector with a scalar factor.
+
+----------------------------------------------------------------------
+
+ DIRECTORY INFORMATION
+
+     doc: Contains documentations about the function.
+     src: Contains source code.
+    test: For testing purpose, to ensure the function has no error.
+
+======================================================================

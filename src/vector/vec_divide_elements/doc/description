@@ -2,9 +2,9 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-FUNCTION: vec_multiply_elements
+FUNCTION: vec_divide_elements
 
-DESCRIPTION: Multiply source vector with a scalar factor.
+DESCRIPTION: Divide source vector with a scalar factor.
 
 REQUIRES: ---
 
@@ -16,11 +16,11 @@ FUTURE IMPROVEMENTS: ---
 
 PROCESS DESCRIPTION:
 
-  vec_multiply_elements(addr_srcVec:ESI,
-                        addr_dstVec:EDI,
-                        factor:XMM0[scalar_single-precision],
-                        vec_jumpSize:EBX,
-                        numOfElements:ECX)
+  vec_divide_elements(addr_srcVec:ESI,
+                      addr_dstVec:EDI,
+                      factor:XMM0[scalar_single-precision],
+                      vec_jumpSize:EBX,
+                      numOfElements:ECX)
 
   Input parameters
       1) addr_srcVec   = Address to source vector
@@ -46,6 +46,6 @@ PROCESS DESCRIPTION:
   | Total stack used for local variables =  0 bytes             |
   +-------------------------------------------------------------+
 
-  Algorithm/Pseudocode is in "scilab/vec_multiply_elements.sce"
+  Algorithm/Pseudocode is in "scilab/vec_divide_elements.sce"
 
 ======================================================================

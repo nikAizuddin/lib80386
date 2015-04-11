@@ -2,10 +2,10 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-                         euclidean_norm
+                        vec_subtract_vv
 
-            Use this function if you want to calculate
-                  the Euclidean Norm of a vector
+            Use this function if you want to subtract a
+                     vector with a vector.
 
 ----------------------------------------------------------------------
 

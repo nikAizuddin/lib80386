@@ -8,9 +8,10 @@
 ;
 ;           AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
 ;            EMAIL: nickaizuddin93@gmail.com
-;     DATE CREATED: 05-APR-2015
+;     DATE CREATED: 10-APR-2015
 ;
-;     TEST PURPOSE: Make sure the euclidean_norm have no errors.
+;     TEST PURPOSE: Make sure the vec_subtract_sv()
+;                   have no defects.
 ;
 ;         LANGUAGE: x86 Assembly Language
 ;        ASSEMBLER: NASM
@@ -24,29 +25,42 @@
 ;=====================================================================
 
 ;Include constant symbols and global variables
-%include "constants.inc"
-%include "data.inc"
+%include "include/constants.inc"
+%include "include/data.inc"
 
-extern euclidean_norm
+extern vec_subtract_sv
 global _start
 
 section .text
 
 _start:
 
+;A[:,0] = B[0,0]-A[:,0]
+    lea    esi, [A]
+    lea    edi, [A]
+    movss  xmm0, [B]
+    mov    ebx, ROWSIZE
+    mov    ecx, NUM_OF_ROWS
+    call   vec_subtract_sv
+b1:
 
-;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-;
-;   Y_T001 = euclidean_norm(@X, ELEMENTSIZE, ELEMENTS)
-;
-;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+;A[:,2] = B[2,4]-A[:,2]
+    lea    esi, [A+(2*COLUMNSIZE)]
+    lea    edi, [A+(2*COLUMNSIZE)]
+    movss  xmm0, [B+((2*ROWSIZE)+(4*COLUMNSIZE))]
+    mov    ebx, ROWSIZE
+    mov    ecx, NUM_OF_ROWS
+    call   vec_subtract_sv
+b2:
 
-    lea    eax, [X_T001]
-    mov    ebx, ELEMENTSIZE_T001
-    mov    ecx, ELEMENTS_T001
-    call   euclidean_norm
-    movss  [Y_T001], xmm0
-
+;A[2,:] = B[1,3]-A[2,:]
+    lea    esi, [A+(2*ROWSIZE)]
+    lea    edi, [A+(2*ROWSIZE)]
+    movss  xmm0, [B+((1*ROWSIZE)+(3*COLUMNSIZE))]
+    mov    ebx, COLUMNSIZE
+    mov    ecx, NUM_OF_COLUMNS
+    call   vec_subtract_sv
+b3:
 
 exit:
     mov    eax, SYSCALL_EXIT

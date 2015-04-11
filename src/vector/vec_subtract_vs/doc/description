@@ -2,9 +2,9 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-FUNCTION: vec_multiply_elements
+FUNCTION: vec_subtract_vs
 
-DESCRIPTION: Multiply source vector with a scalar factor.
+DESCRIPTION: Subtract a vector with a scalar.
 
 REQUIRES: ---
 
@@ -16,21 +16,21 @@ FUTURE IMPROVEMENTS: ---
 
 PROCESS DESCRIPTION:
 
-  vec_multiply_elements(addr_srcVec:ESI,
-                        addr_dstVec:EDI,
-                        factor:XMM0[scalar_single-precision],
-                        vec_jumpSize:EBX,
-                        numOfElements:ECX)
+  vec_subtract_vs(addr_srcVec:ESI,
+                  addr_dstVec:EDI,
+                  factor:XMM0[scalar_single-precision],
+                  vec_jumpSize:EBX,
+                  numOfElements:ECX)
 
   Input parameters
       1) addr_srcVec   = Address to source vector
       2) addr_dstVec   = Address to destination vector
-      3) factor        = Factor to multiply source vector
+      3) factor        = Factor to subtract source vector
       4) vec_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
-      5) numOfElements = Number of elements to multiply
+      5) numOfElements = Number of elements to subtract
 
   Output parameters
-      2) addr_dstVec   = Filled with multiplied srcVec
+      2) addr_dstVec   = Filled with subtracted srcVec
 
   Returns
       ---
@@ -46,6 +46,6 @@ PROCESS DESCRIPTION:
   | Total stack used for local variables =  0 bytes             |
   +-------------------------------------------------------------+
 
-  Algorithm/Pseudocode is in "scilab/vec_multiply_elements.sce"
+  Algorithm/Pseudocode is in "scilab/vec_subtract_vs.sce"
 
 ======================================================================
