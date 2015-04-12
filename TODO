@@ -14,13 +14,14 @@ ImageProcessing
 
 Vector
 ------
+++ vec_maximum_value()
+++ vec_norm_0_255_abs()
 
 Matrix
 ------
-++ qr_decomposition()
 ++ mat_multiplication()
 ++ mat_diagonal()
-++ eigen_qr()
+++ eigen()
 
 Mathematics
 -----------

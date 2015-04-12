@@ -1,0 +1,49 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: vec_absolute_value
+
+DESCRIPTION: Convert value to absolute value of a vector
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  vec_absolute_value(addr_srcVec:ESI,
+                     addr_dstVec:EDI,
+                     vec_jumpSize:EBX,
+                     numOfElements:ECX)
+
+  Input parameters
+      1) addr_srcVec   = Address to source vector
+      2) addr_dstVec   = Address to destination vector
+      3) vec_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
+      4) numOfElements = Number of elements to convert
+
+  Output parameters
+      2) addr_dstVec   = Filled with absolute values of srcVec
+
+  Returns
+      ---
+
+  +-------------------------------------------------------------+
+  |                   STACK MEMORY INFORMATION                  |
+  +--------+----------------------------------------------------+
+  | Offset |      Data       |           Description            |
+  +--------+-----------------+----------------------------------+
+  | +    0 | ---             | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | Total stack used for local variables =  0 bytes             |
+  +-------------------------------------------------------------+
+
+  Algorithm/Pseudocode is in "scilab/vec_absolute_value.sce"
+
+======================================================================
