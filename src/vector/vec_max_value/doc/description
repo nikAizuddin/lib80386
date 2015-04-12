@@ -1,0 +1,47 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: vec_max_value
+
+DESCRIPTION: Find maximum value of a vector
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  vec_max_value(addr_srcVec:ESI,
+                vec_jumpSize:EBX,
+                numOfElements:ECX) maxValue:XMM0 (single-precision)
+
+  Input parameters
+      1) addr_srcVec   = Address to source vector
+      2) vec_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
+      3) numOfElements = Number of elements to convert
+
+  Output parameters
+      ---
+
+  Returns
+      maxValue:XMM0 (single-precision)
+
+  +-------------------------------------------------------------+
+  |                   STACK MEMORY INFORMATION                  |
+  +--------+----------------------------------------------------+
+  | Offset |      Data       |           Description            |
+  +--------+-----------------+----------------------------------+
+  | +    0 | ---             | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | Total stack used for local variables =  0 bytes             |
+  +-------------------------------------------------------------+
+
+  Algorithm/Pseudocode is in "scilab/vec_max_value.sce"
+
+======================================================================
