@@ -14,8 +14,7 @@ ImageProcessing
 
 Vector
 ------
-++ vec_max_absvalue() ###
-++ vec_norm_0_255_abs()
+++ vec_norm_0_255_abs() ###
 
 Matrix
 ------
