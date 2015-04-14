@@ -14,11 +14,10 @@ ImageProcessing
 
 Vector
 ------
-++ vec_norm_0_255_abs() ###
 
 Matrix
 ------
-++ mat_multiplication()
+++ mat_multiplication() ###
 ++ mat_diagonal()
 ++ eigen()
 

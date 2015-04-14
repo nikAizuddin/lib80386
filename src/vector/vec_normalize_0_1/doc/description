@@ -1,0 +1,59 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: vec_normalize_0_1
+
+DESCRIPTION: Normalize a vector, so that the range of elements are
+             between [0.0, 1.0].
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  vec_normalize_0_1(addr_srcVec:ESI,
+                    addr_dstVec:EDI,
+                    vec_jumpSize:EBX,
+                    numOfElements:ECX)
+
+  Input parameters
+      1) addr_srcVec   = Address to source vector
+      2) addr_dstVec   = Address to destination vector
+      3) vec_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
+      4) numOfElements = Number of elements to normalize
+
+  Output parameters
+      2) addr_dstVec   = Will be filled with normalized vector
+
+  Returns
+      ---
+
+  +-------------------------------------------------------------+
+  |                   STACK MEMORY INFORMATION                  |
+  +--------+----------------------------------------------------+
+  | Offset |      Data       |           Description            |
+  +--------+-----------------+----------------------------------+
+  | +    0 | addr_srcVec     | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +    4 | addr_dstVec     | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +    8 | vec_jumpSize    | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   12 | numOfElements   | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | Total stack used for local variables = 16 bytes             |
+  +-------------------------------------------------------------+
+
+  Algorithm/Pseudocode is in "scilab/vec_normalize_0_1.sce"
+
+======================================================================

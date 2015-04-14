@@ -53,7 +53,6 @@ vec_max_value:
     .xmm1_lessthan_xmm0:
 
     add    esi, ebx
-    add    edi, ebx
 
     sub    ecx, 1
     jnz    .loop_max_value
