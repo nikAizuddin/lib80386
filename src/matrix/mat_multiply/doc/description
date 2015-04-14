@@ -1,0 +1,88 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION NAME: Matrix multiply
+
+DESCRIPTION:
+    Multiply 2 matrices, matrix1 * matrix2. The result will be
+    stored in dstMatrix.
+
+REQUIRED EXTERNAL FILES:
+    vec_dotproduct.asm
+
+NOTES:
+    Algorithm/Pseudocode is in "scilab/mat_multiply.sce".
+
+----------------------------------------------------------------------
+
+FUNCTION: mat_multiply
+
+PARAMETERS:
+
+    EAX = @matrix1   : Matrix (Input only)
+    EBX = @matrix2   : Matrix (Input only)
+    ECX = @dstMatrix : Matrix (Input and Output)
+
+    Matrix:
+        .numOfRows:    resd 1
+        .numOfColumns: resd 1
+        .columnSize:   resd 1
+        .rowSize:      resd 1
+        .pData:        resd 1
+
+    Input parameters
+        1) Memory address of matrix1
+        2) Memory address of matrix2
+        3) Memory address of destination matrix
+
+    Output parameters
+        3) srcMatrix.data
+               Will be filled with result from the multplication
+               of matrix1 and matrix2.
+
+    Returns
+        ---
+
+----------------------------------------------------------------------
+
+STACK MEMORY INFORMATION:
+
++------+----+----------------+---------------------------------------+
+|Offset|Size|      Name      |              Initial value            |
++------+----+----------------+---------------------------------------+
+| +  0 |  4 | pMatrix1       | @matrix1                              |
++------+----+----------------+---------------------------------------+
+| +  4 |  4 | pMatrix2       | @matrix2                              |
++------+----+----------------+---------------------------------------+
+| +  8 |  4 | pDstMatrix     | @dstMatrix                            |
++------+----+----------------+---------------------------------------+
+| + 12 |  4 | row            | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 16 |  4 | column         | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 20 |  4 | maxRows        | matrix1.numOfRows                     |
++------+----+----------------+---------------------------------------+
+| + 24 |  4 | maxColumns     | matrix2.numOfColumns                  |
++------+----+----------------+---------------------------------------+
+| + 28 |  4 | pDataMat1      | matrix1.pData^                        |
++------+----+----------------+---------------------------------------+
+| + 32 |  4 | pDataMat2      | matrix2.pData^                        |
++------+----+----------------+---------------------------------------+
+| + 36 |  4 | colSizeMat1    | matrix1.columnSize                    |
++------+----+----------------+---------------------------------------+
+| + 40 |  4 | rowSizeMat1    | matrix1.rowSize                       |
++------+----+----------------+---------------------------------------+
+| + 44 |  4 | colSizeMat2    | matrix2.columnSize                    |
++------+----+----------------+---------------------------------------+
+| + 48 |  4 | rowSizeMat2    | matrix2.rowSize                       |
++------+----+----------------+---------------------------------------+
+| + 52 |  4 | pDataDstMat    | dstMatrix.pData^                      |
++------+----+----------------+---------------------------------------+
+| + 56 |  4 | rowsMat2       | matrix2.numOfRows                     |
++------+----+----------------+---------------------------------------+
+| Total stack used for local variables = 60 bytes                    |
++--------------------------------------------------------------------+
+*Unit for offset & size are bytes.
+
+======================================================================

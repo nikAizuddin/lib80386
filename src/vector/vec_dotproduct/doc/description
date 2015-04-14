@@ -2,50 +2,54 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-FUNCTION: vec_dotproduct
+FUNCTION NAME: Vector dot product
 
-DESCRIPTION: Calculate a dotproduct between 2 vectors.
+DESCRIPTION:
+    Calculate dot product between 2 vectors.
 
-REQUIRES: ---
+REQUIRED EXTERNAL FILES: ---
 
-BUGS: ---
-
-FUTURE IMPROVEMENTS: ---
+NOTES:
+    Algorithm/Pseudocode is in "scilab/vec_dotproduct.sce"
 
 ----------------------------------------------------------------------
 
-PROCESS DESCRIPTION:
+FUNCTION: vec_dotproduct
 
-  vec_dotproduct(addr_vec1:ESI,
-                 vec1_jumpSize:EBX,
-                 addr_vec2:EDI,
-                 vec2_jumpSize:EDX,
-                 numOfElements:ECX) result:XMM0[scalar_single-precision]
+PARAMETERS:
+
+    ESI = @vector1         : DWORD (Input Only)
+    EBX = vector1_jumpSize : DWORD (Input Only)
+    EDI = @vector2         : DWORD (Input Only)
+    EDX = vector2_jumpSize : DWORD (Input Only)
+    ECX = numOfElements    : DWORD (Input Only)
 
   Input parameters
-      1) addr_vec1     = Address to vector 2
-      2) vec1_jumpSize = ROWSIZE if column vector, otherwise COLUMNSIZE
-      3) addr_vec2     = Address to vector 2
-      4) vec2_jumpSize = ROWSIZE if column vector, otherwise COLUMNSIZE
-      5) numOfElements = Number of elements for dotproduct
+      1) Memory address of vector1
+      2) Vector1 jump size. Can be ROWSIZE if column vector,
+         otherwise COLUMNSIZE.
+      3) Memory address of vector2
+      4) Vector2 jump size. Can be ROWSIZE if column vector,
+         otherwise COLUMNSIZE.
+      5) Number of elements to perform dot product.
 
   Output parameters
       ---
 
   Returns
-      result:XMM0[scalar_single-precision]
+      XMM0 = result : scalar_single_precision
 
-  +-------------------------------------------------------------+
-  |                   STACK MEMORY INFORMATION                  |
-  +--------+----------------------------------------------------+
-  | Offset |      Data       |           Description            |
-  +--------+-----------------+----------------------------------+
-  | +    0 | ---             | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | Total stack used for local variables =  0 bytes             |
-  +-------------------------------------------------------------+
+----------------------------------------------------------------------
 
-  Algorithm/Pseudocode is in "scilab/vec_dotproduct.sce"
+STACK MEMORY INFORMATION:
+
++------+----+----------------+---------------------------------------+
+|Offset|Size|      Name      |              Initial value            |
++------+----+----------------+---------------------------------------+
+| +  0 |  0 | ---            | ---                                   |
++------+----+----------------+---------------------------------------+
+| Total stack used for local variables =  0 bytes                    |
++--------------------------------------------------------------------+
+*Unit for offset & size are bytes.
 
 ======================================================================
