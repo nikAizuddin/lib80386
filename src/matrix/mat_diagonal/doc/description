@@ -1,0 +1,77 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION NAME: Matrix diagonal
+
+DESCRIPTION:
+    Find diagonal value of a square matrix.
+
+REQUIRED EXTERNAL FILES: ---
+
+NOTES:
+    Algorithm/Pseudocode is in "scilab/mat_diagonal.sce".
+
+----------------------------------------------------------------------
+
+FUNCTION: mat_diagonal
+
+PARAMETERS:
+
+    EAX = @srcMatrix : Matrix (Input only)
+    EBX = @dstVector : Vector (Input and Output)
+
+    Matrix:
+        .numOfRows:    resd 1
+        .numOfColumns: resd 1
+        .columnSize:   resd 1
+        .rowSize:      resd 1
+        .pData:        resd 1
+
+    Vector:
+        .numOfElements: resd 1
+        .jumpSize:      resd 1
+        .pData:         resd 1
+
+    Input parameters
+        1) Memory address of source matrix
+        2) Memory address of destination vector
+
+    Output parameters
+        2) dstVector.pData
+               Will be filled with result from the diagonal
+               of source matrix.
+
+    Returns
+        ---
+
+----------------------------------------------------------------------
+
+STACK MEMORY INFORMATION:
+
++------+----+----------------+---------------------------------------+
+|Offset|Size|      Name      |              Initial value            |
++------+----+----------------+---------------------------------------+
+| +  0 |  4 | pSrcMatrix     | @srcMatrix                            |
++------+----+----------------+---------------------------------------+
+| +  4 |  4 | pDstVector     | @dstVector                            |
++------+----+----------------+---------------------------------------+
+| +  8 |  4 | pDataSrcMat    | @srcMatrix.pData^                     |
++------+----+----------------+---------------------------------------+
+| + 12 |  4 | pDataDstVec    | @dstVector.pData^                     |
++------+----+----------------+---------------------------------------+
+| + 16 |  4 | srcMatRowSize  | srcMatrix.rowSize                     |
++------+----+----------------+---------------------------------------+
+| + 20 |  4 | srcMatColSize  | srcMatrix.columnSize                  |
++------+----+----------------+---------------------------------------+
+| + 24 |  4 | dstVecJumpSize | dstVector.jumpSize                    |
++------+----+----------------+---------------------------------------+
+| + 28 |  4 | srcMatRows     | srcMatrix.numOfRows                   |
++------+----+----------------+---------------------------------------+
+| + 32 |  4 | srcMatCols     | srcMatrix.numOfColumns                |
++------+----+----------------+---------------------------------------+
+| Total stack used for local variables = 36 bytes                    |
++--------------------------------------------------------------------+
+*Unit for offset & size are bytes.
+
+======================================================================
