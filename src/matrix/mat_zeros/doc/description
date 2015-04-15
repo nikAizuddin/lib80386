@@ -1,0 +1,55 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION NAME: Matrix zeros
+
+DESCRIPTION:
+    Zero a matrix.
+
+REQUIRED EXTERNAL FILES: ---
+
+NOTES:
+    Algorithm/Pseudocode is in "scilab/mat_zeros.sce".
+
+----------------------------------------------------------------------
+
+FUNCTION: mat_zeros
+
+PARAMETERS:
+
+    EAX = @srcMatrix : Matrix (Input only)
+    EBX = @dstMatrix : Matrix (Input and Output)
+
+    Matrix:
+        .numOfRows:    resd 1
+        .numOfColumns: resd 1
+        .columnSize:   resd 1
+        .rowSize:      resd 1
+        .pData:        resd 1
+
+    Input parameters
+        1) Memory address of source matrix
+        2) Memory address of destination matrix
+
+    Output parameters
+        2) dstMatrix.pData
+               Will be filled with zeros of source matrix.
+
+    Returns
+        ---
+
+----------------------------------------------------------------------
+
+STACK MEMORY INFORMATION:
+
++------+----+----------------+---------------------------------------+
+|Offset|Size|      Name      |              Initial value            |
++------+----+----------------+---------------------------------------+
+| +  0 |  0 | ---            | ---                                   |
++------+----+----------------+---------------------------------------+
+| Total stack used for local variables =  0 bytes                    |
++--------------------------------------------------------------------+
+*Unit for offset & size are bytes.
+
+======================================================================

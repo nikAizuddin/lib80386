@@ -18,7 +18,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-function[] = eigen_qr()
+function[] = eigen()
 
     //////////////////////////////////////////////////////////////////
     // Let A = sample covariance matrix.
@@ -28,6 +28,8 @@ function[] = eigen_qr()
          -18.5556  34.4444 -15.8889
            7.1111 -15.8889   8.7778];
 
+    B = A;
+
 
     //////////////////////////////////////////////////////////////////
     // Perform 20 iterations of QR Decomposition, to find the
@@ -36,14 +38,14 @@ function[] = eigen_qr()
     // the number of iterations for extra accuracy.
     //////////////////////////////////////////////////////////////////
 
-    [Q,R] = qr_decomposition(A);
-    A = Q*R;
+    [Q,R] = qr_decomposition(B);
+    B = Q*R;
     S = Q;
 
     for i=2:1:20
-        A = R*Q;
-        [Q,R] = qr_decomposition(A);
-        A = Q*R;
+        B = R*Q;
+        [Q,R] = qr_decomposition(B);
+        B = Q*R;
         S = S*Q;
     end
 
@@ -53,7 +55,7 @@ function[] = eigen_qr()
     // is between 0.0 -> 1.0.
     //////////////////////////////////////////////////////////////////
 
-    for i=1:1:size(A,'c')
+    for i=1:1:size(B,'c')
         S(:,i) = S(:,i)./max(abs(S(:,i)));
     end
 
@@ -62,7 +64,7 @@ function[] = eigen_qr()
     // Show results
     //////////////////////////////////////////////////////////////////
 
-    disp("Eigenvalues = ");disp(diag(A));
+    disp("Eigenvalues = ");disp(diag(B));
     disp("Eigenvectors = ");disp(S);
 
 

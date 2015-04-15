@@ -17,7 +17,8 @@ Vector
 
 Matrix
 ------
-++ mat_diagonal() ###
+++ mat_zeros() ###
+++ mat_copy()
 ++ eigen()
 
 Mathematics
