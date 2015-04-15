@@ -17,8 +17,6 @@ Vector
 
 Matrix
 ------
-++ mat_zeros() ###
-++ mat_copy()
 ++ eigen()
 
 Mathematics
