@@ -17,18 +17,22 @@
 function[] = vec_copy()
 
     // Source matrix
-    A = [1 2 3
-         4 5 6
-         7 8 9];
+    A = [-32.4012   42.1234  -85.5213
+          90.3214  -49.123   -64.2356
+          84.1235   95.2314   33.1456
+         -90.3213  -42.2391  -63.3524
+          52.2014  -69.2405   64.3777];
+
 
     // Destination matrix
-    B = [0 0 0
-         0 0 0
-         0 0 0];
-
-    B(:,2) = A(:,3);
+    B = zeros( size(A,'r'), size(A,'c') );
+    C = zeros( size(A,'r'), size(A,'c') );
 
     disp("A =");disp(A);
-    disp("B =");disp(B);
+
+    B(:,2) = A(:,3);
+    disp("B(:,2) = A(:,3)");disp(B);
+    C(1,:) = A(3,:);
+    disp("C(1,:) = C(3,:)");disp(C);
 
 endfunction

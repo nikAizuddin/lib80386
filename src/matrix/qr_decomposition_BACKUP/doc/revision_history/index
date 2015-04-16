@@ -2,16 +2,12 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-                            mat_copy
-
-           Use this function if you want to copy a matrix.
+                          REVISION HISTORY
 
 ----------------------------------------------------------------------
 
- DIRECTORY INFORMATION
-
-     doc: Contains documentations about the function.
-     src: Contains source code.
-    test: For testing purpose, to ensure the function has no error.
+     Rev #  |    Date     |               Summary
+   ---------+-------------+----------------------------------------
+            |             |
 
 ======================================================================

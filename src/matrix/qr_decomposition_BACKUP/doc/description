@@ -1,0 +1,81 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION: qr_decomposition
+
+DESCRIPTION: Calculate QR Decomposition of N*N matrix
+
+REQUIRES: ---
+
+BUGS: ---
+
+FUTURE IMPROVEMENTS: ---
+
+----------------------------------------------------------------------
+
+PROCESS DESCRIPTION:
+
+  qr_decomposition(addr_srcMat:EAX,
+                   addr_u:EBX,
+                   addr_e:ECX,
+                   n:EDX,
+                   addr_Q:ESI,
+                   addr_R:EDI)
+
+  Input parameters
+      1) addr_srcMat = Address to source square matrix (n*n)
+      2) addr_u      = u (used to store the function temporary data)
+      3) addr_e      = e (used to store the function temporary data)
+      3) n           = Number of rows or columns of the matrix
+      4) addr_Q      = Address to store Q matrix (n*n)
+      5) addr_R      = Address to store R matrix (n*n)
+
+  Output parameters
+      4) addr_Q      = Filled with Q matrix (n*n)
+      5) addr_R      = Filled with R matrix (n*n)
+
+  Returns
+      ---
+
+  +-------------------------------------------------------------+
+  |                   STACK MEMORY INFORMATION                  |
+  +--------+----------------------------------------------------+
+  | Offset |      Data       |           Description            |
+  +--------+-----------------+----------------------------------+
+  | +    0 | addr_srcMat     | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +    4 | addr_u          | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +    8 | addr_e          | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   12 | n               | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   16 | addr_Q          | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   20 | addr_R          | ---                              |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   24 | i               | i counter                        |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   28 | j               | j counter                        |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   32 | k               | k counter                        |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | +   36 | rowSize         | n * 4                            |
+  |        |                 |                                  |
+  +--------+-----------------+----------------------------------+
+  | Total stack used for local variables = 40 bytes             |
+  +-------------------------------------------------------------+
+
+  Algorithm/Pseudocode is in "scilab/qr_decomposition.sce"
+
+======================================================================

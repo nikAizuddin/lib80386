@@ -29,20 +29,14 @@ break exit
 run
 
 printf "\nSample matrix, A = \n"
-print_matrix dataMatrix_A 4 4
+print_matrix A 4 4
 
 printf "\n\nOutput of QR Decomposition:\n"
 
 printf "\nQ = \n"
-print_matrix dataMatrix_Q 4 4
+print_matrix Q 4 4
 
 printf "\nR = \n"
-print_matrix dataMatrix_R 4 4
-
-printf "\ntempMat = \n"
-print_matrix dataMatrix_tempMat 4 4
-
-printf "\ntempVec = \n"
-print_matrix dataVector_tempVec 1 4
+print_matrix R 4 4
 
 continue

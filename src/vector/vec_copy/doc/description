@@ -2,51 +2,77 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-FUNCTION: vec_copy
+FUNCTION NAME: Vector copy
 
-DESCRIPTION: Copy a vector (either row vector or column vector)
-             from a matrix.
+DESCRIPTION:
+    Copy a vector (either row vector or column vector)
+    from matrix.
 
-REQUIRES: ---
+REQUIRED EXTERNAL FILES: ---
 
-BUGS: ---
-
-FUTURE IMPROVEMENTS: ---
+NOTES:
+    Algorithm/Pseudocode is in "scilab/vec_copy.sce"
 
 ----------------------------------------------------------------------
 
-PROCESS DESCRIPTION:
+FUNCTION: vec_copy
 
-  vec_copy(addr_srcVec:ESI,
-           src_jumpSize:EBX,
-           addr_dstVec:EDI,
-           dst_jumpSize:EDX,
-           numOfElements:ECX)
+PARAMETERS:
 
-  Input parameters
-      1) addr_srcVec   = Address to the source vector
-      2) src_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
-      3) addr_dstVec   = Address to the destination vector
-      4) dst_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
-      5) numOfElements = Number of elements to copy
+    EAX = @srcMatrix    : Matrix    (Input Only)
+    EBX = @dstMatrix    : Matrix    (Input and Output)
+    ECX = srcOffset     : DWORD     (Input Only)
+    EDX = dstOffset     : DWORD     (Input Only)
+    ESI = srcJumpSize   : LOW WORD  (Input Only)
+        = dstJumpSize   : HIGH WORD (Input Only)
+    EDI = numOfElements : DWORD     (Input Only)
 
-  Output parameters
-      3) addr_dstVec = Filled with data from source vector
+    Matrix:
+        .numOfRows:    resd 1
+        .numOfColumns: resd 1
+        .columnSize:   resd 1
+        .rowSize:      resd 1
+        .pData:        resd 1
 
-  Returns
-      ---
+    Input parameters
+        1) Memory address of source matrix
+        2) Memory address of destination matrix
+        3) Starting offset of source matrix (in bytes)
+        4) Starting offset of destination matrix (in bytes)
+        5) Source matrix jump size (in bytes)
+        6) Destination matrix jump size (in bytes)
+        7) Number of elements to copy
 
-  +-------------------------------------------------------------+
-  |                   STACK MEMORY INFORMATION                  |
-  +--------+----------------------------------------------------+
-  | Offset |      Data       |           Description            |
-  +--------+-----------------+----------------------------------+
-  | +    0 | ---             | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | Total stack used for local variables =  0 bytes             |
-  +-------------------------------------------------------------+
+    Output parameters
+        2) dstMatrix.pData
+               Will be filled with vector from srcMatrix.pData
 
-  Algorithm/Pseudocode is in "scilab/vec_copy.sce"
+    Returns
+        ---
+
+----------------------------------------------------------------------
+
+STACK MEMORY INFORMATION:
+
++------+----+----------------+---------------------------------------+
+|Offset|Size|      Name      |              Initial value            |
++------+----+----------------+---------------------------------------+
+| +  0 |  4 | pSrcMatrix     | @srcMatrix                            |
++------+----+----------------+---------------------------------------+
+| +  4 |  4 | pDstMatrix     | @dstMatrix                            |
++------+----+----------------+---------------------------------------+
+| +  8 |  4 | srcOffset      | (Depends)                             |
++------+----+----------------+---------------------------------------+
+| + 12 |  4 | dstOffset      | (Depends)                             |
++------+----+----------------+---------------------------------------+
+| + 16 |  2 | srcJumpSize    | (Depends)                             |
++------+----+----------------+---------------------------------------+
+| + 18 |  2 | dstJumpSize    | (Depends)                             |
++------+----+----------------+---------------------------------------+
+| + 20 |  4 | numOfElements  | (Depends)                             |
++------+----+----------------+---------------------------------------+
+| Total stack used for local variables = 24 bytes                    |
++--------------------------------------------------------------------+
+*Unit for offset & size are bytes.
 
 ======================================================================

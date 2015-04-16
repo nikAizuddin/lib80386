@@ -36,10 +36,11 @@ section .text
 _start:
 
     lea    eax, [A]
-    lea    ebx, [Q]
-    lea    ecx, [R]
-    lea    edx, [tempMat]
-    lea    esi, [tempVec]
+    lea    ebx, [u]
+    lea    ecx, [e]
+    mov    edx, NUM_OF_ROWS
+    lea    esi, [Q]
+    lea    edi, [R]
     call   qr_decomposition
 
 exit:

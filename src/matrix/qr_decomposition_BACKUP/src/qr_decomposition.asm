@@ -62,43 +62,29 @@ qr_decomposition:
 
 .set_local_variables:
     sub    esp, 40
-    mov    [esp     ], eax     ;pSrcMatrix
-    mov    [esp +  4], ebx     ;pQ
-    mov    [esp +  8], ecx     ;pR
-    mov    [esp + 12], edx     ;pTempMat
-    mov    [esp + 16], esi     ;pTempVec
-
-    ;n = srcMatrix.numOfRows
-    mov    ebx, eax
-    mov    ebx, [ebx]
-    mov    [esp + 20], ebx
-
-    ;rowSize = srcMatrix.rowSize
-    mov    ebx, eax
-    add    ebx, (4*3)
-    mov    ebx, [ebx]
-    mov    [esp + 24], ebx
-
-    mov    dword [esp + 28], 4 ;i
-    mov    dword [esp + 32], 4 ;j
-    mov    dword [esp + 36], 0 ;k
+    mov    [esp     ], eax       ;addr_srcMat
+    mov    [esp +  4], ebx       ;addr_u
+    mov    [esp +  8], ecx       ;addr_e
+    mov    [esp + 12], edx       ;n
+    mov    [esp + 16], esi       ;addr_Q
+    mov    [esp + 20], edi       ;addr_R
+    mov    dword [esp + 24], 4   ;i
+    mov    dword [esp + 28], 4   ;j
+    mov    dword [esp + 32], 0   ;k
+    lea    edx, [edx*4]
+    mov    dword [esp + 36], edx ;rowsize = n * 4
 
 ; ***
 ; Find Q
 ; ***
 
-    ;pTempMat[:,0] = srcMatrix[:,0]
-    mov    eax, [esp     ]    ;EAX = pSrcMatrix
-    mov    ebx, [esp + 12]    ;EBX = pTempMat
-    mov    ecx, 0             ;ECX = srcOffset
-    mov    edx, 0             ;EDX = dstOffset
-    mov    esi, [esp + 24]    ;LOW ESI = srcJumpSize
-    shl    esi, 16
-    add    esi, [esp + 24]    ;HIGH ESI = dstJumpSize
-    mov    edi, [esp + 20]    ;EDI = numOfElements = n
+; u[:,0] = A[:,0]
+    mov    esi, [esp]      ;ESI = addr_srcMat
+    mov    ebx, [esp + 36] ;EBX = rowSize
+    mov    edi, [esp +  4] ;EDI = addr_u
+    mov    edx, [esp + 36] ;EDX = rowSize
+    mov    ecx, [esp + 12] ;ECX = n
     call   vec_copy
-
-%ifdef _0_
 
 ; Q[:,0] = u[:,0] / euclidean_norm(u[:,0])
 
@@ -302,7 +288,6 @@ qr_decomposition:
 
 .endloopR:
 
-%endif
 
 .clean_stackframe:
     mov    esp, ebp

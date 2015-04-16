@@ -36,24 +36,73 @@ section .text
 
 vec_copy:
 
-;parameter 1) addr_srcVec:ESI
-;parameter 2) src_jumpSize:EBX
-;parameter 3) addr_dstVec:EDI
-;parameter 4) dst_jumpSize:EDX
-;parameter 5) numOfElements:ECX
+;parameter 1) EAX = @srcMatrix    : Matrix    (Input Only)
+;parameter 2) EBX = @dstMatrix    : Matrix    (Input and Output)
+;parameter 3) ECX = srcOffset     : DWORD     (Input Only)
+;parameter 4) EDX = dstOffset     : DWORD     (Input Only)
+;parameter 5) ESI = srcJumpSize   : LOW WORD  (Input Only)
+;parameter 6) ESI = dstJumpSize   : HIGH WORD (Input Only)
+;parameter 7) EDI = numOfElements : DWORD     (Input Only)
 ;returns ---
 
-.loop_vec_copy:
+.setup_stackframe:
+    sub    esp, 4
+    mov    [esp], ebp
+    mov    ebp, esp
 
-    movss  xmm0, [esi]         ;XMM0 = A[?]
-    movss  [edi], xmm0         ;B[?] = XMM0
+.set_localvariables:
+    sub    esp, 24
+    mov    [esp     ], eax    ;pSrcMatrix
+    mov    [esp +  4], ebx    ;pDstMatrix
+    mov    [esp +  8], ecx    ;srcOffset
+    mov    [esp + 12], edx    ;dstOffset
+    mov    [esp + 16], esi    ;srcJumpSize (LOW WORD)
+                              ;dstJumpSize (HIGH WORD)
+    mov    [esp + 20], edi    ;numOfEements
 
-    add    esi, ebx            ;point ESI to next element
-    add    edi, edx            ;point EDI to next element
+    ;Done setting up local variables
+
+    ;ESI = pSrcMatrix.pData + srcOffset
+    mov    esi, [esp]         ;ESI = pSrcMatrix
+    add    esi, (4*4)         ;ESI = pSrcMatrix.pData
+    mov    esi, [esi]
+    mov    ebx, [esp + 8]     ;EBX = srcOffset
+    add    esi, ebx
+
+    ;EDI = pDstMatrix.pData + dstOffset
+    mov    edi, [esp +  4]    ;EDI = pDstMatrix
+    add    edi, (4*4)         ;EDI = pDstMatrix.pData
+    mov    edi, [edi]
+    mov    ebx, [esp + 12]    ;EBX = dstOffset
+    add    edi, ebx
+
+    ;EBX = srcJumpSize
+    mov    ebx, [esp + 16]    ;EBX = srcJumpSize
+    and    ebx, 0x0000ffff    ;Remove dstJumpSize from EBX
+
+    ;EDX = dstJumpSize
+    mov    edx, [esp + 16]    ;EDX = srcJumpSize
+    shr    edx, 16            ;EDX = dstJumpSize
+
+    ;ECX = numOfElements
+    mov    ecx, [esp + 20]    ;ECX = numOfElements
+
+.loop:
+
+    movss  xmm0, [esi]
+    movss  [edi], xmm0
+
+    add    esi, ebx           ;point ESI to next element
+    add    edi, edx           ;point EDI to next element
 
     sub    ecx, 1
-    jnz    .loop_vec_copy
+    jnz    .loop
 
-.endloop_vec_copy:
+.endloop:
+
+.clean_stackframe:
+    mov    esp, ebp
+    mov    ebp, [esp]
+    add    esp, 4
 
     ret

@@ -2,80 +2,97 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-FUNCTION: qr_decomposition
+FUNCTION NAME: QR Decomposition
 
-DESCRIPTION: Calculate QR Decomposition of N*N matrix
+DESCRIPTION:
+    Calculate QR Decomposition of a square matrix.
 
-REQUIRES: ---
+REQUIRED EXTERNAL FILES:
+    vec_copy.asm ###
+    vec_divide_elements.asm
+    vec_multiply_elements.asm
+    vec_dotproduct.asm
+    vec_subtract_vv.asm
+    euclidean_norm.asm
 
-BUGS: ---
-
-FUTURE IMPROVEMENTS: ---
+NOTES:
+    Algorithm/Pseudocode is in "scilab/qr_decomposition.sce".
 
 ----------------------------------------------------------------------
 
-PROCESS DESCRIPTION:
+FUNCTION: qr_decomposition
 
-  qr_decomposition(addr_srcMat:EAX,
-                   addr_u:EBX,
-                   addr_e:ECX,
-                   n:EDX,
-                   addr_Q:ESI,
-                   addr_R:EDI)
+PARAMETERS:
 
-  Input parameters
-      1) addr_srcMat = Address to source square matrix (n*n)
-      2) addr_u      = u (used to store the function temporary data)
-      3) addr_e      = e (used to store the function temporary data)
-      3) n           = Number of rows or columns of the matrix
-      4) addr_Q      = Address to store Q matrix (n*n)
-      5) addr_R      = Address to store R matrix (n*n)
+    EAX = @srcMatrix  : Matrix (Input only)
+    EBX = @Q          : Matrix (Input and Output)
+    ECX = @R          : Matrix (Input and Output)
+    EDX = @tempMatrix : Matrix (Input and Output)
+    ESI = @tempVector : Vector (Input and Output)
 
-  Output parameters
-      4) addr_Q      = Filled with Q matrix (n*n)
-      5) addr_R      = Filled with R matrix (n*n)
+    Matrix:
+        .numOfRows:     resd 1
+        .numOfColumns:  resd 1
+        .columnSize:    resd 1
+        .rowSize:       resd 1
+        .pData:         resd 1
 
-  Returns
-      ---
+    Vector:
+        .numOfElements: resd 1
+        .jumpSize:      resd 1
+        .pData:         resd 1
 
-  +-------------------------------------------------------------+
-  |                   STACK MEMORY INFORMATION                  |
-  +--------+----------------------------------------------------+
-  | Offset |      Data       |           Description            |
-  +--------+-----------------+----------------------------------+
-  | +    0 | addr_srcMat     | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +    4 | addr_u          | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +    8 | addr_e          | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   12 | n               | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   16 | addr_Q          | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   20 | addr_R          | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   24 | i               | i counter                        |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   28 | j               | j counter                        |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   32 | k               | k counter                        |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   36 | rowSize         | n * 4                            |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | Total stack used for local variables = 40 bytes             |
-  +-------------------------------------------------------------+
+    Input parameters
+        1) Memory address of source matrix
+        2) Memory address of Q matrix
+        3) Memory address of R matrix
+        4) Memory address of temporary matrix
+        5) Memory address of temporary vector
 
-  Algorithm/Pseudocode is in "scilab/qr_decomposition.sce"
+    Output parameters
+        2) Q.pData
+               Will be filled with Q value of QR Decomposition.
+        3) R.pData
+               Will be filled with R value of QR Decomposition.
+        4) tempMatrix.pData
+               Temporary matrix, used for QR Decomposition.
+               Must have the same size as source matrix.
+        5) tempVector.pData
+               Temporary vector, used for QR Decomposition.
+               Must have the same columns as source matrix.
+
+    Returns
+        ---
+
+----------------------------------------------------------------------
+
+STACK MEMORY INFORMATION:
+
++------+----+----------------+---------------------------------------+
+|Offset|Size|      Name      |              Initial value            |
++------+----+----------------+---------------------------------------+
+| +  0 |  4 | pSrcMatrix     | @srcMatrix                            |
++------+----+----------------+---------------------------------------+
+| +  4 |  4 | pQ             | @Q                                    |
++------+----+----------------+---------------------------------------+
+| +  8 |  4 | pR             | @R                                    |
++------+----+----------------+---------------------------------------+
+| + 12 |  4 | pTempMat       | @tempMat                              |
++------+----+----------------+---------------------------------------+
+| + 16 |  4 | pTempVec       | @tempVec                              |
++------+----+----------------+---------------------------------------+
+| + 20 |  4 | n              | srcMatrix.numOfRows                   |
++------+----+----------------+---------------------------------------+
+| + 24 |  4 | rowSize        | srcMatrix.rowSize                     |
++------+----+----------------+---------------------------------------+
+| + 28 |  4 | i              | 4                                     |
++------+----+----------------+---------------------------------------+
+| + 32 |  4 | j              | 4                                     |
++------+----+----------------+---------------------------------------+
+| + 36 |  4 | k              | 0                                     |
++------+----+----------------+---------------------------------------+
+| Total stack used for local variables = 40 bytes                    |
++--------------------------------------------------------------------+
+*Unit for offset & size are bytes.
 
 ======================================================================

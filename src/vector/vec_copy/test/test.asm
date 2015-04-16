@@ -34,22 +34,35 @@ section .text
 
 _start:
 
-;Copy column vector A to column vector B
-;B[:,3] = A[:,7]
-    lea    esi, [A + (7*COLUMNSIZE)]
-    mov    ebx, ROWSIZE
-    lea    edi, [B + (3*COLUMNSIZE)]
-    mov    edx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+;B[:,1] = A[:,2]
+    mov    eax, [A.columnSize]    ;ECX = srcOffset
+    mov    ebx, 2
+    mul    ebx
+    mov    ecx, eax
+    mov    eax, [B.columnSize]    ;EDX = dstOffset
+    mov    ebx, 1
+    mul    ebx
+    mov    edx, eax
+    lea    eax, [A]               ;EAX = @A
+    lea    ebx, [B]               ;EBX = @B
+    mov    si, [A.rowSize]        ;LOW ESI  = srcJumpSize
+    shl    esi, 16
+    add    si, [B.rowSize]        ;HIGH ESI = dstJumpSize
+    mov    edi, [A.numOfRows]     ;EDI = A.numOfRows
     call   vec_copy
 
-;Copy row vector A to row vector B
-;B[6,:] = A[2,:]
-    lea    esi, [A + (2*ROWSIZE)]
-    mov    ebx, COLUMNSIZE
-    lea    edi, [B + (6*ROWSIZE)]
-    mov    edx, COLUMNSIZE
-    mov    ecx, NUM_OF_COLUMNS
+;C[0,:] = A[2,:]
+    mov    eax, [A.rowSize]       ;ECX = srcOffset
+    mov    ebx, 2
+    mul    ebx
+    mov    ecx, eax
+    mov    edx, 0                 ;EDX = dstOffset
+    lea    eax, [A]               ;EAX = @A
+    lea    ebx, [C]               ;EBX = @B
+    mov    si, [A.columnSize]     ;LOW ESI = srcJumpSize
+    shl    esi, 16
+    add    si, [B.columnSize]     ;HIGH ESI = dstJumpSize
+    mov    edi, [A.numOfColumns]  ;EDI = numOfElements
     call   vec_copy
 
 exit:
