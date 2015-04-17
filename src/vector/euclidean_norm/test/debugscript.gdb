@@ -4,13 +4,12 @@
 ## This is a debugscript for automated debugging the program.
 ##
 ## Author: Nik Mohamad Aizuddin bin Nik Azmi
-##   Date: 11-APR-2015
+##   Date: 09-APR-2015
 ######################################################################
 
-######################################################################
 ## $arg0 = source matrix
 ## $arg1 = rows
-## $arg2 = columns 
+## $arg2 = columns
 define print_matrix
     set $i = 0
     while($i<($arg1*$arg2))
@@ -20,19 +19,21 @@ define print_matrix
             set $j = $j + 1
         end
         printf "\n"
-        set $i = $i + $arg2 
+        set $i = $i + $arg2
     end
 end
-######################################################################
 
 break exit
 run
 
-## Print vector X_T001 (1x4)
-printf "\nX_T001 = \n"
-print_matrix X_T001 1 3
+printf "\nActual results\n"
 
-## Print result, scalar Y_T001
-printf "\nY_T001 = %f\n", Y_T001
+printf "\nA = \n"
+print_matrix dataMatrix_A 5 3
+
+printf "\nB = %f\n", B
+printf "\nC = %f\n", C
+printf "\nD = %f\n", D
+printf "\nE = %f\n", E
 
 continue

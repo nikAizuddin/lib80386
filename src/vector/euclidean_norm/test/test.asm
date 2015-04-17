@@ -11,7 +11,7 @@
 ;     DATE CREATED: 05-APR-2015
 ;
 ;     TEST PURPOSE: Make sure the euclidean_norm()
-;                   have no errors.
+;                   have no defects.
 ;
 ;         LANGUAGE: x86 Assembly Language
 ;        ASSEMBLER: NASM
@@ -25,8 +25,8 @@
 ;=====================================================================
 
 ;Include constant symbols and global variables
-%include "constants.inc"
-%include "data.inc"
+%include "include/constants.inc"
+%include "include/data.inc"
 
 extern euclidean_norm
 global _start
@@ -35,19 +35,33 @@ section .text
 
 _start:
 
-
-;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-;
-;   Y_T001 = euclidean_norm(@X, ELEMENTSIZE, ELEMENTS)
-;
-;   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    lea    eax, [X_T001]
-    mov    ebx, ELEMENTSIZE_T001
-    mov    ecx, ELEMENTS_T001
+    ;B = norm(A[0,:])
+    lea    eax, [A]
+    mov    ebx, 0b0
+    mov    ecx, 0
     call   euclidean_norm
-    movss  [Y_T001], xmm0
+    movss  [B], xmm0
 
+    ;C = norm(A[:,0])
+    lea    eax, [A]
+    mov    ebx, 0b1
+    mov    ecx, 0
+    call   euclidean_norm
+    movss  [C], xmm0
+
+    ;D = norm(A[2,:])
+    lea    eax, [A]
+    mov    ebx, 0b0
+    mov    ecx, 2
+    call   euclidean_norm
+    movss  [D], xmm0
+
+    ;E = norm(A[:,1])
+    lea    eax, [A]
+    mov    ebx, 0b1
+    mov    ecx, 1
+    call   euclidean_norm
+    movss  [E], xmm0
 
 exit:
     mov    eax, SYSCALL_EXIT

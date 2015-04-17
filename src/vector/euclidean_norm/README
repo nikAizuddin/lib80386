@@ -2,7 +2,7 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-                       vec_euclidean_norm
+                          euclidean_norm
 
             Use this function if you want to calculate
                   the Euclidean Norm of a vector
