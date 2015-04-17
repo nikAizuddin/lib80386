@@ -18,7 +18,7 @@
 ;                 KERNEL: Linux 32-bit
 ;                 FORMAT: elf32
 ;
-;     REQ EXTERNAL FILES: ---
+;     REQ EXTERNAL FILES: get_vector_info.asm
 ;
 ;                VERSION: 0.1.0
 ;                 STATUS: Alpha
@@ -30,6 +30,7 @@
 ;
 ;=====================================================================
 
+extern get_vector_info
 global euclidean_norm
 
 section .text
@@ -56,49 +57,14 @@ euclidean_norm:
 
     ;Check whether to use row vector or column vector
     ;operation.
-    mov    eax, [esp + 4]     ;EAX = flag
-    and    eax, 0b01
-    jz     .is_row_vector
+    mov    esi, eax
+    call   get_vector_info
+    ;EBX = jumpSize
+    ;ECX = numOfElements
+    ;EDI = offset = pSrcMatrix.pData + (index * jumpSize)
 
-.is_column_vector:
-    ;EBX = pSrcMatrix.rowSize (jumpSize)
-    ;EDX = index*columnSize (offset)
-    ;ECX = numOfRows
-    mov    ebx, [esp]         ;EBX = pSrcMatrix
-    add    ebx, (3*4)         ;EBX = .rowSize
-    mov    ebx, [ebx]
-    mov    eax, [esp]         ;EAX = pSrcMatrix
-    add    eax, (2*4)         ;EAX = .columnSize
-    mov    eax, [eax]
-    mul    ecx                ;EAX = index * columnSize
-    mov    edx, eax           ;EDX = EAX
-    mov    ecx, [esp]         ;ECX = pSrcMatrix.numOfRows
-    mov    ecx, [ecx]
-    jmp    .done_check_ops_type
-
-.is_row_vector:
-    ;EBX = pSrcMatrix.columnSize (jumpSize)
-    ;EDX = index*rowSize (offset)
-    ;ECX = numOfColumns
-    mov    ebx, [esp]         ;EBX = pSrcMatrix
-    add    ebx, (2*4)         ;EBX = .columnSize
-    mov    ebx, [ebx]
-    mov    eax, [esp]         ;EAX = pSrcMatrix
-    add    eax, (3*4)         ;EAX = .rowSize
-    mov    eax, [eax]
-    mul    ecx                ;EAX = index * rowSize
-    mov    edx, eax           ;EDX = EAX
-    mov    ecx, [esp]         ;ECX = pSrcMatrix
-    add    ecx, (1*4)         ;ECX = .numOfColumns
-    mov    ecx, [ecx]
-
-.done_check_ops_type:
-
-    ;ESI = pSrcMatrix.pData + EDX
-    mov    esi, [esp]         ;ESI = pSrcMatrix
-    add    esi, (4*4)         ;ESI = .pData
-    mov    esi, [esi]
-    add    esi, edx           ;ESI += EDX
+    ;ESI = offset
+    mov    esi, edi
 
     pxor   xmm1, xmm1
 

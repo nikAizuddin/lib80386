@@ -35,34 +35,19 @@ section .text
 _start:
 
 ;B[:,1] = A[:,2]
-    mov    eax, [A.columnSize]    ;ECX = srcOffset
-    mov    ebx, 2
-    mul    ebx
-    mov    ecx, eax
-    mov    eax, [B.columnSize]    ;EDX = dstOffset
-    mov    ebx, 1
-    mul    ebx
-    mov    edx, eax
-    lea    eax, [A]               ;EAX = @A
-    lea    ebx, [B]               ;EBX = @B
-    mov    si, [A.rowSize]        ;LOW ESI  = srcJumpSize
-    shl    esi, 16
-    add    si, [B.rowSize]        ;HIGH ESI = dstJumpSize
-    mov    edi, [A.numOfRows]     ;EDI = A.numOfRows
+    lea    eax, [A]         ;srcMatrix
+    lea    ebx, [B]         ;dstMatrix
+    mov    ecx, 0b11        ;src and dst are column vectors
+    mov    edx, 2           ;srcIndex (column number)
+    mov    esi, 1           ;dstIndex (column number)
     call   vec_copy
 
 ;C[0,:] = A[2,:]
-    mov    eax, [A.rowSize]       ;ECX = srcOffset
-    mov    ebx, 2
-    mul    ebx
-    mov    ecx, eax
-    mov    edx, 0                 ;EDX = dstOffset
-    lea    eax, [A]               ;EAX = @A
-    lea    ebx, [C]               ;EBX = @B
-    mov    si, [A.columnSize]     ;LOW ESI = srcJumpSize
-    shl    esi, 16
-    add    si, [B.columnSize]     ;HIGH ESI = dstJumpSize
-    mov    edi, [A.numOfColumns]  ;EDI = numOfElements
+    lea    eax, [A]         ;srcMatrix
+    lea    ebx, [C]         ;dstMatrix
+    mov    ecx, 0b00        ;src and dst are row vectors
+    mov    edx, 2           ;srcIndex (row number)
+    mov    esi, 0           ;dstIndex (row number)
     call   vec_copy
 
 exit:

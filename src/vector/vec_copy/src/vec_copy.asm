@@ -2,47 +2,46 @@
 ;234567890123456789012345678901234567890123456789012345678901234567890
 ;=====================================================================
 ;
-;      FUNCTION NAME: vec_copy
-;   FUNCTION PURPOSE: <See doc/description file>
+;          FUNCTION NAME: vec_copy
+; FUNCTION DOCUMENTATION: <See doc/description file>
 ;
-;             AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
-;              EMAIL: nickaizuddin93@gmail.com
-;       DATE CREATED: 09-APR-2015
+;                 AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
+;                  EMAIL: nickaizuddin93@gmail.com
+;           DATE CREATED: 09-APR-2015
 ;
-;       CONTRIBUTORS: ---
+;           CONTRIBUTORS: ---
 ;
-;           LANGUAGE: x86 Assembly Language
-;             SYNTAX: Intel
-;          ASSEMBLER: NASM
-;       ARCHITECTURE: i386
-;             KERNEL: Linux 32-bit
-;             FORMAT: elf32
+;               LANGUAGE: x86 Assembly Language
+;                 SYNTAX: Intel
+;              ASSEMBLER: NASM
+;           ARCHITECTURE: i386
+;                 KERNEL: Linux 32-bit
+;                 FORMAT: elf32
 ;
-;      INCLUDE FILES: ---
+;     REQ EXTERNAL FILES: get_vector_info.asm
 ;
-;            VERSION: 0.1.0
-;             STATUS: Alpha
-;               BUGS: --- <See doc/bugs/index file>
+;                VERSION: 0.1.0
+;                 STATUS: Alpha
+;                   BUGS: --- <See doc/bugs/index file>
 ;
-;   REVISION HISTORY: <See doc/revision_history/index file>
+;       REVISION HISTORY: <See doc/revision_history/index file>
 ;
 ;                 MIT Licensed. See /LICENSE file.
 ;
 ;=====================================================================
 
+extern get_vector_info
 global vec_copy
 
 section .text
 
 vec_copy:
 
-;parameter 1) EAX = @srcMatrix    : Matrix    (Input Only)
-;parameter 2) EBX = @dstMatrix    : Matrix    (Input and Output)
-;parameter 3) ECX = srcOffset     : DWORD     (Input Only)
-;parameter 4) EDX = dstOffset     : DWORD     (Input Only)
-;parameter 5) ESI = srcJumpSize   : LOW WORD  (Input Only)
-;parameter 6) ESI = dstJumpSize   : HIGH WORD (Input Only)
-;parameter 7) EDI = numOfElements : DWORD     (Input Only)
+;parameter 1) EAX = @srcMatrix : Matrix (Input Only)
+;parameter 2) EBX = @dstMatrix : Matrix (Input and Output)
+;parameter 3) ECX = flag       : DWORD  (Input Only)
+;parameter 4) EDX = srcIndex   : DWORD  (Input Only)
+;parameter 5) ESI = dstIndex   : DWORD  (Input Only)
 ;returns ---
 
 .setup_stackframe:
@@ -51,49 +50,54 @@ vec_copy:
     mov    ebp, esp
 
 .set_localvariables:
-    sub    esp, 24
-    mov    [esp     ], eax    ;pSrcMatrix
-    mov    [esp +  4], ebx    ;pDstMatrix
-    mov    [esp +  8], ecx    ;srcOffset
-    mov    [esp + 12], edx    ;dstOffset
-    mov    [esp + 16], esi    ;srcJumpSize (LOW WORD)
-                              ;dstJumpSize (HIGH WORD)
-    mov    [esp + 20], edi    ;numOfEements
+    sub    esp, 44
+    mov    [esp     ], eax        ;pSrcMatrix
+    mov    [esp +  4], ebx        ;pDstMatrix
+    mov    [esp +  8], ecx        ;flag
+    mov    [esp + 12], edx        ;srcIndex
+    mov    [esp + 16], esi        ;dstIndex
+    mov    dword [esp + 20], 0    ;srcJumpSize
+    mov    dword [esp + 24], 0    ;srcNumOfElems
+    mov    dword [esp + 28], 0    ;pSrcDataMat
+    mov    dword [esp + 32], 0    ;dstJumpSize
+    mov    dword [esp + 36], 0    ;dstNumOfElems
+    mov    dword [esp + 40], 0    ;pDstDataMat
 
     ;Done setting up local variables
 
-    ;ESI = pSrcMatrix.pData + srcOffset
+    ;Check source matrix flag and assign the values
     mov    esi, [esp]         ;ESI = pSrcMatrix
-    add    esi, (4*4)         ;ESI = pSrcMatrix.pData
-    mov    esi, [esi]
-    mov    ebx, [esp + 8]     ;EBX = srcOffset
-    add    esi, ebx
+    mov    ebx, [esp + 8]     ;EBX = flag for srcMatrix
+    and    ebx, 0b01
+    mov    ecx, [esp + 12]    ;ECX = srcIndex
+    call   get_vector_info
+    mov    [esp + 20], ebx    ;srcJumpSize
+    mov    [esp + 24], ecx    ;srcNumOfElements
+    mov    [esp + 28], edi    ;pSrcDataMat
 
-    ;EDI = pDstMatrix.pData + dstOffset
-    mov    edi, [esp +  4]    ;EDI = pDstMatrix
-    add    edi, (4*4)         ;EDI = pDstMatrix.pData
-    mov    edi, [edi]
-    mov    ebx, [esp + 12]    ;EBX = dstOffset
-    add    edi, ebx
+    ;Check destination matrix flag and assign the values
+    mov    esi, [esp + 4]     ;ESI = pDstMatrix
+    mov    ebx, [esp + 8]     ;EBX = flag for dstMatrix
+    shr    ebx, 1
+    mov    ecx, [esp + 16]    ;ECX = dstIndex
+    call   get_vector_info
+    mov    [esp + 32], ebx    ;dstJumpSize
+    mov    [esp + 36], ecx    ;dstNumOfElements
+    mov    [esp + 40], edi    ;pDstDataMat
 
-    ;EBX = srcJumpSize
-    mov    ebx, [esp + 16]    ;EBX = srcJumpSize
-    and    ebx, 0x0000ffff    ;Remove dstJumpSize from EBX
-
-    ;EDX = dstJumpSize
-    mov    edx, [esp + 16]    ;EDX = srcJumpSize
-    shr    edx, 16            ;EDX = dstJumpSize
-
-    ;ECX = numOfElements
-    mov    ecx, [esp + 20]    ;ECX = numOfElements
+    mov    ecx, [esp + 24]    ;ECX = srcNumOfElements
+    mov    ebx, [esp + 20]    ;EBX = srcJumpSize
+    mov    edx, [esp + 32]    ;EDX = dstJumpSize
+    mov    esi, [esp + 28]    ;ESI = srcDataMat
+    mov    edi, [esp + 40]    ;EDI = dstDataMat
 
 .loop:
 
     movss  xmm0, [esi]
     movss  [edi], xmm0
 
-    add    esi, ebx           ;point ESI to next element
-    add    edi, edx           ;point EDI to next element
+    add    esi, ebx
+    add    edi, edx
 
     sub    ecx, 1
     jnz    .loop
