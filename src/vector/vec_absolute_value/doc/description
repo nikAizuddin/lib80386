@@ -40,6 +40,8 @@ FUNCTION: vec_absolute_value
     Returns
         ---
 
+----------------------------------------------------------------------
+
 PARAMETER INFORMATION:
 
     Matrix:

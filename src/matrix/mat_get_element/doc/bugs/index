@@ -2,17 +2,12 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-                       vec_divide_elements
-
-            Use this function if you want to divide the
-            elements of a vector with a scalar divisor.
+                        BUGS / KNOWN ISSUES
 
 ----------------------------------------------------------------------
 
- DIRECTORY INFORMATION
-
-     doc: Contains documentations about the function.
-     src: Contains source code.
-    test: For testing purpose, to ensure the function has no error.
+   ID# | Report Date |            Summary                  | Status
+ ------+-------------+-------------------------------------+--------
+       |             |                                     |
 
 ======================================================================

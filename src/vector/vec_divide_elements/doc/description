@@ -2,50 +2,110 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-FUNCTION: vec_divide_elements
+FUNCTION NAME: Vector Divide Elements
 
-DESCRIPTION: Divide source vector with a scalar factor.
+DESCRIPTION:
+    Divide source vector (either row vector or column vector,
+    depends on the flag) with a scalar divisor.
 
-REQUIRES: ---
+REQUIRED EXTERNAL FILES:
+    get_vector_info.asm
 
-BUGS: ---
-
-FUTURE IMPROVEMENTS: ---
+NOTES:
+    Algorithm is in "scilab/vec_divide_elements.sce"
 
 ----------------------------------------------------------------------
 
-PROCESS DESCRIPTION:
+FUNCTION: vec_divide_elements
 
-  vec_divide_elements(addr_srcVec:ESI,
-                      addr_dstVec:EDI,
-                      factor:XMM0[scalar_single-precision],
-                      vec_jumpSize:EBX,
-                      numOfElements:ECX)
+    EAX  = @srcMatrix : Matrix (Input Only)
+    EBX  = @dstMatrix : Matrix (Input and Output)
+    ECX  = flag       : DWORD  (Input Only)
+    EDX  = srcIndex   : DWORD  (Input Only)
+    ESI  = dstIndex   : DWORD  (Input Only)
+    XMM0 = divisor    : SCALAR SINGLE-PRECISION (Input Only)
 
-  Input parameters
-      1) addr_srcVec   = Address to source vector
-      2) addr_dstVec   = Address to destination vector
-      3) factor        = Factor to multiply source vector
-      4) vec_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
-      5) numOfElements = Number of elements to multiply
+    Input parameters
+        1) Memory address of source matrix
+        2) Memory address of destination matrix
+        3) Flag to determine whether to use column vector or
+           row vector on the both matrices
+        4) Source index, either column number or row number.
+           Depends on the flag value.
+        5) Destination index, either column number or row number.
+           Depends on the flag value.
+        6) The divisor.
 
-  Output parameters
-      2) addr_dstVec   = Filled with multiplied srcVec
+    Output parameters
+        2) dstMatrix.pData
+               Will be filled with results.
 
-  Returns
-      ---
+    Returns
+        ---
 
-  +-------------------------------------------------------------+
-  |                   STACK MEMORY INFORMATION                  |
-  +--------+----------------------------------------------------+
-  | Offset |      Data       |           Description            |
-  +--------+-----------------+----------------------------------+
-  | +    0 | ---             | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | Total stack used for local variables =  0 bytes             |
-  +-------------------------------------------------------------+
+----------------------------------------------------------------------
 
-  Algorithm/Pseudocode is in "scilab/vec_divide_elements.sce"
+PARAMETER INFORMATION:
+
+    Matrix: 
+        .numOfRows:    resd 1  
+        .numOfColumns: resd 1
+        .columnSize:   resd 1  
+        .rowSize:      resd 1  
+        .pData:        resd 1
+
++--------------------------------------------------------------------+
+|                              flag                                  |
++-----+-------+------------------------------------------------------+
+| BIT | Value |                    Descriptions                      |
++-----+-------+------------------------------------------------------+
+|   0 |     0 | Source matrix is row vector, e.g: A[:,i].            |
+|     |       | The index value will be the column number.           |
+|     +-------+------------------------------------------------------+
+|     |     1 | Source matrix is column vector, e.g: A[i,:]          |
+|     |       | The index value will be the row number.              |
++-----+-------+------------------------------------------------------+
+|   1 |     0 | Destination matrix is row vector, e.g: A[:,i].       |
+|     |       | The index value will be the column number.           |
+|     +-------+------------------------------------------------------+
+|     |     1 | Destination matrix is column vector, e.g: A[i,:]     |
+|     |       | The index value will be the row number.              |
++-----+-------+------------------------------------------------------+
+
+----------------------------------------------------------------------
+
+STACK MEMORY INFORMATION:
+
++------+----+----------------+---------------------------------------+
+|Offset|Size|      Name      |              Initial value            |
++------+----+----------------+---------------------------------------+
+| +  0 |  4 | pSrcMatrix     | @srcMatrix                            |
++------+----+----------------+---------------------------------------+
+| +  4 |  4 | pDstMatrix     | @dstMatrix                            |
++------+----+----------------+---------------------------------------+
+| +  8 |  4 | flag           | ECX                                   |
++------+----+----------------+---------------------------------------+
+| + 12 |  4 | srcIndex       | EDX                                   |
++------+----+----------------+---------------------------------------+
+| + 16 |  4 | dstIndex       | ESI                                   |
++------+----+----------------+---------------------------------------+
++------+----+----------------+---------------------------------------+
+| + 20 |  4 | srcJumpSize    | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 24 |  4 | srcNumOfElems  | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 28 |  4 | pSrcDataMat    | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 32 |  4 | dstJumpSize    | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 36 |  4 | dstNumOfElems  | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 40 |  4 | pDstDataMat    | 0                                     |
++------+----+----------------+---------------------------------------+
+| +    |    |                |                                       |
++------+----+----------------+---------------------------------------+
+| Total stack used for local variables = 44 bytes                    |
++--------------------------------------------------------------------+
+*Unit for offset & size are bytes.
 
 ======================================================================

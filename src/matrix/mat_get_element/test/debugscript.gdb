@@ -23,38 +23,16 @@ define print_matrix
     end
 end
 
-break _start
-break b1
-break b2
-break b3
+break exit
 run
 
-## Print matrix A (3x5)
-printf "\nContent of matrix A\n"
-print_matrix dataMatrix_A 3 5
+printf "\nActual results\n"
 
-## Print matrix B (3x5)
-printf "\nContent of matrix B\n"
-print_matrix dataMatrix_B 3 5
+printf "\nA = \n"
+print_matrix dataMatrix_A 5 3
 
-continue
+printf "\nA[3,2] = %f\n", B
 
-## Print result
+printf "\nA[4,1] = %f\n", C
 
-printf "\n"
-printf "A[:,0] = A[:,0].*B[0,0]\n"
-printf "A = \n"
-print_matrix dataMatrix_A 3 5
-continue
-
-printf "\n"
-printf "A[:,2] = A[:,2].*B[2,4]\n"
-printf "A = \n"
-print_matrix dataMatrix_A 3 5
-continue
-
-printf "\n"
-printf "A[2,:] = A[2,:].*B[1,3]\n"
-printf "A = \n"
-print_matrix dataMatrix_A 3 5
 continue

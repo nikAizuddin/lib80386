@@ -2,10 +2,10 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-                       vec_divide_elements
+                         mat_get_element
 
-            Use this function if you want to divide the
-            elements of a vector with a scalar divisor.
+         Use this function if you want a value from a matrix
+                    at given row and column number.
 
 ----------------------------------------------------------------------
 
@@ -13,6 +13,6 @@
 
      doc: Contains documentations about the function.
      src: Contains source code.
-    test: For testing purpose, to ensure the function has no error.
+    test: For testing purpose, to ensure the function has no defects.
 
 ======================================================================

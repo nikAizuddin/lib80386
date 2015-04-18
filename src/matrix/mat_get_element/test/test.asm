@@ -8,10 +8,9 @@
 ;
 ;           AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
 ;            EMAIL: nickaizuddin93@gmail.com
-;     DATE CREATED: 10-APR-2015
+;     DATE CREATED: 18-APR-2015
 ;
-;     TEST PURPOSE: Make sure the vec_divide_elements()
-;                   have no defects.
+;     TEST PURPOSE: Make sure the mat_get_element() have no defects. 
 ;
 ;         LANGUAGE: x86 Assembly Language
 ;        ASSEMBLER: NASM
@@ -20,7 +19,7 @@
 ;           KERNEL: Linux x86
 ;           FORMAT: elf32
 ;
-;   EXTERNAL FILES: mat_get_element.asm
+;   EXTERNAL FILES: ---
 ;
 ;=====================================================================
 
@@ -29,51 +28,25 @@
 %include "include/data.inc"
 
 extern mat_get_element
-extern vec_divide_elements
 global _start
 
 section .text
 
 _start:
 
-;A[:,0] = A[:,0]./B[0,0]
-    lea    eax, [B]
-    mov    ebx, 0
-    mov    ecx, 0
-    call   mat_get_element
+;B = A[3,2]
     lea    eax, [A]
-    lea    ebx, [A]
-    mov    ecx, 0b11
-    mov    edx, 0
-    mov    esi, 0
-    call   vec_divide_elements
-b1:
+    mov    ebx, 3
+    mov    ecx, 2
+    call   mat_get_element
+    movss  [B], xmm0
 
-;A[:,2] = A[:,2]./B[2,4]
-    lea    eax, [B]
-    mov    ebx, 2
-    mov    ecx, 4
-    call   mat_get_element
+;C = A[4,1]
     lea    eax, [A]
-    lea    ebx, [A]
-    mov    ecx, 0b11
-    mov    edx, 2
-    mov    esi, 2
-    call   vec_divide_elements
-b2:
-
-;A[2,:] = A[2,:]./B[1,3]
-    lea    eax, [B]
-    mov    ebx, 1
-    mov    ecx, 3
+    mov    ebx, 4
+    mov    ecx, 1
     call   mat_get_element
-    lea    eax, [A]
-    lea    ebx, [A]
-    mov    ecx, 0b00
-    mov    edx, 2
-    mov    esi, 2
-    call   vec_divide_elements
-b3:
+    movss  [C], xmm0
 
 exit:
     mov    eax, SYSCALL_EXIT
