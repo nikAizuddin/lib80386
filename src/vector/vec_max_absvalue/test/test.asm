@@ -36,16 +36,16 @@ section .text
 _start:
 
 ;B = max( abs(A[:,2]) )
-    lea    esi, [A+(2*COLUMNSIZE)]
-    mov    ebx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+    lea    eax, [A]
+    mov    ebx, 0b1
+    mov    ecx, 2
     call   vec_max_absvalue
     movss  [B], xmm0
 
 ;C = max( abs(A[0,:]) )
-    lea    esi, [A]
-    mov    ebx, COLUMNSIZE
-    mov    ecx, NUM_OF_COLUMNS
+    lea    eax, [A]
+    mov    ebx, 0b0
+    mov    ecx, 0
     call   vec_max_absvalue
     movss  [C], xmm0
 

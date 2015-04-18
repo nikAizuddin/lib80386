@@ -27,7 +27,7 @@ break exit
 run
 
 printf "\nA = \n"
-print_matrix A 3 5
+print_matrix dataMatrix_A 3 5
 
 printf "\n"
 printf "B = max( abs(A[:,2]) )\n"
