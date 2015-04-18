@@ -27,16 +27,16 @@ break exit
 run
 
 printf "\nA = \n"
-print_matrix A 3 5
+print_matrix dataMatrix_A 3 5
 
 printf "\n"
 printf "B = abs(A[:,1])\n"
 printf "B = \n"
-print_matrix B 3 5
+print_matrix dataMatrix_B 3 5
 
 printf "\n"
 printf "C = abs(A[1,:])\n"
 printf "C = \n"
-print_matrix C 3 5
+print_matrix dataMatrix_C 3 5
 
 continue

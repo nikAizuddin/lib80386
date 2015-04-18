@@ -19,11 +19,13 @@ function[] = vec_absolute_value()
     A = [-32.4012  90.3214 -84.1235  90.3213 -52.2014
          -42.1234 -49.1230 -95.2314  42.2391  69.2405
           85.5213  64.2356 -33.1456 -63.3524  64.3777];
+    B = zeros(size(A,'r'),size(A,'c'));
+    C = zeros(size(A,'r'),size(A,'c'));
 
-    B = abs(A(:,2));
+    B(:,2) = abs(A(:,2));
     disp("B = ");disp(B);
 
-    C = abs(A(2,:));
+    C(2,:) = abs(A(2,:));
     disp("C = ");disp(C);
 
 endfunction

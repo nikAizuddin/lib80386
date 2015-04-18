@@ -35,18 +35,20 @@ section .text
 
 _start:
 
-;B = abs(A[:,1])
-    lea    esi, [A+(1*COLUMNSIZE)]
-    lea    edi, [B]
-    mov    ebx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+;B[:,1] = abs(A[:,1])
+    lea    eax, [A]
+    lea    ebx, [B]
+    mov    ecx, 0b11
+    mov    edx, 1
+    mov    esi, 1
     call   vec_absolute_value
 
-;C = abs(A[1,:])
-    lea    esi, [A+(1*ROWSIZE)]
-    lea    edi, [C]
-    mov    ebx, COLUMNSIZE
-    mov    ecx, NUM_OF_COLUMNS
+;C[1,:] = abs(A[1,:])
+    lea    eax, [A]
+    lea    ebx, [C]
+    mov    ecx, 0b00
+    mov    edx, 1
+    mov    esi, 1
     call   vec_absolute_value
 
 exit:
