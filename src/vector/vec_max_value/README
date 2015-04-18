@@ -2,10 +2,10 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-                       vec_absolute_value
+                          vec_max_value
 
-            Use this function if you want to convert value
-                   to absolute value of a vector.
+             Use this function if you want to find the
+                   maximum value of a vector.
 
 ----------------------------------------------------------------------
 

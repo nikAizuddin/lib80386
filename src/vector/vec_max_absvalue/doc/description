@@ -18,6 +18,8 @@ NOTES:
 
 FUNCTION: vec_max_absvalue
 
+PARAMETERS:
+
     EAX  = @srcMatrix  : Matrix (Input Only)
     EBX  = flag        : DWORD  (Input Only)
     ECX  = index       : DWORD  (Input Only)

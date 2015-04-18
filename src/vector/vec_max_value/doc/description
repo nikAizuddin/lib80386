@@ -2,46 +2,88 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-FUNCTION: vec_max_value
+FUNCTION NAME: Vector Maximum Value
 
-DESCRIPTION: Find maximum value of a vector
+DESCRIPTION:
+    Find maximum value of a vector from a matrix
+    (either row vector or column vector, depends on the flag)
 
-REQUIRES: ---
+REQUIRED EXTERNAL FILES:
+    get_vector_info.asm
 
-BUGS: ---
-
-FUTURE IMPROVEMENTS: ---
+NOTES:
+    Algorithm is in "scilab/vec_max_value.sce"
 
 ----------------------------------------------------------------------
 
-PROCESS DESCRIPTION:
+FUNCTION: vec_max_value
 
-  vec_max_value(addr_srcVec:ESI,
-                vec_jumpSize:EBX,
-                numOfElements:ECX) maxValue:XMM0 (single-precision)
+PARAMETERS:
 
-  Input parameters
-      1) addr_srcVec   = Address to source vector
-      2) vec_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
-      3) numOfElements = Number of elements to convert
+    EAX  = @srcMatrix : Matrix (Input Only)
+    EBX  = flag       : DWORD  (Input Only)
+    ECX  = index      : DWORD  (Input Only)
+    XMM0 = maxValue   : SCALAR SINGLE-PRECISION
 
-  Output parameters
-      ---
+    Input parameters
+        1) Memory address of source matrix
+        2) Flag to determine the type of vector for the source matrix
+        3) Index for the source matrix, either row number or
+           column number, depends on the flag value
 
-  Returns
-      maxValue:XMM0 (single-precision)
+    Output parameters
+        ---
 
-  +-------------------------------------------------------------+
-  |                   STACK MEMORY INFORMATION                  |
-  +--------+----------------------------------------------------+
-  | Offset |      Data       |           Description            |
-  +--------+-----------------+----------------------------------+
-  | +    0 | ---             | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | Total stack used for local variables =  0 bytes             |
-  +-------------------------------------------------------------+
+    Returns
+        1) Maximum value
 
-  Algorithm/Pseudocode is in "scilab/vec_max_value.sce"
+----------------------------------------------------------------------
+
+PARAMETER INFORMATION:
+
+    Matrix:
+        .numOfRows:    resd 1
+        .numOfColumns: resd 1
+        .columnSize:   resd 1
+        .rowSize:      resd 1
+        .pData:        resd 1
+
++--------------------------------------------------------------------+
+|                              flag                                  |
++-----+-------+------------------------------------------------------+
+| BIT | Value |                    Descriptions                      |
++-----+-------+------------------------------------------------------+
+|   0 |     0 | Source matrix is row vector, e.g: A[:,i].            |
+|     |       | The index value will be the column number.           |
+|     +-------+------------------------------------------------------+
+|     |     1 | Source matrix is column vector, e.g: A[i,:]          |
+|     |       | The index value will be the row number.              |
++-----+-------+------------------------------------------------------+
+
+----------------------------------------------------------------------
+
+STACK MEMORY INFORMATION:
+
++------+----+----------------+---------------------------------------+
+|Offset|Size|      Name      |              Initial value            |
++------+----+----------------+---------------------------------------+
+| +  0 |  4 | pSrcMatrix     | @srcMatrix                            |
++------+----+----------------+---------------------------------------+
+| +  4 |  4 | flag           | EBX                                   |
++------+----+----------------+---------------------------------------+
+| +  8 |  4 | index          | ECX                                   |
++------+----+----------------+---------------------------------------+
++------+----+----------------+---------------------------------------+
+| + 12 |  4 | jumpSize       | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 16 |  4 | numOfElems     | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 20 |  4 | pDataMat       | 0                                     |
++------+----+----------------+---------------------------------------+
+| +    |    |                |                                       |
++------+----+----------------+---------------------------------------+
+| Total stack used for local variables = 24 bytes                    |
++--------------------------------------------------------------------+
+*Unit for offset & size are bytes.
 
 ======================================================================

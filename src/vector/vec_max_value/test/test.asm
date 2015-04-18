@@ -8,7 +8,7 @@
 ;
 ;           AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
 ;            EMAIL: nickaizuddin93@gmail.com
-;     DATE CREATED: 12-APR-2015
+;     DATE CREATED: 13-APR-2015
 ;
 ;     TEST PURPOSE: Make sure the vec_max_value()
 ;                   have no defects.
@@ -35,17 +35,17 @@ section .text
 
 _start:
 
-;B = max(A[:,2])
-    lea    esi, [A+(2*COLUMNSIZE)]
-    mov    ebx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+;B = max( (A[:,2]) )
+    lea    eax, [A]
+    mov    ebx, 0b1
+    mov    ecx, 2
     call   vec_max_value
     movss  [B], xmm0
 
-;C = max(A[0,:])
-    lea    esi, [A]
-    mov    ebx, COLUMNSIZE
-    mov    ecx, NUM_OF_COLUMNS
+;C = max( (A[0,:]) )
+    lea    eax, [A]
+    mov    ebx, 0b0
+    mov    ecx, 0
     call   vec_max_value
     movss  [C], xmm0
 
