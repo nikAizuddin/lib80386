@@ -7,10 +7,11 @@ FUNCTION NAME: Vector dot product
 DESCRIPTION:
     Calculate dot product between 2 vectors.
 
-REQUIRED EXTERNAL FILES: ---
+REQUIRED EXTERNAL FILES:
+    get_vector_info.asm
 
 NOTES:
-    Algorithm/Pseudocode is in "scilab/vec_dotproduct.sce"
+    Algorithm is in "scilab/vec_dotproduct.sce"
 
 ----------------------------------------------------------------------
 
@@ -18,26 +19,57 @@ FUNCTION: vec_dotproduct
 
 PARAMETERS:
 
-    ESI = @vector1         : DWORD (Input Only)
-    EBX = vector1_jumpSize : DWORD (Input Only)
-    EDI = @vector2         : DWORD (Input Only)
-    EDX = vector2_jumpSize : DWORD (Input Only)
-    ECX = numOfElements    : DWORD (Input Only)
+    EAX  = @Matrix1 : Matrix (Input Only)
+    EBX  = @Matrix2 : Matrix (Input Only)
+    ECX  = flag     : DWORD  (Input Only)
+    EDX  = index1   : DWORD  (Input Only)
+    ESI  = index2   : DWORD  (Input Only)
+    XMM0 = result   : SCALAR SINGLE-PRECISION (Returns)
 
   Input parameters
-      1) Memory address of vector1
-      2) Vector1 jump size. Can be ROWSIZE if column vector,
-         otherwise COLUMNSIZE.
-      3) Memory address of vector2
-      4) Vector2 jump size. Can be ROWSIZE if column vector,
-         otherwise COLUMNSIZE.
-      5) Number of elements to perform dot product.
+      1) Memory address of matrix1
+      2) Memory address of matrix2
+      3) Flag to determine the type of vector for matrix1 and
+         matrix2.
+      4) Index for matrix1, either row number or column number,
+         depends on the flag value.
+      5) Index for matrix2, either row number or column number,
+         depends on the flag value.
 
   Output parameters
       ---
 
   Returns
-      XMM0 = result : scalar_single_precision
+      1) Result of the dot product
+
+----------------------------------------------------------------------
+
+PARAMETER INFORMATION:
+
+    Matrix:
+        .numOfRows:    resd 1
+        .numOfColumns: resd 1
+        .columnSize:   resd 1
+        .rowSize:      resd 1
+        .pData:        resd 1
+
++--------------------------------------------------------------------+
+|                              flag                                  |
++-----+-------+------------------------------------------------------+
+| BIT | Value |                    Descriptions                      |
++-----+-------+------------------------------------------------------+
+|   0 |     0 | Matrix1 is row vector, e.g: A[:,i].                  |
+|     |       | The index value will be the column number.           |
+|     +-------+------------------------------------------------------+
+|     |     1 | Matrix1 is column vector, e.g: A[i,:]                |
+|     |       | The index value will be the row number.              |
++-----+-------+------------------------------------------------------+
+|   1 |     0 | Matrix2 is row vector, e.g: A[:,i].                  |
+|     |       | The index value will be the column number.           |
+|     +-------+------------------------------------------------------+
+|     |     1 | Matrix2 is column vector, e.g: A[i,:]                |
+|     |       | The index value will be the row number.              |
++-----+-------+------------------------------------------------------+
 
 ----------------------------------------------------------------------
 
@@ -46,9 +78,32 @@ STACK MEMORY INFORMATION:
 +------+----+----------------+---------------------------------------+
 |Offset|Size|      Name      |              Initial value            |
 +------+----+----------------+---------------------------------------+
-| +  0 |  0 | ---            | ---                                   |
+| +  0 |  4 | pMatrix1       | @matrix1                              |
 +------+----+----------------+---------------------------------------+
-| Total stack used for local variables =  0 bytes                    |
+| +  4 |  4 | pMatrix2       | @matrix2                              |
++------+----+----------------+---------------------------------------+
+| +  8 |  4 | flag           | ECX                                   |
++------+----+----------------+---------------------------------------+
+| + 12 |  4 | index1         | EDX                                   |
++------+----+----------------+---------------------------------------+
+| + 16 |  4 | index2         | ESI                                   |
++------+----+----------------+---------------------------------------+
++------+----+----------------+---------------------------------------+
+| + 20 |  4 | mat1JumpSize   | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 24 |  4 | mat1NumOfElems | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 28 |  4 | pDataMat1      | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 32 |  4 | mat2JumpSize   | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 36 |  4 | mat2NumOfElems | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 40 |  4 | pDataMat2      | 0                                     |
++------+----+----------------+---------------------------------------+
+| +    |    |                |                                       |
++------+----+----------------+---------------------------------------+
+| Total stack used for local variables = 44 bytes                    |
 +--------------------------------------------------------------------+
 *Unit for offset & size are bytes.
 

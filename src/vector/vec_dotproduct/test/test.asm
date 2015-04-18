@@ -35,31 +35,31 @@ section .text
 _start:
 
 ;C = A[:,0]'*B[:,0]
-    lea    esi, [A]
-    mov    ebx, ROWSIZE
-    lea    edi, [B]
-    mov    edx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+    lea    eax, [A]
+    lea    ebx, [B]
+    mov    ecx, 0b11
+    mov    edx, 0
+    mov    esi, 0
     call   vec_dotproduct
     movss  [C], xmm0
 b1:
 
 ;C = A[:,2]'*B[:,4]
-    lea    esi, [A+(2*COLUMNSIZE)]
-    mov    ebx, ROWSIZE
-    lea    edi, [B+(4*COLUMNSIZE)]
-    mov    edx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+    lea    eax, [A]
+    lea    ebx, [B]
+    mov    ecx, 0b11
+    mov    edx, 2
+    mov    esi, 4
     call   vec_dotproduct
     movss  [C], xmm0
 b2:
 
 ;C = A[2,:]*B[1,:]'
-    lea    esi, [A+(2*ROWSIZE)]
-    mov    ebx, COLUMNSIZE
-    lea    edi, [B+(1*ROWSIZE)]
-    mov    edx, COLUMNSIZE
-    mov    ecx, NUM_OF_COLUMNS
+    lea    eax, [A]
+    lea    ebx, [B]
+    mov    ecx, 0b00
+    mov    edx, 2
+    mov    esi, 1
     call   vec_dotproduct
     movss  [C], xmm0
 b3:
