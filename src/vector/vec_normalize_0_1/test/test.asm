@@ -36,38 +36,43 @@ section .text
 _start:
 
 ;B[:,0] = A[:,0] / max( abs(A[:,0]) )
-    lea    esi, [A]
-    lea    edi, [B]
-    mov    ebx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+    lea    eax, [A]
+    lea    ebx, [B]
+    mov    ecx, 0b11
+    mov    edx, 0
+    mov    esi, 0
     call   vec_normalize_0_1
 
 ;B[:,1] = A[:,1] / max( abs(A[:,1]) )
-    lea    esi, [A+(1*COLUMNSIZE)]
-    lea    edi, [B+(1*COLUMNSIZE)]
-    mov    ebx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+    lea    eax, [A]
+    lea    ebx, [B]
+    mov    ecx, 0b11
+    mov    edx, 1
+    mov    esi, 1
     call   vec_normalize_0_1
 
 ;B[:,2] = A[:,2] / max( abs(A[:,2]) )
-    lea    esi, [A+(2*COLUMNSIZE)]
-    lea    edi, [B+(2*COLUMNSIZE)]
-    mov    ebx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+    lea    eax, [A]
+    lea    ebx, [B]
+    mov    ecx, 0b11
+    mov    edx, 2
+    mov    esi, 2
     call   vec_normalize_0_1
 
 ;B[:,3] = A[:,3] / max( abs(A[:,3]) )
-    lea    esi, [A+(3*COLUMNSIZE)]
-    lea    edi, [B+(3*COLUMNSIZE)]
-    mov    ebx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+    lea    eax, [A]
+    lea    ebx, [B]
+    mov    ecx, 0b11
+    mov    edx, 3
+    mov    esi, 3
     call   vec_normalize_0_1
 
 ;B[:,4] = A[:,4] / max( abs(A[:,4]) )
-    lea    esi, [A+(4*COLUMNSIZE)]
-    lea    edi, [B+(4*COLUMNSIZE)]
-    mov    ebx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+    lea    eax, [A]
+    lea    ebx, [B]
+    mov    ecx, 0b11
+    mov    edx, 4
+    mov    esi, 4
     call   vec_normalize_0_1
 
 exit:
