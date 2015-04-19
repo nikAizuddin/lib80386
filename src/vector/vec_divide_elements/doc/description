@@ -18,6 +18,8 @@ NOTES:
 
 FUNCTION: vec_divide_elements
 
+PARAMETERS:
+
     EAX  = @srcMatrix : Matrix (Input Only)
     EBX  = @dstMatrix : Matrix (Input and Output)
     ECX  = flag       : DWORD  (Input Only)
@@ -28,17 +30,16 @@ FUNCTION: vec_divide_elements
     Input parameters
         1) Memory address of source matrix
         2) Memory address of destination matrix
-        3) Flag to determine whether to use column vector or
-           row vector on the both matrices
-        4) Source index, either column number or row number.
-           Depends on the flag value.
-        5) Destination index, either column number or row number.
-           Depends on the flag value.
-        6) The divisor.
+        3) Flag to determine the type of matrix
+        4) Source index, either row number or column number,
+           depends on the flag value
+        5) Destination index, either row number or column number,
+           depends on the flag value
+        6) The divisor
 
     Output parameters
         2) dstMatrix.pData
-               Will be filled with results.
+               Will be filled with results
 
     Returns
         ---
