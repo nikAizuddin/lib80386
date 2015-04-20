@@ -107,27 +107,15 @@ mat_multiply:
     mov    ecx, 0                ;ECX = 0
     mov    [esp + 16], ecx       ;column = ECX
 
-    ;reset pDataMat2
-    mov    eax, [esp + 4]        ;EAX = pMatrix2
-    add    eax, (4*4)
-    mov    eax, [eax]
-    mov    [esp + 32], eax       ;reset pDataMat2
-
 .subloop:
 
     ;C[row,column] = A[row,:]*B[:,column]
-    mov    esi, [esp + 28]       ;ESI = pDataMat1
-    mov    ebx, [esp + 36]       ;EBX = colSizeMat1
-    mov    edi, [esp + 32]       ;EDI = pDataMat2
-    mov    edx, [esp + 48]       ;EDX = rowSizeMat2
-    mov    ecx, [esp + 56]       ;pMatrix2.numOfRows
+    mov    eax, [esp     ]        ;EAX = pMatrix1
+    mov    ebx, [esp +  4]        ;EBX = pMatrix2
+    mov    ecx, 0b10              ;ECX = flag
+    mov    edx, [esp + 12]        ;EDX = row
+    mov    esi, [esp + 16]        ;ESI = column
     call   vec_dotproduct
-
-    ;pDataMat2 += colSizeMat2
-    mov    eax, [esp + 44]       ;EAX = colSizeMat2
-    mov    ebx, [esp + 32]       ;EBX = pDataMat2
-    add    eax, ebx
-    mov    [esp + 32], eax       ;pDataMat2 = EAX + EBX
 
     ;pDataDstMat += colSizeDstMat
     mov    edi, [esp + 52]       ;EDI = pDataDstMat
@@ -148,12 +136,6 @@ mat_multiply:
     jmp    .subloop
 
 .endsubloop:
-
-    ;pDataMat1 += rowSizeMat1
-    mov    eax, [esp + 28]       ;EAX = pDataMat1
-    mov    ebx, [esp + 40]       ;EBX = rowSizeMat1
-    add    eax, ebx
-    mov    [esp + 28], eax       ;pDataMat1 = EAX + EBX
 
     ;++row
     mov    ecx, [esp + 12]       ;ECX = row
