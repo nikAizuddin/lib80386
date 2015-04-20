@@ -8,10 +8,9 @@
 ;
 ;           AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
 ;            EMAIL: nickaizuddin93@gmail.com
-;     DATE CREATED: 11-APR-2015
+;     DATE CREATED: 18-APR-2015
 ;
-;     TEST PURPOSE: Make sure the qr_decomposition()
-;                   have no defects.
+;     TEST PURPOSE: Make sure the mat_set_element() have no defects. 
 ;
 ;         LANGUAGE: x86 Assembly Language
 ;        ASSEMBLER: NASM
@@ -20,7 +19,7 @@
 ;           KERNEL: Linux x86
 ;           FORMAT: elf32
 ;
-;   EXTERNAL FILES: ---
+;   EXTERNAL FILES: mat_get_element
 ;
 ;=====================================================================
 
@@ -28,20 +27,23 @@
 %include "include/constants.inc"
 %include "include/data.inc"
 
-extern qr_decomposition
+extern mat_get_element
+extern mat_set_element
 global _start
 
 section .text
 
 _start:
 
+;B[1,3] = A[1,3]
     lea    eax, [A]
-    lea    ebx, [u]
-    lea    ecx, [e]
-    mov    edx, NUM_OF_ROWS
-    lea    esi, [Q]
-    lea    edi, [R]
-    call   qr_decomposition
+    mov    ebx, 1
+    mov    ecx, 3
+    call   mat_get_element
+    lea    eax, [B]
+    mov    ebx, 1
+    mov    ecx, 3
+    call   mat_set_element
 
 exit:
     mov    eax, SYSCALL_EXIT

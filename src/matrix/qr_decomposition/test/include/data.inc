@@ -39,9 +39,11 @@ section .data
         .pData:         dd dataMatrix_tempMat
 
     tempVec:
-        .numOfElements: dd 4
-        .jumpSize:      dd 4            ;single-precision elements
-        .pData:         dd dataVector_tempVec
+        .numOfRows:     dd 4
+        .numOfColumns:  dd 4
+        .columnSize:    dd 4            ;single-precision elements
+        .rowSize:       dd (4*4)        ;numOfColumns * columnSize
+        .pData:         dd dataMatrix_tempVec
 
     align 16, db 0
     dataMatrix_A: dd __float32__( 4.000) ;A[0,0]
@@ -67,5 +69,4 @@ section .bss
     dataMatrix_Q:          resd (4*4)
     dataMatrix_R:          resd (4*4)
     dataMatrix_tempMat:    resd (4*4)
-    dataVector_tempVec:    resd 4
-
+    dataMatrix_tempVec:    resd (4*4)

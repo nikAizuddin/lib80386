@@ -8,7 +8,7 @@ DESCRIPTION:
     Calculate QR Decomposition of a square matrix.
 
 REQUIRED EXTERNAL FILES:
-    vec_copy.asm ###
+    vec_copy.asm
     vec_divide_elements.asm
     vec_multiply_elements.asm
     vec_dotproduct.asm
@@ -28,18 +28,13 @@ PARAMETERS:
     EBX = @Q          : Matrix (Input and Output)
     ECX = @R          : Matrix (Input and Output)
     EDX = @tempMatrix : Matrix (Input and Output)
-    ESI = @tempVector : Vector (Input and Output)
+    ESI = @tempVector : Matrix (Input and Output)
 
     Matrix:
         .numOfRows:     resd 1
         .numOfColumns:  resd 1
         .columnSize:    resd 1
         .rowSize:       resd 1
-        .pData:         resd 1
-
-    Vector:
-        .numOfElements: resd 1
-        .jumpSize:      resd 1
         .pData:         resd 1
 
     Input parameters
@@ -81,13 +76,14 @@ STACK MEMORY INFORMATION:
 +------+----+----------------+---------------------------------------+
 | + 16 |  4 | pTempVec       | @tempVec                              |
 +------+----+----------------+---------------------------------------+
++------+----+----------------+---------------------------------------+
 | + 20 |  4 | n              | srcMatrix.numOfRows                   |
 +------+----+----------------+---------------------------------------+
-| + 24 |  4 | rowSize        | srcMatrix.rowSize                     |
+| + 24 |  4 | rowSize        | srcMatrix.rowSize *** UNUSED ***      |
 +------+----+----------------+---------------------------------------+
-| + 28 |  4 | i              | 4                                     |
+| + 28 |  4 | i              | 1                                     |
 +------+----+----------------+---------------------------------------+
-| + 32 |  4 | j              | 4                                     |
+| + 32 |  4 | j              | 1                                     |
 +------+----+----------------+---------------------------------------+
 | + 36 |  4 | k              | 0                                     |
 +------+----+----------------+---------------------------------------+

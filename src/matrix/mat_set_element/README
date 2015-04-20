@@ -2,10 +2,10 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-                        qr_decomposition
+                          mat_set_element
 
-            Use this function if you want to calculate
-                  QR Decomposition of N*N matrix
+      Use this function if you want to set a value in a matrix
+                   at given row and column number.
 
 ----------------------------------------------------------------------
 
@@ -13,6 +13,6 @@
 
      doc: Contains documentations about the function.
      src: Contains source code.
-    test: For testing purpose, to ensure the function has no error.
+    test: For testing purpose, to ensure the function has no defects.
 
 ======================================================================

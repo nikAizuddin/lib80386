@@ -2,34 +2,35 @@
 ;234567890123456789012345678901234567890123456789012345678901234567890
 ;=====================================================================
 ;
-;      FUNCTION NAME: qr_decomposition
-;   FUNCTION PURPOSE: <See doc/description file>
+;          FUNCTION NAME: qr_decomposition
+; FUNCTION DOCUMENTATION: <See doc/description file>
 ;
-;             AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
-;              EMAIL: nickaizuddin93@gmail.com
-;       DATE CREATED: 11-APR-2015
+;                 AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
+;                  EMAIL: nickaizuddin93@gmail.com
+;           DATE CREATED: 11-APR-2015
 ;
-;       CONTRIBUTORS: ---
+;           CONTRIBUTORS: ---
 ;
-;           LANGUAGE: x86 Assembly Language
-;             SYNTAX: Intel
-;          ASSEMBLER: NASM
-;       ARCHITECTURE: i386
-;             KERNEL: Linux 32-bit
-;             FORMAT: elf32
+;               LANGUAGE: x86 Assembly Language
+;                 SYNTAX: Intel
+;              ASSEMBLER: NASM
+;           ARCHITECTURE: i386
+;                 KERNEL: Linux 32-bit
+;                 FORMAT: elf32
 ;
-;     EXTERNAL FILES: vec_copy.asm
-;                     euclidean_norm.asm
-;                     vec_divide_elements.asm
-;                     vec_dotproduct.asm
-;                     vec_multiply_elements.asm
-;                     vec_subtract_vv.asm
+;         EXTERNAL FILES: vec_copy.asm
+;                         euclidean_norm.asm
+;                         vec_divide_elements.asm
+;                         vec_dotproduct.asm
+;                         vec_multiply_elements.asm
+;                         vec_subtract_vv.asm
+;                         mat_set_element.asm
 ;
-;            VERSION: 0.1.0
-;             STATUS: Alpha
-;               BUGS: --- <See doc/bugs/index file>
+;                VERSION: 0.1.0
+;                 STATUS: Alpha
+;                   BUGS: --- <See doc/bugs/index file>
 ;
-;   REVISION HISTORY: <See doc/revision_history/index file>
+;       REVISION HISTORY: <See doc/revision_history/index file>
 ;
 ;                 MIT Licensed. See /LICENSE file.
 ;
@@ -41,18 +42,18 @@ extern vec_divide_elements
 extern vec_dotproduct
 extern vec_multiply_elements
 extern vec_subtract_vv
+extern mat_set_element
 global qr_decomposition
 
 section .text
 
 qr_decomposition:
 
-;parameter 1) addr_srcMat:EAX
-;parameter 2) addr_u:EBX
-;parameter 3) addr_e:ECX
-;parameter 4) n:EDX
-;parameter 5) addr_Q:ESI
-;parameter 6) addr_R:EDI
+;parameter 1) EAX = @srcMatrix  : Matrix (Input Only)
+;parameter 2) EBX = @Q          : Matrix (Input and Output)
+;parameter 3) ECX = @R          : Matrix (Input and Output)
+;parameter 4) EDX = @tempMatrix : Matrix (Input and Output)
+;parameter 5) ESI = @tempVector : Matrix (Input and Output)
 ;returns ---
 
 .setup_stackframe:
@@ -79,147 +80,134 @@ qr_decomposition:
     mov    ebx, [ebx]
     mov    [esp + 24], ebx
 
-    mov    dword [esp + 28], 4 ;i
-    mov    dword [esp + 32], 4 ;j
+    mov    dword [esp + 28], 1 ;i
+    mov    dword [esp + 32], 1 ;j
     mov    dword [esp + 36], 0 ;k
 
 ; ***
 ; Find Q
 ; ***
 
-    ;pTempMat[:,0] = srcMatrix[:,0]
-    mov    eax, [esp     ]    ;EAX = pSrcMatrix
-    mov    ebx, [esp + 12]    ;EBX = pTempMat
-    mov    ecx, 0             ;ECX = srcOffset
-    mov    edx, 0             ;EDX = dstOffset
-    mov    esi, [esp + 24]    ;LOW ESI = srcJumpSize
-    shl    esi, 16
-    add    esi, [esp + 24]    ;HIGH ESI = dstJumpSize
-    mov    edi, [esp + 20]    ;EDI = numOfElements = n
+    ;pTempMat[:,0] = pSrcMatrix[:,0]
+    mov    eax, [esp     ]        ;EAX = pSrcMatrix
+    mov    ebx, [esp + 12]        ;EBX = pTempMat
+    mov    ecx, 0b11              ;ECX = flag
+    mov    edx, 0                 ;EDX = index for pSrcMatrix
+    mov    esi, 0                 ;ESI = index for pTempMat
     call   vec_copy
 
-%ifdef _0_
+; Q[:,0] = pTempMat[:,0] / euclidean_norm(pTempMat[:,0])
 
-; Q[:,0] = u[:,0] / euclidean_norm(u[:,0])
-
-    ; euclidean_norm(u[:,0])
-    mov    eax, [esp +  4]    ;EAX = addr_u
-    mov    ebx, [esp + 36]    ;EBX = rowSize
-    mov    ecx, [esp + 12]    ;ECX = n (numOfRows)
+    ;euclidean_norm(pTempMat[:,0])
+    mov    eax, [esp + 12]        ;EAX = pTempMat
+    mov    ebx, 0b1               ;EBX = flag
+    mov    ecx, 0                 ;ECX = index
     call   euclidean_norm
 
-    ; Q[:,0] = u[:,0] / XMM0
-    mov    esi, [esp +  4]    ;ESI = addr_u
-    mov    edi, [esp + 16]    ;EDI = addr_Q
-                              ;XMM0 = previous result
-    mov    ebx, [esp + 36]    ;EBX = rowSize
-    mov    ecx, [esp + 12]    ;ECX = n (numOfRows)
+    ;XMM0 = euclidean_norm
+
+    ;Q[:,0] = pTempMat[:,0] / XMM0
+    mov    eax, [esp + 12]        ;EAX = pTempMat
+    mov    ebx, [esp +  4]        ;EBX = pQ
+    mov    ecx, 0b11              ;ECX = flag
+    mov    edx, 0                 ;EDX = index for pTempMat
+    mov    esi, 0                 ;ESI = index for pQ
     call   vec_divide_elements
 
 .loopQ:
 
-; u[:,i] = A[:,i]
-    mov    ecx, [esp + 24]    ;ECX = i
-    mov    esi, [esp]         ;ESI = addr_srcMat[:,i]
-    add    esi, ecx
-    mov    ebx, [esp + 36]    ;EBX = rowSize
-    mov    edi, [esp +  4]    ;EDI = addr_u[:,i]
-    add    edi, ecx
-    mov    edx, [esp + 36]    ;EDX = rowSize
-    mov    ecx, [esp + 12]    ;ECX = n (numOfRows)
+    ;pTempMat[:,i] = pSrcMatrix[:,i]
+    mov    eax, [esp     ]        ;EAX = pSrcMatrix
+    mov    ebx, [esp + 12]        ;EBX = pTempMat
+    mov    ecx, 0b11              ;ECX = flag
+    mov    edx, [esp + 28]        ;EDX = i (index for pSrcMatrix)
+    mov    esi, [esp + 28]        ;ESI = i (index for pTempMat)
     call   vec_copy
 
+    ;k = 0
     mov    eax, 0
-    mov    [esp + 32], eax    ;k = 0
+    mov    [esp + 36], eax        ;k = 0
 
 .subloopQ:
 
-; u[:,i] = u[:,i] - (A(:,i)'*Q(:,k)).*Q(:,k);
+    ;pTempMat[:,i]=pTempMat[:,i]-(pSrcMatrix(:,i)'*pQ(:,k)).*pQ(:,k);
 
-    ; XMM0 = A[:,i]'*Q[:,k]
-    mov    ecx, [esp + 24]    ;ECX = i
-    mov    edx, [esp + 32]    ;EDX = k
-    mov    esi, [esp]         ;ESI = addr_srcMat[:,i]
-    add    esi, ecx
-    mov    ebx, [esp + 36]    ;EBX = rowSize
-    mov    edi, [esp + 16]    ;EDI = addr_Q[:,k]
-    add    edi, edx
-    mov    edx, [esp + 36]    ;EDX = rowSize
-    mov    ecx, [esp + 12]    ;ECX = n (numOfRows)
+    ;XMM0 = pSrcMatrix[:,i]'*pQ[:,k]
+    mov    eax, [esp     ]        ;EAX = pSrcMatrix
+    mov    ebx, [esp +  4]        ;EBX = pQ
+    mov    ecx, 0b11              ;ECX = flag
+    mov    edx, [esp + 28]        ;EDX = i (index pSrcMatrix)
+    mov    esi, [esp + 36]        ;ESI = k (index pQ)
     call   vec_dotproduct
 
-    ; e[:,0] = Q[:,k].*XMM0
-    mov    ecx, [esp + 32]    ;ECX = k
-    mov    esi, [esp + 16]    ;ESI = addr_Q[:,k]
-    add    esi, ecx
-    mov    edi, [esp +  8]    ;EDI = addr_e[:,0]
-                              ;XMM0 = already assigned
-    mov    ebx, [esp + 36]    ;EBX = rowSize
-    mov    ecx, [esp + 12]    ;ECX = n (numOfRows)
+    ;pTempVec[:,0] = pQ[:,k].*XMM0
+    mov    eax, [esp +  4]        ;EAX = pQ
+    mov    ebx, [esp + 16]        ;EBX = pTempVec
+    mov    ecx, 0b11              ;ECX = flag
+    mov    edx, [esp + 36]        ;EDX = k (index pQ)
+    mov    esi, 0                 ;ESI = 0 (index pTempVec)
     call   vec_multiply_elements
 
-    ; u[:,i] -= e[:,0]
-    mov    edx, [esp + 24]    ;EDX = i
-    mov    esi, [esp +  4]    ;ESI = addr_u[:,i]
-    add    esi, edx
-    mov    edi, [esp +  8]    ;EDI = addr_e[:,0]
-    mov    eax, esi           ;EAX = addr_u[:,i]
-    mov    ebx, [esp + 36]    ;EBX = rowSize
-    mov    ecx, [esp + 12]    ;ECX = n (numOfRows)
+    ;pTempMat[:,i] -= pTempVec[:,0]
+    mov    eax, [esp + 12]        ;EAX = pTempMat
+    mov    ebx, [esp + 16]        ;EBX = pTempVec
+    mov    ecx, [esp + 12]        ;ECX = pTempMat
+    mov    edx, 0b111             ;EDX = flag
+    mov    esi, 0                 ;HIGH ESI = 0 (index pTempVec)
+    shl    esi, 16
+    add    esi, [esp + 28]        ;LOW ESI = i (index pTempMat)
+    mov    edi, [esp + 28]        ;EDI = i (index pTempMat)
     call   vec_subtract_vv
 
-; k += 4
-    mov    ecx, [esp + 32]    ;ECX = k
-    add    ecx, 4
-    mov    [esp + 32], ecx    ;k = ECX
+    ;++k
+    mov    ecx, [esp + 36]    ;ECX = k
+    add    ecx, 1
+    mov    [esp + 36], ecx    ;k = ECX
 
-    mov    eax, [esp + 28]    ;EAX = j
-    cmp    ecx, eax           ;subloopQ if ECX < j
+    ;subloopQ if k < j
+    mov    eax, [esp + 32]    ;EAX = j
+    cmp    ecx, eax
     jb     .dont_exit_subloopQ
-    .exit_subloopQ:
+.exit_subloopQ:
     jmp    .endsubloopQ
-    .dont_exit_subloopQ:
+.dont_exit_subloopQ:
     jmp    .subloopQ
 
 .endsubloopQ:
 
-; Q[:,i] = u[:,i] / norm(u[:,i]);
+    ;pQ[:,i] = pTempMat[:,i] / norm(pTempMat[:,i]);
 
-    ; norm(u[:,i])
-    mov    ecx, [esp + 24] ;ECX = i
-    mov    eax, [esp +  4] ;EAX = addr_u[:,i]
-    add    eax, ecx
-    mov    ebx, [esp + 36] ;EBX = rowSize
-    mov    ecx, [esp + 12] ;ECX = n (numOfRows)
+    ;XMM0 = norm(pTempMat[:,i])
+    mov    eax, [esp + 12]        ;EAX = pTempMat
+    mov    ebx, 0b1               ;EBX = flag
+    mov    ecx, [esp + 28]        ;ECX = i (index pTempMat)
     call   euclidean_norm
 
-    ; Q[:,i] = u[:,i] / XMM0 ###
-    mov    ecx, [esp + 24] ;ECX = i
-    mov    esi, [esp +  4] ;ESI = addr_u[:,i]
-    add    esi, ecx
-    mov    edi, [esp + 16] ;EDI = addr_Q[:,i]
-    add    edi, ecx
-                           ;XMM0 = already assigned
-    mov    ebx, [esp + 36] ;EBX = rowSize
-    mov    ecx, [esp + 12] ;ECX = n (numOfRows)
+    ;pQ[:,i] = pTempMat[:,i] / XMM0
+    mov    eax, [esp + 12]        ;EAX = pTempMat
+    mov    ebx, [esp +  4]        ;EBX = pQ
+    mov    ecx, 0b11              ;ECX = flag
+    mov    edx, [esp + 28]        ;EDX = i (index pTempMat)
+    mov    esi, [esp + 28]        ;ESI = i (index pQ)
     call   vec_divide_elements
 
-; j += 4
-    mov    ecx, [esp + 28]    ;ECX = j
-    add    ecx, 4
-    mov    [esp + 28], ecx    ;j = ECX
+    ;++j
+    mov    ecx, [esp + 32]    ;ECX = j
+    add    ecx, 1
+    mov    [esp + 32], ecx    ;j = ECX
 
-; i += 4
-    mov    ecx, [esp + 24]    ;ECX = i
-    add    ecx, 4
-    mov    [esp + 24], ecx    ;i = ECX
+    ;++i
+    mov    ecx, [esp + 28]    ;ECX = i
+    add    ecx, 1
+    mov    [esp + 28], ecx    ;i = ECX
 
-    mov    eax, [esp + 36]    ;EAX = rowSize
-    cmp    ecx, eax           ;loopQ if ECX < rowSize
+    ;loopQ if i < n
+    mov    eax, [esp + 20]    ;EAX = n
+    cmp    ecx, eax
     jb     .dont_exit_loopQ
-    .exit_loopQ:
+.exit_loopQ:
     jmp    .endloopQ
-    .dont_exit_loopQ:
+.dont_exit_loopQ:
     jmp    .loopQ
 
 .endloopQ:
@@ -231,82 +219,72 @@ qr_decomposition:
 
 ; i = 0, j = 0, k = 0
     mov    eax, 0
-    mov    [esp + 24], eax    ;i = EAX
-    mov    [esp + 28], eax    ;j = EAX
-    mov    [esp + 32], eax
+    mov    [esp + 28], eax        ;i = 0
+    mov    [esp + 32], eax        ;j = 0
+    mov    [esp + 36], eax        ;k = 0
 
 .loopR:
 
-    ; j = k
-    mov    eax, [esp + 32]    ;EAX = k
-    mov    [esp + 28], eax    ;j = EAX
+    ;j = k
+    mov    eax, [esp + 36]    ;EAX = k
+    mov    [esp + 32], eax    ;j = EAX
 
 .subloopR:
 
-    ; R[i, j] = A[:,j]' * Q[:,i];
-    mov    ecx, [esp + 24] ;ECX = i
-    mov    edx, [esp + 28] ;EDX = j
-    mov    esi, [esp     ] ;ESI = addr_srcMat[:,j]
-    add    esi, edx
-    mov    ebx, [esp + 36] ;EBX = rowSize
-    mov    edi, [esp + 16] ;EDI = addr_Q[:,i]
-    add    edi, ecx
-    mov    edx, [esp + 36] ;EDX = rowSize
-    mov    ecx, [esp + 12] ;ECX = n (numOfRows)
+    ;pR[i, j] = pSrcMatrix[:,j]' * pQ[:,i];
+    mov    eax, [esp     ]        ;EAX = pSrcMatrix
+    mov    ebx, [esp +  4]        ;EBX = pQ
+    mov    ecx, 0b11              ;ECX = flag
+    mov    edx, [esp + 32]        ;EDX = j (index pSrcMatrix)
+    mov    esi, [esp + 28]        ;ESI = i (index pQ)
     call   vec_dotproduct
-    mov    ecx, [esp + 28] ;ECX = j
-    mov    eax, [esp + 24] ;EAX = i
-    mov    ebx, [esp + 12] ;EBX = n (numOfRows)
-    mul    ebx
-    mov    esi, [esp + 20] ;ESI = addr_R
-    add    esi, eax
-    add    esi, ecx
-    movss  [esi], xmm0
+    mov    eax, [esp +  8]        ;EAX = pR
+    mov    ebx, [esp + 28]        ;EBX = i
+    mov    ecx, [esp + 32]        ;ECX = j
+    call   mat_set_element
 
-    ; j += 4
-    mov    eax, [esp + 28]    ;EAX = j
-    add    eax, 4
-    mov    [esp + 28], eax    ;j = EAX
+    ;++j
+    mov    eax, [esp + 32]    ;EAX = j
+    add    eax, 1
+    mov    [esp + 32], eax    ;j = EAX
 
-    ; subloopR if j < rowSize
-    mov    eax, [esp + 28]    ;EAX = j
-    mov    ebx, [esp + 36]    ;EBX = rowSize
+    ;subloopR if j < n
+    mov    eax, [esp + 32]    ;EAX = j
+    mov    ebx, [esp + 20]    ;EBX = n
     cmp    eax, ebx
     jb     .dont_exit_subloopR
-    .exit_subloopR:
+.exit_subloopR:
     jmp    .endsubloopR
-    .dont_exit_subloopR:
+.dont_exit_subloopR:
     jmp    .subloopR
 
 .endsubloopR:
 
-    ; k += 4
-    mov    eax, [esp + 32]    ;EAX = k
-    add    eax, 4
-    mov    [esp + 32], eax    ;k = EAX
+    ;++k
+    mov    eax, [esp + 36]    ;EAX = k
+    add    eax, 1
+    mov    [esp + 36], eax    ;k = EAX
 
-    ; i += 4
-    mov    ebx, [esp + 24]    ;EBX = i
-    add    ebx, 4
-    mov    [esp + 24], ebx    ;i = EBX
+    ;++i
+    mov    ebx, [esp + 28]    ;EBX = i
+    add    ebx, 1
+    mov    [esp + 28], ebx    ;i = EBX
 
-    ; loopR if i < rowSize
-    mov    eax, [esp + 24]    ;EAX = i
-    mov    ebx, [esp + 36]    ;EBX = rowSize
+    ;loopR if i < n
+    mov    eax, [esp + 28]    ;EAX = i
+    mov    ebx, [esp + 20]    ;EBX = n
     cmp    eax, ebx
     jbe    .dont_exit_loopR
-    .exit_loopR:
+.exit_loopR:
     jmp    .endloopR
-    .dont_exit_loopR:
+.dont_exit_loopR:
     jmp    .loopR
 
 .endloopR:
 
-%endif
-
 .clean_stackframe:
     mov    esp, ebp
-    mov    ebp, [esp]
+    mov    ebp, [esp] ;SIGSEGV
     add    esp, 4
 
     ret

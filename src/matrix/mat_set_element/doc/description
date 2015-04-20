@@ -1,0 +1,68 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION NAME: Matrix Set Element
+
+DESCRIPTION:
+    Set an element in a matrix at given row and column index,
+    for example: A[EBX,ECX] = XMM0;
+
+REQUIRED EXTERNAL FILES:
+    ---
+
+----------------------------------------------------------------------
+
+FUNCTION: mat_get_element
+
+PARAMETERS:
+
+    EAX  = @srcMatrix  : Matrix (Input Only)
+    EBX  = rowIndex    : DWORD  (Input Only)
+    ECX  = columnIndex : DWORD  (Input Only)
+    XMM0 = setElement  : SCALAR SINGLE-PRECISION (Input Only)
+
+    Input parameters
+        1) Memory address of source matrix
+        2) Row number of the source matrix
+        3) Column number of the source matrix
+        4) Input element value
+
+    Output parameters
+        ---
+
+    Returns
+        ---
+
+----------------------------------------------------------------------
+
+PARAMETER INFORMATION:
+
+    Matrix:
+        .numOfRows:    resd 1
+        .numOfColumns: resd 1
+        .columnSize:   resd 1
+        .rowSize:      resd 1
+        .pData:        resd 1
+
+----------------------------------------------------------------------
+
+STACK MEMORY INFORMATION:
+
++------+----+----------------+---------------------------------------+
+|Offset|Size|      Name      |              Initial value            |
++------+----+----------------+---------------------------------------+
+| +  0 |  4 | pSrcMatrix     | @srcMatrix                            |
++------+----+----------------+---------------------------------------+
+| +  4 |  4 | rowIndex       | EBX                                   |
++------+----+----------------+---------------------------------------+
+| +  8 |  4 | columnIndex    | ECX                                   |
++------+----+----------------+---------------------------------------+
++------+----+----------------+---------------------------------------+
+| +    |    |                |                                       |
++------+----+----------------+---------------------------------------+
+| Total stack used for local variables = 12 bytes                    |
++--------------------------------------------------------------------+
+*Unit for offset & size are bytes.
+
+======================================================================

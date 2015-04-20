@@ -4,13 +4,12 @@
 ## This is a debugscript for automated debugging the program.
 ##
 ## Author: Nik Mohamad Aizuddin bin Nik Azmi
-##   Date: 11-APR-2015
+##   Date: 09-APR-2015
 ######################################################################
 
-######################################################################
 ## $arg0 = source matrix
 ## $arg1 = rows
-## $arg2 = columns 
+## $arg2 = columns
 define print_matrix
     set $i = 0
     while($i<($arg1*$arg2))
@@ -20,23 +19,18 @@ define print_matrix
             set $j = $j + 1
         end
         printf "\n"
-        set $i = $i + $arg2 
+        set $i = $i + $arg2
     end
 end
-######################################################################
 
 break exit
 run
 
-printf "\nSample matrix, A = \n"
-print_matrix A 4 4
+## Print matrix A (3x5)
+printf "\nContent of matrix A\n"
+print_matrix dataMatrix_A 3 5
 
-printf "\n\nOutput of QR Decomposition:\n"
-
-printf "\nQ = \n"
-print_matrix Q 4 4
-
-printf "\nR = \n"
-print_matrix R 4 4
-
+## Print matrix B (3x5)
+printf "\nContent of matrix B\n"
+print_matrix dataMatrix_B 3 5
 continue

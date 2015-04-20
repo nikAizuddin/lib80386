@@ -2,12 +2,12 @@
 ;234567890123456789012345678901234567890123456789012345678901234567890
 ;=====================================================================
 ;
-;          FUNCTION NAME: mat_get_element
+;          FUNCTION NAME: mat_set_element
 ; FUNCTION DOCUMENTATION: <See doc/description file>
 ;
 ;                 AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
 ;                  EMAIL: nickaizuddin93@gmail.com
-;           DATE CREATED: 18-APR-2015
+;           DATE CREATED: 21-APR-2015
 ;
 ;           CONTRIBUTORS: ---
 ;
@@ -30,16 +30,16 @@
 ;
 ;=====================================================================
 
-global mat_get_element
+global mat_set_element
 
 section .text
 
-mat_get_element:
+mat_set_element:
 
 ;parameter 1) EAX = @srcMatrix  : Matrix (Input Only)
 ;parameter 2) EBX = rowIndex    : DWORD  (Input Only)
 ;parameter 3) ECX = columnIndex : DWORD  (Input Only)
-;returns 1) XMM0 = retElement : SCALA SINGLE-PRECISION
+;parameter 4) XMM0 = setElement : SCALA SINGLE-PRECISION (Input Only)
 
 .setup_stackframe:
     sub    esp, 4
@@ -76,8 +76,8 @@ mat_get_element:
     add    esi, ebx
     add    esi, ecx
 
-    ;XMM0 = [ESI]
-    movss  xmm0, [esi]
+    ;[ESI] = XMM0
+    movss  [esi], xmm0
 
 .clean_stackframe:
     mov    esp, ebp

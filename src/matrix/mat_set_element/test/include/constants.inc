@@ -12,7 +12,7 @@
 SYSCALL_EXIT    equ    1 ;exit the program
 
 ; Program constants
-NUM_OF_COLUMNS equ 4
-NUM_OF_ROWS    equ 4
-COLUMNSIZE     equ 4
-ROWSIZE        equ (COLUMNSIZE*NUM_OF_COLUMNS)
+NUM_OF_COLUMNS  equ    9 ;number of columns
+NUM_OF_ROWS     equ    9 ;number of rows
+COLUMNSIZE      equ    4 ;size of a column
+ROWSIZE         equ    (NUM_OF_COLUMNS * COLUMNSIZE)

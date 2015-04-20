@@ -43,6 +43,6 @@ printf "\ntempMat = \n"
 print_matrix dataMatrix_tempMat 4 4
 
 printf "\ntempVec = \n"
-print_matrix dataVector_tempVec 1 4
+print_matrix dataMatrix_tempVec 4 4
 
 continue

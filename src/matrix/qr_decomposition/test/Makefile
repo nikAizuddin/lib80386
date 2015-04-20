@@ -11,6 +11,8 @@ OBJ       = test.o \
             vec_dotproduct.o \
             vec_multiply_elements.o \
             vec_subtract_vv.o \
+            get_vector_info.o \
+            mat_set_element.o \
             qr_decomposition.o
 
 VEC_COPY = \
@@ -30,6 +32,12 @@ VEC_MULTIPLY_ELEMENTS = \
 
 VEC_SUBTRACT_VV = \
   "../../../vector/vec_subtract_vv/src/vec_subtract_vv.asm"
+
+GET_VECTOR_INFO = \
+  "../../../vector/get_vector_info/src/get_vector_info.asm"
+
+MAT_SET_ELEMENT = \
+  "../../mat_set_element/src/mat_set_element.asm"
 
 QR_DECOMPOSITION = \
   "../src/qr_decomposition.asm"
@@ -80,6 +88,18 @@ all:
 		-g -Fstabs
 
 	@${ASSEMBLER} \
+		${GET_VECTOR_INFO} \
+		-o get_vector_info.o \
+		-f ${FORMAT} \
+		-g -Fstabs
+
+	@${ASSEMBLER} \
+		${MAT_SET_ELEMENT} \
+		-o mat_set_element.o \
+		-f ${FORMAT} \
+		-g -Fstabs
+
+	@${ASSEMBLER} \
 		${QR_DECOMPOSITION} \
 		-o qr_decomposition.o \
 		-f ${FORMAT} \
@@ -94,3 +114,4 @@ clean:
 	@rm \
 		${OBJ} \
 		${BIN}
+
