@@ -31,11 +31,11 @@ run
 
 ## Print matrix A (3x5)
 printf "\nContent of matrix A\n"
-print_matrix A 3 5
+print_matrix dataMatrix_A 3 5
 
 ## Print matrix B (3x5)
 printf "\nContent of matrix B\n"
-print_matrix B 3 5
+print_matrix dataMatrix_B 3 5
 
 continue
 
@@ -44,17 +44,17 @@ continue
 printf "\n"
 printf "A[:,0] = A[:,0].*B[0,0]\n"
 printf "A = \n"
-print_matrix A 3 5
+print_matrix dataMatrix_A 3 5
 continue
 
 printf "\n"
 printf "A[:,2] = A[:,2].*B[2,4]\n"
 printf "A = \n"
-print_matrix A 3 5
+print_matrix dataMatrix_A 3 5
 continue
 
 printf "\n"
 printf "A[2,:] = A[2,:].*B[1,3]\n"
 printf "A = \n"
-print_matrix A 3 5
+print_matrix dataMatrix_A 3 5
 continue

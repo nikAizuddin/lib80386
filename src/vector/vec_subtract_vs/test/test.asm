@@ -20,7 +20,7 @@
 ;           KERNEL: Linux x86
 ;           FORMAT: elf32
 ;
-;   EXTERNAL FILES: ---
+;   EXTERNAL FILES: mat_get_element.asm
 ;
 ;=====================================================================
 
@@ -28,6 +28,7 @@
 %include "include/constants.inc"
 %include "include/data.inc"
 
+extern mat_get_element
 extern vec_subtract_vs
 global _start
 
@@ -36,29 +37,41 @@ section .text
 _start:
 
 ;A[:,0] = A[:,0]-B[0,0]
-    lea    esi, [A]
-    lea    edi, [A]
-    movss  xmm0, [B]
-    mov    ebx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+    lea    eax, [B]
+    mov    ebx, 0
+    mov    ecx, 0
+    call   mat_get_element
+    lea    eax, [A]
+    lea    ebx, [A]
+    mov    ecx, 0b11
+    mov    edx, 0
+    mov    esi, 0
     call   vec_subtract_vs
 b1:
 
 ;A[:,2] = A[:,2]-B[2,4]
-    lea    esi, [A+(2*COLUMNSIZE)]
-    lea    edi, [A+(2*COLUMNSIZE)]
-    movss  xmm0, [B+((2*ROWSIZE)+(4*COLUMNSIZE))]
-    mov    ebx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+    lea    eax, [B]
+    mov    ebx, 2
+    mov    ecx, 4
+    call   mat_get_element
+    lea    eax, [A]
+    lea    ebx, [A]
+    mov    ecx, 0b11
+    mov    edx, 2
+    mov    esi, 2
     call   vec_subtract_vs
 b2:
 
 ;A[2,:] = A[2,:]-B[1,3]
-    lea    esi, [A+(2*ROWSIZE)]
-    lea    edi, [A+(2*ROWSIZE)]
-    movss  xmm0, [B+((1*ROWSIZE)+(3*COLUMNSIZE))]
-    mov    ebx, COLUMNSIZE
-    mov    ecx, NUM_OF_COLUMNS
+    lea    eax, [B]
+    mov    ebx, 1
+    mov    ecx, 3
+    call   mat_get_element
+    lea    eax, [A]
+    lea    ebx, [A]
+    mov    ecx, 0b00
+    mov    edx, 2
+    mov    esi, 2
     call   vec_subtract_vs
 b3:
 
