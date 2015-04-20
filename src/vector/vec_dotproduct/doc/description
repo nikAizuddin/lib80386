@@ -19,8 +19,8 @@ FUNCTION: vec_dotproduct
 
 PARAMETERS:
 
-    EAX  = @Matrix1 : Matrix (Input Only)
-    EBX  = @Matrix2 : Matrix (Input Only)
+    EAX  = @matrix1 : Matrix (Input Only)
+    EBX  = @matrix2 : Matrix (Input Only)
     ECX  = flag     : DWORD  (Input Only)
     EDX  = index1   : DWORD  (Input Only)
     ESI  = index2   : DWORD  (Input Only)

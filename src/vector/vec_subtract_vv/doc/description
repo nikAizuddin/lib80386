@@ -2,50 +2,130 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-FUNCTION: vec_subtract_vv
+FUNCTION: Vector Subtract Vector with Vector
 
-DESCRIPTION: Subtract a vector with a vector, v3 = v1 - v2.
+DESCRIPTION:
+    Subtract a vector with a vector.
 
-REQUIRES: ---
+REQUIRED EXTERNAL FILES:
+    get_vector_info.asm
 
-BUGS: ---
+LIMITATIONS:
+    index1 < 2^16
+    index2 < 2^16
 
-FUTURE IMPROVEMENTS: ---
+NOTES:
+    Algorithm is in "scilab/vec_subtract_vv.sce"
 
 ----------------------------------------------------------------------
 
-PROCESS DESCRIPTION:
+FUNCTION: vec_subtract_vv
 
-  vec_subtract_vs(addr_srcVec1:ESI,
-                  addr_srcVec2:EDI,
-                  addr_dstVec:EAX,
-                  vec_jumpSize:EBX,
-                  numOfElements:ECX)
+PARAMETERS:
 
-  Input parameters
-      1) addr_srcVec1  = Address to source vector1
-      2) addr_srcVec2  = Address to source vector2
-      3) addr_dstVec   = Address to destination vector
-      4) vec_jumpSize  = ROWSIZE if column vector, otherwise COLUMNSIZE
-      5) numOfElements = Number of elements to subtract
+    EAX = @matrix1   : Matrix     (Input Only)
+    EBX = @matrix2   : Matrix     (Input Only)
+    ECX = @dstMatrix : Matrix     (Input and Output)
+    EDX = flag       : DWORD      (Input Only)
+    ESI = index1     : LOW DWORD  (Input Only)
+    ESI = index2     : HIGH DWORD (Input Only)
+    EDI = dstIndex   : DWORD      (Input Only)
 
-  Output parameters
-      2) addr_dstVec   = Will store value srcVec1 - srcVec2
+    Input parameters
+        1) Memory address of matrix1
+        2) Memory address of matrix2
+        3) Memory address of destination matrix
+        4) Flag to determine the type of vector
+        5) Index for matrix1
+        6) Index for matrix2
+        7) Index for destination index
 
-  Returns
-      ---
+    Output parameters
+        3) dstMatrix.pData
+               Will be filled with results from the subtraction
 
-  +-------------------------------------------------------------+
-  |                   STACK MEMORY INFORMATION                  |
-  +--------+----------------------------------------------------+
-  | Offset |      Data       |           Description            |
-  +--------+-----------------+----------------------------------+
-  | +    0 | ---             | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | Total stack used for local variables =  0 bytes             |
-  +-------------------------------------------------------------+
+    Returns
+        ---
 
-  Algorithm/Pseudocode is in "scilab/vec_subtract_vv.sce"
+----------------------------------------------------------------------
+
+PARAMETER INFORMATION:
+
+    Matrix:
+        .numOfRows:    resd 1
+        .numOfColumns: resd 1
+        .columnSize:   resd 1
+        .rowSize:      resd 1
+        .pData:        resd 1
+
++--------------------------------------------------------------------+
+|                              flag                                  |
++-----+-------+------------------------------------------------------+
+| BIT | Value |                    Descriptions                      |
++-----+-------+------------------------------------------------------+
+|   0 |     0 | Matrix1 is row vector, e.g: A[:,i].                  |
+|     |       | The index value will be the column number.           |
+|     +-------+------------------------------------------------------+
+|     |     1 | Matrix1 is column vector, e.g: A[i,:]                |
+|     |       | The index value will be the row number.              |
++-----+-------+------------------------------------------------------+
+|   1 |     0 | Matrix2 is row vector, e.g: A[:,i].                  |
+|     |       | The index value will be the column number.           |
+|     +-------+------------------------------------------------------+
+|     |     1 | Matrix2 is column vector, e.g: A[i,:]                |
+|     |       | The index value will be the row number.              |
++-----+-------+------------------------------------------------------+
+|   2 |     0 | Destination matrix is row vector.                    |
+|     |       |                                                      |
+|     +-------+------------------------------------------------------+
+|     |     1 | Destination matrix is column vector.                 |
+|     |       |                                                      |
++-----+-------+------------------------------------------------------+
+
+----------------------------------------------------------------------
+
+STACK MEMORY INFORMATION:
+
++------+----+----------------+---------------------------------------+
+|Offset|Size|      Name      |              Initial value            |
++------+----+----------------+---------------------------------------+
+| +  0 |  4 | pMatrix1       | @matrix1                              |
++------+----+----------------+---------------------------------------+
+| +  4 |  4 | pMatrix2       | @matrix2                              |
++------+----+----------------+---------------------------------------+
+| +  8 |  4 | pDstMatrix     | @dstMatrix                            |
++------+----+----------------+---------------------------------------+
+| + 12 |  4 | flag           | EDX                                   |
++------+----+----------------+---------------------------------------+
+| + 16 |  4 | index1         | ESI (LOW DWORD)                       |
++------+----+----------------+---------------------------------------+
+| + 20 |  4 | index2         | ESI (HIGH DWORD)                      |
++------+----+----------------+---------------------------------------+
+| + 24 |  4 | dstIndex       | EDI                                   |
++------+----+----------------+---------------------------------------+
++------+----+----------------+---------------------------------------+
+| + 28 |  4 | mat1JumpSize   | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 32 |  4 | mat1NumOfElems | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 36 |  4 | pDataMat1      | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 40 |  4 | mat2JumpSize   | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 44 |  4 | mat2NumOfElems | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 48 |  4 | pDataMat2      | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 52 |  4 | dstJumpSize    | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 56 |  4 | dstNumOfElems  | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 60 |  4 | pDataMatDst    | 0                                     |
++------+----+----------------+---------------------------------------+
+| +    |    |                |                                       |
++------+----+----------------+---------------------------------------+
+| Total stack used for local variables = 64 bytes                    |
++--------------------------------------------------------------------+
+*Unit for offset & size are bytes.
 
 ======================================================================

@@ -25,7 +25,9 @@ function[] = vec_subtract_vv()
          12.1524 42.5214 30.1255 42.3215 53.5124
          90.4215 50.2050 53.1246 43.6534 86.9240];
 
-    C = A(:,3) - B(:,2);
+    C = zeros(size(A,'r'),size(A,'c'));
+
+    C(:,2) = A(:,3) - B(:,2);
     disp("C =");disp(C);
 
 endfunction

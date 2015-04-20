@@ -13,6 +13,9 @@ REQUIRED EXTERNAL FILES:
 NOTES:
     Algorithm/Pseudocode is in "scilab/vec_absolute_value.sce"
 
+FUTURE IMPROVEMENTS:
+    Use |A| = A - A - A, instead of |A| = A^2,sqrt(A)
+
 ----------------------------------------------------------------------
 
 FUNCTION: vec_absolute_value

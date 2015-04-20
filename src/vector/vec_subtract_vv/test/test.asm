@@ -35,12 +35,13 @@ section .text
 
 _start:
 
-;C = A[:,2] - B[:,1]
-    lea    esi, [A+(2*COLUMNSIZE)]
-    lea    edi, [B+(1*COLUMNSIZE)]
-    lea    eax, [C]
-    mov    ebx, ROWSIZE
-    mov    ecx, NUM_OF_ROWS
+;C[:,1] = A[:,2] - B[:,1]
+    lea    eax, [A]
+    lea    ebx, [B]
+    lea    ecx, [C]
+    mov    edx, 0b111
+    mov    esi, (2 | (1<<16))
+    mov    edi, 1
     call   vec_subtract_vv
 b1:
 
