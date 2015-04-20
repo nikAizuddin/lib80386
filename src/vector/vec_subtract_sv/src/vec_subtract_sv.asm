@@ -88,10 +88,10 @@ vec_subtract_sv:
     mov    [esp + 36], ecx        ;dstNumOfElements = ECX
     mov    [esp + 40], edi        ;pDataMatDst = EDI
 
-    mov    esi, [esp     ]        ;ESI = pDiminisher
+    mov    esi, [esp + 28]        ;ESI = pDataMatDim
     mov    ebx, [esp + 20]        ;EBX = dimJumpSize
     mov    ecx, [esp + 24]        ;ECX = dimNumOfElements
-    mov    edi, [esp +  8]        ;EDI = pDstMatrix
+    mov    edi, [esp + 40]        ;EDI = pDataMatDst
     mov    edx, [esp + 32]        ;EDX = dstJumpSize
 
     ;XMM0 = base (from the input parameter)

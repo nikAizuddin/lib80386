@@ -12,8 +12,8 @@ REQUIRED EXTERNAL FILES:
     get_vector_info.asm
 
 LIMITATIONS:
-    dimIndex < 2^32
-    dstIndex < 2^32
+    0 =< dimIndex < 2^32
+    0 =< dstIndex < 2^32
 
 NOTES:
     Algorithm is in "scilab/vec_subtract_sv.sce"
