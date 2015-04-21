@@ -38,7 +38,7 @@ extern qr_decomposition
 extern mat_copy
 extern mat_multiply
 extern mat_diagonal
-;extern mat_normalize_0_1 *** NOT YET AVAILABLE ***
+extern mat_normalize_0_1
 global eigen
 
 section .text
@@ -147,8 +147,11 @@ eigen:
     mov    ebx, [esp +  4]        ;EBX = pEigenvalue
     call   mat_diagonal
 
-    ;eigenvector = mat_normalize_0_1(eigenvector)
-    ;call   mat_normalize_0_1 *** NOT YET AVAILABLE ***
+    ;pEigenvector = mat_normalize_0_1(pEigenvector)
+    mov    eax, [esp +  8]        ;EAX = pEigenvector
+    mov    ebx, [esp +  8]        ;EBX = pEigenvector
+    mov    ecx, 0b1               ;ECX = flag (norm by column)
+    call   mat_normalize_0_1
 
 .clean_stackframe:
     mov    esp, ebp
