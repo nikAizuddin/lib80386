@@ -14,6 +14,7 @@ REQUIRED EXTERNAL FILES:
     vec_dotproduct.asm
     vec_subtract_vv.asm
     euclidean_norm.asm
+    mat_set_element.asm
 
 NOTES:
     Algorithm/Pseudocode is in "scilab/qr_decomposition.sce".

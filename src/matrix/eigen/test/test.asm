@@ -8,10 +8,9 @@
 ;
 ;           AUTHOR: Nik Mohamad Aizuddin bin Nik Azmi
 ;            EMAIL: nickaizuddin93@gmail.com
-;     DATE CREATED: 11-APR-2015
+;     DATE CREATED: 21-APR-2015
 ;
-;     TEST PURPOSE: Make sure the qr_decomposition()
-;                   have no defects.
+;     TEST PURPOSE: Make sure the eigen() have no defects.
 ;
 ;         LANGUAGE: x86 Assembly Language
 ;        ASSEMBLER: NASM
@@ -28,7 +27,7 @@
 %include "include/constants.inc"
 %include "include/data.inc"
 
-extern qr_decomposition
+extern eigen
 global _start
 
 section .text
@@ -36,12 +35,11 @@ section .text
 _start:
 
     lea    eax, [A]
-    lea    ebx, [u]
-    lea    ecx, [e]
-    mov    edx, NUM_OF_ROWS
-    lea    esi, [Q]
-    lea    edi, [R]
-    call   qr_decomposition
+    lea    ebx, [eigenvalue]
+    lea    ecx, [eigenvector]
+    mov    edx, 20
+    lea    esi, [tempMatrices]
+    call   eigen
 
 exit:
     mov    eax, SYSCALL_EXIT

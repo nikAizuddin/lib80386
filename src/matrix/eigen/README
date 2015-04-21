@@ -2,10 +2,11 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-                        qr_decomposition
+                              eigen
 
-            Use this function if you want to calculate
-                  QR Decomposition of N*N matrix
+              Use this function if you want to find
+                 eigenvalues and eigenvector using
+                     QR Decomposition method
 
 ----------------------------------------------------------------------
 

@@ -19,7 +19,7 @@ FUNCTION: mat_diagonal
 PARAMETERS:
 
     EAX = @srcMatrix : Matrix (Input only)
-    EBX = @dstVector : Vector (Input and Output)
+    EBX = @dstVector : Matrix (Input and Output)
 
     Matrix:
         .numOfRows:    resd 1
@@ -27,11 +27,6 @@ PARAMETERS:
         .columnSize:   resd 1
         .rowSize:      resd 1
         .pData:        resd 1
-
-    Vector:
-        .numOfElements: resd 1
-        .jumpSize:      resd 1
-        .pData:         resd 1
 
     Input parameters
         1) Memory address of source matrix
@@ -56,15 +51,16 @@ STACK MEMORY INFORMATION:
 +------+----+----------------+---------------------------------------+
 | +  4 |  4 | pDstVector     | @dstVector                            |
 +------+----+----------------+---------------------------------------+
-| +  8 |  4 | pDataSrcMat    | @srcMatrix.pData^                     |
 +------+----+----------------+---------------------------------------+
-| + 12 |  4 | pDataDstVec    | @dstVector.pData^                     |
+| +  8 |  4 | pDataSrcMat    | @srcMatrix.pData                      |
++------+----+----------------+---------------------------------------+
+| + 12 |  4 | pDataDstVec    | @dstVector.pData                      |
 +------+----+----------------+---------------------------------------+
 | + 16 |  4 | srcMatRowSize  | srcMatrix.rowSize                     |
 +------+----+----------------+---------------------------------------+
 | + 20 |  4 | srcMatColSize  | srcMatrix.columnSize                  |
 +------+----+----------------+---------------------------------------+
-| + 24 |  4 | dstVecJumpSize | dstVector.jumpSize                    |
+| + 24 |  4 | dstVecJumpSize | dstVector.columnSize                  |
 +------+----+----------------+---------------------------------------+
 | + 28 |  4 | srcMatRows     | srcMatrix.numOfRows                   |
 +------+----+----------------+---------------------------------------+

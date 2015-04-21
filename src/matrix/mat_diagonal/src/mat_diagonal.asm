@@ -55,7 +55,7 @@ mat_diagonal:
     mov    [esp +  8], ecx    ;pDataSrcMat
 
     mov    edx, ebx
-    add    edx, (4*2)
+    add    edx, (4*4)
     mov    edx, [edx]
     mov    [esp + 12], edx    ;pDataDstVec
 
@@ -70,7 +70,7 @@ mat_diagonal:
     mov    [esp + 20], ecx    ;srcMatColSize
 
     mov    edx, ebx
-    add    edx, (4*1)
+    add    edx, (4*2)
     mov    edx, [edx]
     mov    [esp + 24], edx    ;dstVecJumpSize
 

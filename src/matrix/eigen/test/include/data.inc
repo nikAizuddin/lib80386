@@ -8,45 +8,82 @@
 ;
 ;=====================================================================
 
+section .data
+
+    align 16, db 0
+    A:
+        .numOfRows:    dd 3
+        .numOfColumns: dd 3
+        .columnSize:   dd 4     ;single-precision elements
+        .rowSize:      dd (3*4) ;numOfColumns * columnSize
+        .pData:        dd dataMatrix_A
+
+    eigenvalue:
+        .numOfRows:    dd 1
+        .numOfColumns: dd 3
+        .columnSize:   dd 4     ;single-precision elements
+        .rowSize:      dd (3*4) ;numOfColumns * columnSize
+        .pData:        dd dataMatrix_eigenvalue
+
+    eigenvector:
+        .numOfRows:    dd 3
+        .numOfColumns: dd 3
+        .columnSize:   dd 4     ;single-precision elements
+        .rowSize:      dd (3*4) ;numOfColumns * columnSize
+        .pData:        dd dataMatrix_eigenvector
+
+    tempMatrices:
+    tempMat1:
+        .numOfRows:    dd 3
+        .numOfColumns: dd 3
+        .columnSize:   dd 4     ;single-precision elements
+        .rowSize:      dd (3*4) ;numOfColumns * columnSize
+        .pData:        dd dataMatrix_tempMat1
+    Q:
+        .numOfRows:    dd 3
+        .numOfColumns: dd 3
+        .columnSize:   dd 4     ;single-precision elements
+        .rowSize:      dd (3*4) ;numOfColumns * columnSize
+        .pData:        dd dataMatrix_Q
+    R:
+        .numOfRows:    dd 3
+        .numOfColumns: dd 3
+        .columnSize:   dd 4     ;single-precision elements
+        .rowSize:      dd (3*4) ;numOfColumns * columnSize
+        .pData:        dd dataMatrix_R
+    u:
+        .numOfRows:    dd 3
+        .numOfColumns: dd 3
+        .columnSize:   dd 4     ;single-precision elements
+        .rowSize:      dd (3*4) ;numOfColumns * columnSize
+        .pData:        dd dataMatrix_u
+    e:
+        .numOfRows:    dd 3
+        .numOfColumns: dd 3
+        .columnSize:   dd 4     ;single-precision elements
+        .rowSize:      dd (3*4) ;numOfColumns * columnSize
+        .pData:        dd dataMatrix_e
+
+
+    align 16, db 0
+    dataMatrix_A:
+          dd __float32__( 11.4445) ;A[0,0]
+          dd __float32__(-18.5556) ;A[0,1]
+          dd __float32__(  7.1111) ;A[0,2]
+          dd __float32__(-18.5556) ;A[1,0]
+          dd __float32__( 34.4444) ;A[1,1]
+          dd __float32__(-15.8889) ;A[1,2]
+          dd __float32__(  7.1111) ;A[2,0]
+          dd __float32__(-15.8889) ;A[2,1]
+          dd __float32__(  8.7778) ;A[2,2]
+
 section .bss
 
     align 16, resb 1
-    u:    resd (4*4)
-    e:    resd (4*4)
-    Q:    resd (4*4)
-    R:    resd (4*4)
-
-section .data
-
-    ; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    ; Matrix A, sample matrix
-    ;   Number of rows = 4
-    ;   Number of columns = 4
-    ;   Column size = 4 bytes
-    ;   Row size = 4 bytes * number of columns = 16
-    ; - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    align 16, db 0
-    A:    ;row 0
-          dd __float32__( 4.000) ;A[0,0]
-          dd __float32__( 0.021) ;A[0,1]
-          dd __float32__(-7.043) ;A[0,2]
-          dd __float32__(21.898) ;A[0,3]
-
-          ;row 1
-          dd __float32__( 0.000) ;A[1,0]
-          dd __float32__( 3.000) ;A[1,1]
-          dd __float32__( 0.873) ;A[1,2]
-          dd __float32__( 3.202) ;A[1,3]
-
-          ;row 2
-          dd __float32__( 0.000) ;A[2,0]
-          dd __float32__( 0.000) ;A[2,1]
-          dd __float32__( 2.000) ;A[2,2]
-          dd __float32__(-3.642) ;A[2,3]
-
-          ;row 3
-          dd __float32__( 0.000) ;A[3,0]
-          dd __float32__( 0.000) ;A[3,1]
-          dd __float32__( 0.000) ;A[3,2]
-          dd __float32__( 1.000) ;A[3,3]
+    dataMatrix_eigenvalue:  resd (1*3)
+    dataMatrix_eigenvector: resd (3*3)
+    dataMatrix_tempMat1:    resd (3*3)
+    dataMatrix_Q:           resd (3*3)
+    dataMatrix_R:           resd (3*3)
+    dataMatrix_u:           resd (3*3)
+    dataMatrix_e:           resd (3*3)

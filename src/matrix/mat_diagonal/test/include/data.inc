@@ -22,8 +22,10 @@ section .data
     ;Vector B
     align 16, db 0
     B:
-        .numOfElements: dd 3
-        .jumpSize:      dd 4            ;single-precision element
+        .numOfRows:     dd 1
+        .numOfColumns:  dd 6
+        .columnSize:    dd 4            ;single-precision element
+        .rowSize:       dd (6*4)        ;numOfColumns * columnSize
         .pData:         dd dataVector_B
 
     align 16, db 0

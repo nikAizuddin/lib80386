@@ -5,13 +5,22 @@ MACHINE   = elf_i386
 _START    = test.asm
 BIN       = exe
 OBJ       = test.o \
+            get_vector_info.o \
             vec_copy.o \
             euclidean_norm.o \
             vec_divide_elements.o \
             vec_dotproduct.o \
             vec_multiply_elements.o \
             vec_subtract_vv.o \
-            qr_decomposition.o
+            mat_set_element.o \
+            qr_decomposition.o \
+            eigen.o \
+            mat_copy.o \
+            mat_diagonal.o \
+            mat_multiply.o \
+
+GET_VECTOR_INFO = \
+  "../../../vector/get_vector_info/src/get_vector_info.asm"
 
 VEC_COPY = \
   "../../../vector/vec_copy/src/vec_copy.asm"
@@ -31,8 +40,23 @@ VEC_MULTIPLY_ELEMENTS = \
 VEC_SUBTRACT_VV = \
   "../../../vector/vec_subtract_vv/src/vec_subtract_vv.asm"
 
+MAT_SET_ELEMENT = \
+  "../../mat_set_element/src/mat_set_element.asm"
+
 QR_DECOMPOSITION = \
-  "../src/qr_decomposition.asm"
+  "../../qr_decomposition/src/qr_decomposition.asm"
+
+EIGEN = \
+  "../src/eigen.asm"
+
+MAT_COPY = \
+  "../../mat_copy/src/mat_copy.asm"
+
+MAT_DIAGONAL = \
+  "../../mat_diagonal/src/mat_diagonal.asm"
+
+MAT_MULTIPLY = \
+  "../../mat_multiply/src/mat_multiply.asm"
 
 .PHONY: all clean
 
@@ -44,14 +68,20 @@ all:
 		-g -Fstabs
 
 	@${ASSEMBLER} \
-		${EUCLIDEAN_NORM} \
-		-o euclidean_norm.o \
+		${GET_VECTOR_INFO} \
+		-o get_vector_info.o \
 		-f ${FORMAT} \
 		-g -Fstabs
 
 	@${ASSEMBLER} \
 		${VEC_COPY} \
 		-o vec_copy.o \
+		-f ${FORMAT} \
+		-g -Fstabs
+
+	@${ASSEMBLER} \
+		${EUCLIDEAN_NORM} \
+		-o euclidean_norm.o \
 		-f ${FORMAT} \
 		-g -Fstabs
 
@@ -80,8 +110,38 @@ all:
 		-g -Fstabs
 
 	@${ASSEMBLER} \
+		${MAT_SET_ELEMENT} \
+		-o mat_set_element.o \
+		-f ${FORMAT} \
+		-g -Fstabs
+
+	@${ASSEMBLER} \
 		${QR_DECOMPOSITION} \
 		-o qr_decomposition.o \
+		-f ${FORMAT} \
+		-g -Fstabs
+
+	@${ASSEMBLER} \
+		${EIGEN} \
+		-o eigen.o \
+		-f ${FORMAT} \
+		-g -Fstabs
+
+	@${ASSEMBLER} \
+		${MAT_COPY} \
+		-o mat_copy.o \
+		-f ${FORMAT} \
+		-g -Fstabs
+
+	@${ASSEMBLER} \
+		${MAT_DIAGONAL} \
+		-o mat_diagonal.o \
+		-f ${FORMAT} \
+		-g -Fstabs
+
+	@${ASSEMBLER} \
+		${MAT_MULTIPLY} \
+		-o mat_multiply.o \
 		-f ${FORMAT} \
 		-g -Fstabs
 

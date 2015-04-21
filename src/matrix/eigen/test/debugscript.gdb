@@ -28,15 +28,28 @@ end
 break exit
 run
 
-printf "\nSample matrix, A = \n"
-print_matrix A 4 4
+printf "\nSample covariance matrix, A = \n"
+print_matrix dataMatrix_A 3 3
 
-printf "\n\nOutput of QR Decomposition:\n"
+printf "\neigenvalue =\n"
+print_matrix dataMatrix_eigenvalue 1 3
 
-printf "\nQ = \n"
-print_matrix Q 4 4
+printf "\neigenvector =\n"
+print_matrix dataMatrix_eigenvector 3 3
 
-printf "\nR = \n"
-print_matrix R 4 4
+#printf "\ntempMat1 = \n"
+#print_matrix dataMatrix_tempMat1 3 3
+
+#printf "\nQ = \n"
+#print_matrix dataMatrix_Q 3 3
+
+#printf "\nR = \n"
+#print_matrix dataMatrix_R 3 3
+
+#printf "\nu = \n"
+#print_matrix dataMatrix_u 3 3
+
+#printf "\ne = \n"
+#print_matrix dataMatrix_e 3 3
 
 continue

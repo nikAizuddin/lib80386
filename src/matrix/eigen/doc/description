@@ -2,80 +2,101 @@
 1234567890123456789012345678901234567890123456789012345678901234567890
 ======================================================================
 
-FUNCTION: qr_decomposition
+FUNCTION NAME: Eigen
 
-DESCRIPTION: Calculate QR Decomposition of N*N matrix
+DESCRIPTION:
+    Find eigenvalues and eigenvectors by using QR Decomposition
+    method
 
-REQUIRES: ---
+REQUIRED EXTERNAL FILES:
+    1. qr_decomposition.asm
+    2. mat_copy.asm
+    3. mat_multiply.asm
+    4. mat_diagonal.asm
+    5. mat_normalize_0_1.asm
 
-BUGS: ---
-
-FUTURE IMPROVEMENTS: ---
+NOTES:
+    Algorithm is in "scilab/eigen.sce"
 
 ----------------------------------------------------------------------
 
-PROCESS DESCRIPTION:
+FUNCTION: eigen
 
-  qr_decomposition(addr_srcMat:EAX,
-                   addr_u:EBX,
-                   addr_e:ECX,
-                   n:EDX,
-                   addr_Q:ESI,
-                   addr_R:EDI)
+PARAMETERS:
 
-  Input parameters
-      1) addr_srcMat = Address to source square matrix (n*n)
-      2) addr_u      = u (used to store the function temporary data)
-      3) addr_e      = e (used to store the function temporary data)
-      3) n           = Number of rows or columns of the matrix
-      4) addr_Q      = Address to store Q matrix (n*n)
-      5) addr_R      = Address to store R matrix (n*n)
+    EAX = srcMatrix    : Matrix   (Input Only)
+    EBX = eigenvalue   : Matrix   (Input and Output)
+    ECX = eigenvector  : Matrix   (Input and Output)
+    EDX = iterations   : Matrix   (Input Only)
+    ESI = tempMatrices : Matrices (Input and Output)
 
-  Output parameters
-      4) addr_Q      = Filled with Q matrix (n*n)
-      5) addr_R      = Filled with R matrix (n*n)
+    Input parameters
+        1) Memory address of source matrix
+        2) Memory address of eigenvalue row vector
+        3) Memory address of eigenvector matrix
+        4) Number of iterations
+        5) Memory address of temporary matrices
 
-  Returns
-      ---
+    Output parameters
+        2) eigenvalue.pData
+        3) eigenvector.pData
+        5) all .pData of matrices in temporary matrices
 
-  +-------------------------------------------------------------+
-  |                   STACK MEMORY INFORMATION                  |
-  +--------+----------------------------------------------------+
-  | Offset |      Data       |           Description            |
-  +--------+-----------------+----------------------------------+
-  | +    0 | addr_srcMat     | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +    4 | addr_u          | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +    8 | addr_e          | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   12 | n               | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   16 | addr_Q          | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   20 | addr_R          | ---                              |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   24 | i               | i counter                        |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   28 | j               | j counter                        |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   32 | k               | k counter                        |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | +   36 | rowSize         | n * 4                            |
-  |        |                 |                                  |
-  +--------+-----------------+----------------------------------+
-  | Total stack used for local variables = 40 bytes             |
-  +-------------------------------------------------------------+
+    Returns
+        ---
 
-  Algorithm/Pseudocode is in "scilab/qr_decomposition.sce"
+----------------------------------------------------------------------
+
+PARAMETER INFORMATION:
+
+    Matrix:
+        .numOfRows:    resd 1 (Input Only)
+        .numOfColumns: resd 1 (Input Only)
+        .columnSize:   resd 1 (Input Only)
+        .rowSize:      resd 1 (Input Only)
+        .pData:        resd 1 (Input and Output)
+
+    Matrices:
+        tempMat1 : Matrix
+        Q        : Matrix
+        R        : Matrix
+        u        : Matrix
+        e        : Matrix
+
+----------------------------------------------------------------------
+
+STACK MEMORY INFORMATION:
+
++------+----+----------------+---------------------------------------+
+|Offset|Size|      Name      |              Initial value            |
++------+----+----------------+---------------------------------------+
+| +  0 |  4 | pSrcMatrix     | @srcMatrix                            |
++------+----+----------------+---------------------------------------+
+| +  4 |  4 | pEigenvalue    | @eigenvalue                           |
++------+----+----------------+---------------------------------------+
+| +  8 |  4 | pEigenvector   | @eigenvector                          |
++------+----+----------------+---------------------------------------+
+| + 12 |  4 | iterations     | EDX                                   |
++------+----+----------------+---------------------------------------+
+| + 16 |  4 | pTempMatrices  | @tempMatrices                         |
++------+----+----------------+---------------------------------------+
++------+----+----------------+---------------------------------------+
+| + 20 |  4 | pTempMat1      | pTempMatrices.tempMat1                |
++------+----+----------------+---------------------------------------+
+| + 24 |  4 | pQ             | pTempMatrices.Q                       |
++------+----+----------------+---------------------------------------+
+| + 28 |  4 | pR             | pTempMatrices.R                       |
++------+----+----------------+---------------------------------------+
+| + 32 |  4 | pU             | pTempMatrices.u                       |
++------+----+----------------+---------------------------------------+
+| + 36 |  4 | pE             | pTempMatrices.e                       |
++------+----+----------------+---------------------------------------+
+| + 40 |  4 | i              | iterations - 1                        |
++------+----+----------------+---------------------------------------+
+| +    |  0 |                |                                       |
++------+----+----------------+---------------------------------------+
+| Total stack used for local variables = 44 bytes                    |
++--------------------------------------------------------------------+
+*Unit for offset & size are bytes.
 
 ======================================================================
