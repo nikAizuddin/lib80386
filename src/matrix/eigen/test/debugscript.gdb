@@ -28,13 +28,13 @@ end
 break exit
 run
 
-printf "\nSample covariance matrix, A = \n"
+printf "\nSample covariance matrix = \n"
 print_matrix dataMatrix_A 3 3
 
-printf "\neigenvalue =\n"
+printf "\nEigenvalue =\n"
 print_matrix dataMatrix_eigenvalue 1 3
 
-printf "\neigenvector =\n"
+printf "\nEigenvector =\n"
 print_matrix dataMatrix_eigenvector 3 3
 
 #printf "\ntempMat1 = \n"
@@ -52,4 +52,5 @@ print_matrix dataMatrix_eigenvector 3 3
 #printf "\ne = \n"
 #print_matrix dataMatrix_e 3 3
 
+printf "\n\n"
 continue

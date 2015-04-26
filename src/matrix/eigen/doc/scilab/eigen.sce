@@ -27,6 +27,7 @@ function[] = eigen()
     A = [ 11.4445 -18.5556   7.1111
          -18.5556  34.4444 -15.8889
            7.1111 -15.8889   8.7778];
+    disp("Sample covariance matrix =");disp(A);
 
     B = A;
 

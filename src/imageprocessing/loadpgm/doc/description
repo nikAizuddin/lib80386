@@ -16,6 +16,14 @@ FUTURE IMPROVEMENTS: Currently support P5.
 
 PROCESS DESCRIPTION:
 
+    EAX = @img : Image (Input and Output)
+
+    Image:
+        .pFilename: resd 1
+        .width:     resd 1
+        .height:    resd 1
+        .pData:     resd 1
+
   loadpgm( addr_filename:EAX,
            width:EBX,
            height:ECX,

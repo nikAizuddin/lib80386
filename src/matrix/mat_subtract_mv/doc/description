@@ -1,0 +1,109 @@
+         1         2         3         4         5         6         7
+1234567890123456789012345678901234567890123456789012345678901234567890
+======================================================================
+
+FUNCTION NAME: Subtract Matrix with Vector
+
+DESCRIPTION:
+    Subtract a matrix with a vector.
+
+REQUIRED EXTERNAL FILES:
+    get_vector_info.asm
+
+NOTES:
+    Algorithm is in "scilab/mat_subtract_mv.sce".
+
+----------------------------------------------------------------------
+
+FUNCTION: mat_subtract_mv
+
+PARAMETERS:
+
+    1) EAX = @matrix1   : Matrix (Input Only)
+    2) EBX = @matrix2   : Matrix (Input Only)
+    3) ECX = @dstMatrix : Matrix (Input and Output)
+    4) EDX = flag       : DWORD  (Input Only)
+    5) ESI = index      : DWORD  (Input Only)
+
+    Input parameters
+        1) Memory address of matrix1
+        2) Memory address of matrix2
+        3) Memory address of destination matrix
+        4) Flag to determine the type of vector in matrix2
+        5) Index of row or column of a vector in matrix2
+
+    Output parameters
+        3) dstMatrix.data
+               Will be filled with result from the subtraction
+
+    Returns
+        ---
+
+----------------------------------------------------------------------
+
+PARAMETER INFORMATION:
+
+    Matrix:
+        .numOfRows:    resd 1
+        .numOfColumns: resd 1
+        .columnSize:   resd 1
+        .rowSize:      resd 1
+        .pData:        resd 1
+
++--------------------------------------------------------------------+
+|                              flag                                  |
++-----+-------+------------------------------------------------------+
+| BIT | Value |                    Descriptions                      |
++-----+-------+------------------------------------------------------+
+|   0 |     0 | Vector in matrix2 is row vector, e.g: A[:,i].        |
+|     |       | The index value will be the column number.           |
+|     +-------+------------------------------------------------------+
+|     |     1 | Vector in matrix2 is column vector, e.g: A[i,:]      |
+|     |       | The index value will be the row number.              |
++-----+-------+------------------------------------------------------+
+
+----------------------------------------------------------------------
+
+STACK MEMORY INFORMATION:
+
++------+----+----------------+---------------------------------------+
+|Offset|Size|      Name      |              Initial value            |
++------+----+----------------+---------------------------------------+
+| +  0 |  4 | pMatrix1       | @matrix1                              |
++------+----+----------------+---------------------------------------+
+| +  4 |  4 | pMatrix2       | @matrix2                              |
++------+----+----------------+---------------------------------------+
+| +  8 |  4 | pDstMatrix     | @dstMatrix                            |
++------+----+----------------+---------------------------------------+
+| + 12 |  4 | flag           | EDX                                   |
++------+----+----------------+---------------------------------------+
+| + 16 |  4 | index          | ESI                                   |
++------+----+----------------+---------------------------------------+
++------+----+----------------+---------------------------------------+
+| + 20 |  4 | vecJumpSize    | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 24 |  4 | vecNumOfElem   | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 28 |  4 | pDataVec       | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 32 |  4 | i              | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 36 |  4 | j              | 0                                     |
++------+----+----------------+---------------------------------------+
+| + 40 |  4 | mat1MaxRows    | matrix1.numOfRows                     |
++------+----+----------------+---------------------------------------+
+| + 44 |  4 | mat1MaxCols    | matrix1.numOfColumns                  |
++------+----+----------------+---------------------------------------+
+| + 48 |  4 | mat1ColSize    | matrix1.columnSize                    |
++------+----+----------------+---------------------------------------+
+| + 52 |  4 | matDstColSize  | dstMatrix.columnSize                  |
++------+----+----------------+---------------------------------------+
+| + 56 |  4 | pDataMat1      | matrix1.pData                         |
++------+----+----------------+---------------------------------------+
+| + 60 |  4 | pDataMatDst    | dstMatrix.pData                       |
++------+----+----------------+---------------------------------------+
+| Total stack used for local variables = 64 bytes                    |
++--------------------------------------------------------------------+
+*Unit for offset & size are bytes.
+
+======================================================================

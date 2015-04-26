@@ -11,13 +11,15 @@ ImageProcessing
 ---------------
 ++ savepgm()
 ++ savearray_pgm()
+++ eigenface()
 
 Vector
 ------
 
 Matrix
 ------
-++ eigen()
+++ mat_subtract_mv() // matA = matA - repmat(vecB,1,cols);
+++ mat_scale_255()
 
 Mathematics
 -----------
